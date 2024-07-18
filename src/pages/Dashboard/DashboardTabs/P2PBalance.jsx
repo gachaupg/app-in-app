@@ -95,12 +95,12 @@ const P2PBalance = () => {
       </div>
       {open === "Withdraw" && (
         <>
-          <div className="flex dashTop border border-slate-600 p-3 rounded-lg bg-gray-900  flex-col w-full">
+          <div className="flex dashTop border border-slate-600 p-3 rounded-lg secondary flex-col w-full">
             <div className="flex flex-row items-center gap-3 justify-between">
               <div className="flex  dashTop flex-col w-full  gap-3">
                 <p className="text-slate-400">Asset</p>
                 <select
-                  className="bg-slate-800 p-2 pr-3 w-full rounded-lg dashTop"
+                  className=" primary p-2 pr-3 w-full rounded-lg dashTop"
                   name="USDT"
                   id=""
                 >
@@ -110,7 +110,7 @@ const P2PBalance = () => {
               <div className="flex w-full  dashTop flex-col  gap-3">
                 <p className="text-slate-400">Network</p>
                 <select
-                  className="bg-slate-800 p-2 pr-3 w-full rounded-lg dashTop"
+                  className=" primary p-2 pr-3 w-full rounded-lg dashTop"
                   name="USDT"
                   id=""
                 >
@@ -122,7 +122,7 @@ const P2PBalance = () => {
               <p>USDT Address</p>
               <div className="flex flex-row w-full  gap-6  justify-between">
                 <input
-                  className="bg-slate-800 p-2 pr-3 border border-slate-500 w-full rounded-2xl dashTop"
+                  className="primary p-2 pr-3 border border-slate-500 w-full rounded-2xl dashTop"
                   placeholder="Type in your wallet address here"
                   id=""
                 />
@@ -139,7 +139,7 @@ const P2PBalance = () => {
               <div className="flex   flex-col w-full  gap-3">
                 <p className="text-slate-400">Amount</p>
                 <input
-                  className="bg-slate-800 w-full p-2 pr-3 border flex  border-slate-500 rounded-lg dashTop"
+                  className="primary w-full p-2 pr-3 border flex  border-slate-500 rounded-lg dashTop"
                   placeholder="$ 100"
                   id=""
                 />
@@ -147,22 +147,22 @@ const P2PBalance = () => {
               <div className="flex   flex-col w-full  gap-3">
                 <p className="text-slate-400">Amount to receive</p>
                 <input
-                  className="bg-slate-800 p-2 pr-3 border border-slate-500 w-full rounded-lg dashTop"
+                  className="primary p-2 pr-3 border border-slate-500 w-full rounded-lg dashTop"
                   placeholder="99 USDT"
                   id=""
                 />
               </div>{" "}
             </div>
-            <div className="flex w-full border border-slate-500 rounded-3xl mt-6 p-2 items-center gap-3 justify-center">
-              <button className="bg-slate-600 pr-1 pl-1 rounded-2xl">
+            <div className="flex w-full border border-slate-500 wrap rounded-3xl mt-6 p-2 items-center gap-3 justify-center">
+              <button className="secondary border border-slate-700 pr-1 pl-1 rounded-2xl">
                 commission 3%
               </button>{" "}
               $3
-              <button className="bg-slate-600 pr-1 pl-1 rounded-2xl">
+              <button className="secondary border border-slate-700 pr-1 pl-1 rounded-2xl">
                 network fee{" "}
               </button>{" "}
               $3
-              <button className="bg-slate-600 pr-1 pl-1 rounded-2xl">
+              <button className="secondary border border-slate-700 pr-1 pl-1 rounded-2xl">
                 total fee{" "}
               </button>{" "}
               6
@@ -210,12 +210,12 @@ const P2PBalance = () => {
       )}
       {open === "Deposit" && (
         <>
-          <div className="flex dashTop border border-slate-600 p-3 rounded-lg bg-gray-900  flex-col w-full">
+          <div className="flex dashTop border border-slate-600 p-3 rounded-lg secondary flex-col w-full">
             <div className="flex flex-row items-center gap-3 justify-between">
               <div className="flex  dashTop flex-col w-full  gap-3">
                 <p className="text-slate-400">Asset</p>
                 <select
-                  className="bg-slate-800 p-2 pr-3 w-full rounded-lg dashTop"
+                  className="primary p-2 pr-3 w-full rounded-lg dashTop"
                   name="USDT"
                   id=""
                 >
@@ -225,7 +225,7 @@ const P2PBalance = () => {
               <div className="flex w-full  dashTop flex-col  gap-3">
                 <p className="text-slate-400">Network</p>
                 <select
-                  className="bg-slate-800 p-2 pr-3 w-full rounded-lg dashTop"
+                  className="primary p-2 pr-3 w-full rounded-lg dashTop"
                   name="USDT"
                   id=""
                 >
@@ -237,7 +237,7 @@ const P2PBalance = () => {
               <p>USDT Address</p>
               <div className="flex flex-row  gap-6  justify-between">
                 <div
-                  className="border p-1 mt-1 border-green-800 rounded-2xl flex flex-row justify-between"
+                  className="border p-1 mt-1 bordprimary rounded-2xl flex flex-row justify-between"
                   style={{ width: "90%" }}
                 >
                   <p className="flex flex-row">
@@ -245,7 +245,7 @@ const P2PBalance = () => {
                   </p>{" "}
                   <QrCode className="text-green-800" />
                 </div>
-                <button className="flex items-center gap-1 rounded-2xl p-2 bg-slate-700">
+                <button className="flex items-center gap-1 rounded-2xl p-2 primary">
                   Copy <CopyIcon size={15} />
                 </button>
               </div>
@@ -254,7 +254,7 @@ const P2PBalance = () => {
               <div className="flex   flex-col w-full  gap-3">
                 <p className="text-slate-400">I want to deposit</p>
                 <input
-                  className="bg-slate-800 w-full p-2 pr-3 border flex  border-slate-500 rounded-lg dashTop"
+                  className="primary w-full p-2 pr-3 border flex  border-slate-500 rounded-lg dashTop"
                   placeholder="$ 100"
                   id=""
                 />
@@ -262,22 +262,22 @@ const P2PBalance = () => {
               <div className="flex   flex-col w-full  gap-3">
                 <p className="text-slate-400">I want to recieve</p>
                 <input
-                  className="bg-slate-800 p-2 pr-3 border border-slate-500 w-full rounded-lg dashTop"
+                  className="primary p-2 pr-3 border border-slate-500 w-full rounded-lg dashTop"
                   placeholder="99 USDT"
                   id=""
                 />
               </div>{" "}
             </div>
-            <div className="flex w-full border border-slate-500 rounded-3xl mt-6 p-2 items-center gap-3 justify-center">
-              <button className="bg-slate-600 pr-1 pl-1 rounded-2xl">
+            <div className="flex w-full border border-slate-500 wrap rounded-3xl mt-6 p-2 items-center gap-3 justify-center">
+              <button className="primary border border-slate-800 pr-1 pl-1 rounded-2xl">
                 commission 3%
               </button>{" "}
               $3
-              <button className="bg-slate-600 pr-1 pl-1 rounded-2xl">
+              <button className="primary border border-slate-800 pr-1 pl-1 rounded-2xl">
                 network fee{" "}
               </button>{" "}
               $3
-              <button className="bg-slate-600 pr-1 pl-1 rounded-2xl">
+              <button className="primary border border-slate-800 pr-1 pl-1 rounded-2xl">
                 total fee{" "}
               </button>{" "}
               6

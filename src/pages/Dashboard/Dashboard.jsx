@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import P2PBalance from "./DashboardTabs/P2PBalance";
 import ProfileCard from "./DashboardTabs/ProfileCard";
@@ -19,13 +20,13 @@ function Dashboard() {
   console.log('====================================');
   console.log('logged in uss',user);
   console.log('====================================');
-  useEffect(() => {
-    if (user?.access) {
-      navigate("/dashboard");
-    }else{
-      navigate("/")
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user?.access) {
+  //     navigate("/dashboard");
+  //   }else{
+  //     navigate("/")
+  //   }
+  // }, [user]);
   return (
     <div
       style={{
@@ -111,9 +112,12 @@ function Dashboard() {
                 </Link>
               </div>
               <div>
-                <button className="text-white p-1 m-2  bg-slate-800 rounded-lg w-24">
+                <Link to='/orders'>
+                  <button className="text-white p-1 m-2  bg-slate-800 rounded-lg w-24">
                   My orders
                 </button>
+                </Link>
+                
               </div>
               <div>
                 <button className="text-white p-1 m-2  bg-slate-800 rounded-lg w-24">

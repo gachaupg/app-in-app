@@ -17,13 +17,13 @@ const navigate=useNavigate()
   console.log('====================================');
   console.log('logged in usersss',users);
   console.log('====================================');
-  useEffect(() => {
-    if (user?.access) {
-      navigate("/dashboard");
-    }else{
-      navigate("/")
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user?.access) {
+  //     navigate("/dashboard");
+  //   }else{
+  //     navigate("/")
+  //   }
+  // }, [user]);
   return (
     <section className="bg-dark text-white">
       <HeroSection />

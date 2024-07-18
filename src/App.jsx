@@ -21,6 +21,8 @@ import KYC from "./pages/Dashboard/DashboardTabs/KYC";
 import Wallet from "./pages/Dashboard/DashboardTabs/Wallet";
 import MainExchange from "./pages/exchange/MainExchange";
 import Market from "./pages/p2p/Market";
+import Blog from "./pages/blog/Blogs";
+import Orders from "./pages/p2p/Orders";
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -56,6 +58,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard/>}/> 
         <Route path="/kyc" element={<KYC/>}/> 
         <Route path="/wallet" element={<Wallet/>}/> 
+        <Route path="/blog" element={<Blog/>}/> 
+        <Route path="/orders" element={<Orders/>}/> 
         <Route path="/reset-password" element={<ForgotPasswordButton />} />
       </Routes>
       <Footer />

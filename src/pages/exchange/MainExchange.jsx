@@ -15,7 +15,7 @@ const MainExchange = () => {
         <div className=" flex  flex-col  justify-between">
           <div
             style={{ width: "92%" }}
-            className="border dashTop  border-slate-700 small wrap  bg-gray-900 rounded-lg flex  flex-row items-center justify-between p-2"
+            className="border dashTop  border-slate-700 small wrap  tp-ex  secondary rounded-lg flex  flex-row items-center justify-between p-2"
            >
             <div className="flex flex-row small wrap items-center justify- gap-1">
               <img
@@ -38,7 +38,7 @@ const MainExchange = () => {
                 </p>
               </div>
             </div>
-            <div  className="flex flex-row items-center wrap small justify-center gap-2 ">
+            <div  className="flex justify  flex-row items-center wrap small justify-center gap-2 ">
               <button className="p-1 w-24 bg-green-600 text-white rounded-2xl ">
                 Buy
               </button>
@@ -46,7 +46,7 @@ const MainExchange = () => {
                 Sell
               </button>
             </div>
-            <div className="flex flex-row items-center justify-center gap-2 ">
+            <div className="flex flex-row items-center justify-center justify gap-2 ">
               <div className=" border p-1 border-slate-700 rounded-full">
                 <Notifications className="text-green-600" color="green" />
               </div>
@@ -67,14 +67,20 @@ const MainExchange = () => {
               </div>
               <p className="flex flex-row items-center justify-center">month <IoIosArrowDown/></p>
              </div>
-              <LineGraph/>
+              {/* <LineGraph/>
               <div style={{ width: "100%", overflowX: "auto" }} className="Table">
                               <Table/>
 
-              </div>
+              </div> */}
+ 
+       
+      <LineGraph />
+        <Table />
 
+      
+      
             </div>
-            <div style={{width:"70%"}}>
+            <div className="small" style={{width:"70%"}}>
               <ProfileCard />
             </div>
           </div>

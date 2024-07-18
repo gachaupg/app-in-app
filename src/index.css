@@ -302,6 +302,9 @@ tr:nth-child(even) {
   .dash-hero{
    
   }
+  .Table{
+    width: 22rem !important;
+  }
   .table{
     width: 18rem !important;
     overflow-x: auto; /* Enable horizontal scrolling */
@@ -428,6 +431,16 @@ display: none !important;
  }
  .side{
   display: none !important;
+ }
+ .tp-ex {
+/* width: 22rem !important; */
+ }
+ .justify{
+  width: 100% !important;
+  display: flex;
+  justify-content: space-between !important;
+  margin: 0.5rem;
+  /* gap: 10rem; */
  }
  .market{
   width: 100% !important;

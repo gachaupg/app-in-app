@@ -4,8 +4,8 @@ import { BiLike } from "react-icons/bi";
 
 const BuyTable = () => {
   return (
-    <div>
-      <table className="styled-table rounded-lg secondary w-full border-collapse">
+    <div style={{ width: "100%", overflowX: "auto" }} className="Table">
+      <table className="styled-table rounded-lg Table secondary w-full border-collapse">
         <thead className="bg-slate-800">
           <tr>
             <th className="p-2">Advertise</th>
