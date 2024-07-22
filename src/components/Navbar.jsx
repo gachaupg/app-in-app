@@ -4,11 +4,14 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { IoIosArrowDown, IoMdPeople } from "react-icons/io";
 import { WiMoonWaningCrescent4 } from "react-icons/wi";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
+import { TiArrowSortedDown } from "react-icons/ti";
+
 import {
   AccountCircle,
   ArrowBack,
   Cancel,
   Logout,
+  LogoutOutlined,
   People,
   PrivacyTip,
   RefreshRounded,
@@ -176,23 +179,24 @@ const Navbar = () => {
   // setShow1(!show1);
 
   return (
-    <div className="navbar flex justify-around items-center sm:p-1 pl-4 ">
+    <div className="navbar w-full flex justify-around items-center sm:p-1 pl-4 ">
       <div className="lo">
         <Link to="/">
           <img
+          className="mt-2"
             style={{
-              height: "3.1rem",
-              width: "5rem",
+              height: "2.6rem",
+              width: "7rem",
               marginLeft: "2rem",
             }}
-            src="https://res.cloudinary.com/pitz/image/upload/v1707497590/logo-hiXpVEuB-removebg-preview_jnnrfa.png"
+            src="https://res.cloudinary.com/pitz/image/upload/v1721366723/Frame_rmtgyx.png"
             alt="logo"
           />
         </Link>
       </div>
       <div className="side">
         <div className="links">
-          <NavLink
+          {/* <NavLink
             exact
             to="/"
             onClick={() => {
@@ -203,17 +207,20 @@ const Navbar = () => {
             activeClassName="active"
           >
             Home
-          </NavLink>
-
-          <p
-            className="cursor-pointer"
-            onClick={() => {
-              setShow(false);
-              noUser();
-            }}
-          >
-            Trade
-          </p>
+          </NavLink> */}
+  {!user ? (
+            ""
+          ) : (
+            <Link
+              onClick={() => setShow(false)}
+              className="flex items-center cursor-pointer"
+              to="/dashboard"
+              // activeClassName="active"
+            >
+              <p>Dashboard</p> {" "}
+            </Link>
+          )}
+         
           <p
             className="cursor-pointer"
             onClick={() => {
@@ -232,24 +239,11 @@ const Navbar = () => {
           >
             Rates
           </p>
-          <NavLink onClick={() => setShow(false)} to="/contact">
-            Contact us
-          </NavLink>
+         
           <NavLink to="/blog" activeClassName="active">
             Blog
           </NavLink>
-          {!user ? (
-            ""
-          ) : (
-            <NavLink
-              onClick={() => setShow(false)}
-              className="flex items-center"
-              to="/dashboard"
-              activeClassName="active"
-            >
-              <p>Dashboard</p> <IoIosArrowDropdownCircle />{" "}
-            </NavLink>
-          )}
+        
         </div>
         {show && (
           <div className="dashboard-links">
@@ -376,9 +370,13 @@ const Navbar = () => {
         {user ? (
           <>
             <button
+            style={{
+              background:"#1D8751"
+            }}
               onClick={() => setShow(false)}
-              className="bg-green-700 rounded-2xl p-1 w-24"
+              className=" rounded-lg p-1 w-24 h-8 flex flex-row items-center gap-1"
             >
+              <img className="o object-contain" src="https://res.cloudinary.com/pitz/image/upload/v1721377298/deposit-new-f_qjiizt.png" alt="" />
               Deposit
             </button>
             <div onClick={handleShow1} className="relative flex flex-row items-center">
@@ -386,10 +384,10 @@ const Navbar = () => {
                 width={30}
                 height={30}
                 className="cover relative rounded-full"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOH2aZnIHWjMQj2lQUOWIL2f4Hljgab0ecZQ&usqp=CAU"
+                src="https://res.cloudinary.com/pitz/image/upload/v1721370108/Ellipse_858_1_frdc61.png"
                 alt=""
               />
-              <IoIosArrowDown color="green"  />
+             <img className="h-3 absolute top-0 left-6"  src="https://res.cloudinary.com/pitz/image/upload/v1721370408/Frame_34216_jnzjpy.png" alt="" />
               {/* <RiDashboardLine onClick={handleShowLog} className="text-green-500 absolute top-10" /> */}
             </div>
             {ProPro && (
@@ -432,13 +430,17 @@ const Navbar = () => {
                   <div
                     onClick={() => {
                       dispatch(setLogout(null));
-                      toast.warning("Logged out!", { position: "top-right" });
+                      toast.warning("Logged out!", { position: "top-right"  });
                       navigate("/");
                     }}
-                    className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg"
+                    className="flex justify-between w-full p-1 cursor-pointer gap-3 border-slate-700  border rounded-lg"
                   >
                     <Logout />
-                    <button>Logout</button>
+                    <button onClick={() => {
+                      dispatch(setLogout(null));
+                      toast.warning("Logged out!", { position: "top-left" });
+                      navigate("/");
+                    }}>Logout</button>
                   </div>
                 </div>
               </div>
@@ -469,7 +471,7 @@ const Navbar = () => {
             src="https://media.istockphoto.com/id/1217765834/photo/flag-of-united-kingdom-blowing-in-the-wind.jpg?s=2048x2048&w=is&k=20&c=W2rAsO5-YNL2o-9i8aqKr6QW3Mqi_lnxmSNPSJxVPaw="
             alt=""
           />
-          <IoIosArrowDown onClick={showLang}  />
+          <TiArrowSortedDown color="green" onClick={showLang}  />
 
           {show1 && (
             <div className="lang mt-3 p-2  w-48 right-0  absolute  border border-slate-700 rounded-lg top-8 secondary">
@@ -490,8 +492,7 @@ const Navbar = () => {
         </div>
         <div className=" flex items-center mr-16">
           <p className="flex items-center relative" onClick={handleShowLog}>
-            <WiMoonWaningCrescent4 size={30} color="green" />
-            <IoIosArrowDown />
+           <img src="https://res.cloudinary.com/pitz/image/upload/v1721377629/Frame_35160_bm8nbr.png" alt="" />
           </p>
         </div>
       </div>
@@ -521,7 +522,15 @@ const Navbar = () => {
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" noWrap component="div">
-                Logo
+              <img
+            style={{
+              height: "3.1rem",
+              width: "5rem",
+              marginLeft: "2rem",
+            }}
+            src="https://res.cloudinary.com/pitz/image/upload/v1707497590/logo-hiXpVEuB-removebg-preview_jnnrfa.png"
+            alt="logo"
+          />
               </Typography>
             </Toolbar>
           </AppBar>
@@ -591,19 +600,19 @@ const Navbar = () => {
                       toast.warning("Logged out!", { position: "top-left" });
                       navigate("/");
                     }}
-                    className="lang mt-3  border rounded-lg absolute ml-7 "
+                    className="lang mt-3 w-32 text-center p-1 secondary  text-white border rounded-lg absolute ml-7 "
                   >
-                    log out
+                    Log out <LogoutOutlined/>
                   </div>
                 </>
               ) : (
                 <>
                   <div className="flex ml-10 flex-col justify-center gap-5">
                     <Link to="/register">
-                      <button className="nav-reg">Register</button>
+                      <button className="nav-reg p-1 w-32">Register</button>
                     </Link>
                     <Link to="/login">
-                      <button className="nav-reg">Login</button>
+                      <button className="nav-reg p-1 w-32">Login</button>
                     </Link>
                   </div>
                 </>

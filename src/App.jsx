@@ -23,6 +23,7 @@ import MainExchange from "./pages/exchange/MainExchange";
 import Market from "./pages/p2p/Market";
 import Blog from "./pages/blog/Blogs";
 import Orders from "./pages/p2p/Orders";
+import MainDash from "./pages/Dashboard/MainDashbord/MainDash";
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -48,14 +49,14 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         {/* <Route path="/home" element={<Home />} /> */}
-        <Route path="/" element={<Home/>}/>
+        <Route path="/" element={<MainDash/>}/>
         <Route path="/exchange" element={<MainExchange/>}/>
         <Route path="/market" element={<Market/>}/>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/profile" element={<MainProfile />} />
-        <Route path="/dashboard" element={<Dashboard/>}/> 
+        <Route path="/dashboard" element={<MainDash/>}/> 
         <Route path="/kyc" element={<KYC/>}/> 
         <Route path="/wallet" element={<Wallet/>}/> 
         <Route path="/blog" element={<Blog/>}/> 

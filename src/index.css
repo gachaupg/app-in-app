@@ -131,7 +131,7 @@ tr:nth-child(even) {
 .styled-table {
   width: 100%;
   border-collapse: collapse;
-  border: 1px solid #ddd;
+  border: 3px solid #ddd;
   border-radius: 8px;
   overflow: hidden; /* Ensures rounded corners */
 }
@@ -149,11 +149,26 @@ tr:nth-child(even) {
   padding:  0 !important;
   gap: 0 !important;
 }
+.grey{
+  color: #727272;
+}
+.grey{
+  color: #727272;
+}
+.white{
+  color: #FFFFFF;
+}
+.green{
+  color: #1D8751;
+}
+.greenbg{
+  background-color: #1D8751;
+}
 .secondary{
-  background-color: #151517;
+  background-color: #1D1D23;
 }
 .primary{
-  background-color: #0f0f0f;
+  background-color: #18181D !important;
 }
 .pro2{
   margin-left: 10rem ;
@@ -172,6 +187,9 @@ tr:nth-child(even) {
     width: 100% !important;
     padding: 3px;
   }
+  /* .size{
+    width: rem !important;
+  } */
   .wrap{
     width: 100% !important;
     flex-wrap:  wrap !important;
@@ -491,7 +509,7 @@ padding-left: 25rem !important;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  background-color: rgb(17, 16, 16) !important;
+  background-color:#1D1D23 !important;
   color: azure !important;
   padding-left: 1rem;
   /* height: 4rem; */
