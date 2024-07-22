@@ -169,13 +169,15 @@ const MainDash = () => {
             />
           </div>
         </div>
+         {show === 'P2P' && (
+              <>
         <div className="flex flex-row w-full wrap small justify-between">
           <div
             style={{
               width: "70%",
             }}
             className="  flex flex-col gap-2"
-          >
+           >
             <p className="white"> P2P Wallet</p>
             <div className="border small size border-gray-700 wrap secondary rounded-2xl p-1 items-center   flex flex-row justify-between">
               <p className="white ml-2">
@@ -190,13 +192,14 @@ const MainDash = () => {
               </p>
 
               <div className="flex gap-2 small wrap">
-                <Btn
-                  onClick={() => setShow('Deposit')}
+               <div onClick={() => setShow('Deposit')}>
+               <Btn
                   color="#FFFFFF"
                   icon={<MdArrowOutward size={20} color="green" />}
                   title="Deposit"
                   className={"border border-green-600"}
                 />
+               </div>
                 <Btn
                   color="#FFFFFF"
                   icon={<GoArrowDownLeft size={20} color="red" />}
@@ -205,8 +208,7 @@ const MainDash = () => {
                 />
               </div>
             </div>
-            {show === 'P2P' && (
-              <>
+           
                 <div className="w-full flex primary mt-2  rounded-2xl flex-col  border  border-spacing-1 border-gray-700">
                   <div
                     style={{ width: "100%", background: "#35353E" }}
@@ -277,22 +279,58 @@ const MainDash = () => {
                     alt=""
                   />
                 </div>
-              </>
-            )}
-            {show === 'Deposit' && (
-              <DepositForm/>
-            )}
+            
+            
           </div>
           <div
             className="ml-10 small wrap "
             style={{
               width: "30%",
             }}
-          >
+           >
             <p className="white">Overview Total</p>
             <SideDash />
           </div>
-        </div>
+        </div>  </>
+            )}
+            {show==='Deposit' &&(
+              <>
+              <div>
+              <p className="white"> P2P Wallet</p>
+            <div className="border small size border-gray-700 wrap secondary rounded-2xl p-1 items-center   flex flex-row justify-between">
+              <p className="white ml-2">
+                <p className="grey">Balance</p>
+                <p className="flex flex-row">
+                  1900.8648 USDT{" "}
+                  <span className="grey flex flex-row">
+                    {" "}
+                    <span className="ml-1">≈ </span> 1,900 USD
+                  </span>
+                </p>
+              </p>
+
+              <div className="flex gap-2 small wrap">
+               <div onClick={() => setShow('Deposit')}>
+               <Btn
+                  color="#FFFFFF"
+                  icon={<MdArrowOutward size={20} color="green" />}
+                  title="Deposit"
+                  className={"border border-green-600"}
+                />
+               </div>
+                <Btn
+                  color="#FFFFFF"
+                  icon={<GoArrowDownLeft size={20} color="red" />}
+                  title="Withdrawal"
+                  className={"border border-red-600"}
+                />
+              </div>
+            </div>             
+             <DepositForm/>
+
+              </div>
+              </>
+            )}
       </div>
     </div>
   );
