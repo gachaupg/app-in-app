@@ -1,4 +1,4 @@
-import { Copy, Plus } from "lucide-react";
+import { Copy, Plus, Wallet } from "lucide-react";
 import { useState } from "react";
 import Btn from "../../../components/Button";
 import { MdArrowOutward } from "react-icons/md";
@@ -7,6 +7,7 @@ import Table from "../DashboardTabs/Table";
 import SideDash from "../DashboardTabs/SideDash";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import DepositForm from "./DepositForm";
+import Widthdrwal from "./Widthdrwal";
 
 const MainDash = () => {
   const [activeTab, setActiveTab] = useState("P2P Trading");
@@ -169,46 +170,48 @@ const MainDash = () => {
             />
           </div>
         </div>
-         {show === 'P2P' && (
-              <>
-        <div className="flex flex-row w-full wrap small justify-between">
-          <div
-            style={{
-              width: "70%",
-            }}
-            className="  flex flex-col gap-2"
-           >
-            <p className="white"> P2P Wallet</p>
-            <div className="border small size border-gray-700 wrap secondary rounded-2xl p-1 items-center   flex flex-row justify-between">
-              <p className="white ml-2">
-                <p className="grey">Balance</p>
-                <p className="flex flex-row">
-                  1900.8648 USDT{" "}
-                  <span className="grey flex flex-row">
-                    {" "}
-                    <span className="ml-1">≈ </span> 1,900 USD
-                  </span>
-                </p>
-              </p>
+        {show === "P2P" && (
+          <>
+            <div className="flex flex-row w-full wrap small justify-between">
+              <div
+                style={{
+                  width: "70%",
+                }}
+                className="  flex flex-col gap-2"
+              >
+                <p className="white"> P2P Wallet</p>
+                <div className="border small size border-gray-700 wrap secondary rounded-2xl p-1 items-center   flex flex-row justify-between">
+                  <p className="white ml-2">
+                    <p className="grey">Balance</p>
+                    <p className="flex flex-row">
+                      1900.8648 USDT{" "}
+                      <span className="grey flex flex-row">
+                        {" "}
+                        <span className="ml-1">≈ </span> 1,900 USD
+                      </span>
+                    </p>
+                  </p>
 
-              <div className="flex gap-2 small wrap">
-               <div onClick={() => setShow('Deposit')}>
-               <Btn
-                  color="#FFFFFF"
-                  icon={<MdArrowOutward size={20} color="green" />}
-                  title="Deposit"
-                  className={"border border-green-600"}
-                />
-               </div>
-                <Btn
-                  color="#FFFFFF"
-                  icon={<GoArrowDownLeft size={20} color="red" />}
-                  title="Withdrawal"
-                  className={"border border-red-600"}
-                />
-              </div>
-            </div>
-           
+                  <div className="flex gap-2 small wrap">
+                    <div onClick={() => setShow("Deposit")}>
+                      <Btn
+                        color="#FFFFFF"
+                        icon={<MdArrowOutward size={20} color="green" />}
+                        title="Deposit"
+                        className={"border border-green-600"}
+                      />
+                    </div>
+                    <div onClick={() => setShow("Withdraw")}>
+                      <Btn
+                        color="#FFFFFF"
+                        icon={<GoArrowDownLeft size={20} color="red" />}
+                        title="Withdrawal"
+                        className={"border border-red-600"}
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 <div className="w-full flex primary mt-2  rounded-2xl flex-col  border  border-spacing-1 border-gray-700">
                   <div
                     style={{ width: "100%", background: "#35353E" }}
@@ -279,58 +282,97 @@ const MainDash = () => {
                     alt=""
                   />
                 </div>
-            
-            
-          </div>
-          <div
-            className="ml-10 small wrap "
-            style={{
-              width: "30%",
-            }}
-           >
-            <p className="white">Overview Total</p>
-            <SideDash />
-          </div>
-        </div>  </>
-            )}
-            {show==='Deposit' &&(
-              <>
-              <div>
+              </div>
+              <div
+                className="ml-10 small wrap "
+                style={{
+                  width: "30%",
+                }}
+              >
+                <p className="white">Overview Total</p>
+                <SideDash />
+              </div>
+            </div>{" "}
+          </>
+        )}
+        {show === "Withdraw" && (
+          <>
+            <div>
               <p className="white"> P2P Wallet</p>
-            <div className="border small size border-gray-700 wrap secondary rounded-2xl p-1 items-center   flex flex-row justify-between">
-              <p className="white ml-2">
-                <p className="grey">Balance</p>
-                <p className="flex flex-row">
-                  1900.8648 USDT{" "}
-                  <span className="grey flex flex-row">
-                    {" "}
-                    <span className="ml-1">≈ </span> 1,900 USD
-                  </span>
+              <div className="border small size border-gray-700 wrap secondary rounded-2xl p-1 items-center   flex flex-row justify-between">
+                <p className="white ml-2">
+                  <p className="grey">Balance</p>
+                  <p className="flex flex-row">
+                    1900.8648 USDT{" "}
+                    <span className="grey flex flex-row">
+                      {" "}
+                      <span className="ml-1">≈ </span> 1,900 USD
+                    </span>
+                  </p>
                 </p>
-              </p>
 
-              <div className="flex gap-2 small wrap">
-               <div onClick={() => setShow('Deposit')}>
-               <Btn
-                  color="#FFFFFF"
-                  icon={<MdArrowOutward size={20} color="green" />}
-                  title="Deposit"
-                  className={"border border-green-600"}
-                />
-               </div>
-                <Btn
-                  color="#FFFFFF"
-                  icon={<GoArrowDownLeft size={20} color="red" />}
-                  title="Withdrawal"
-                  className={"border border-red-600"}
-                />
+                <div className="flex gap-2 small wrap">
+                    <div onClick={() => setShow("Deposit")}>
+                      <Btn
+                        color="#FFFFFF"
+                        icon={<MdArrowOutward size={20} color="white" />}
+                        title="Deposit"
+                        className={"border border-green-600 bg-green-600 text-white"}
+                      />
+                    </div>
+                    <div onClick={() => setShow("Withdraw")}>
+                      <Btn
+                        color="#FFFFFF"
+                        icon={<GoArrowDownLeft size={20} color="red" />}
+                        title="Withdrawal"
+                        className={"border border-red-600"}
+                      />
+                    </div>
+                  </div>
               </div>
-            </div>             
-             <DepositForm/>
+              <Widthdrwal />
+            </div>
+          </>
+        )}
+         {show === "Deposit" && (
+          <>
+            <div>
+              <p className="white"> P2P Wallet</p>
+              <div className="border small size border-gray-700 wrap secondary rounded-2xl p-1 items-center   flex flex-row justify-between">
+                <p className="white ml-2">
+                  <p className="grey">Balance</p>
+                  <p className="flex flex-row">
+                    1900.8648 USDT{" "}
+                    <span className="grey flex flex-row">
+                      {" "}
+                      <span className="ml-1">≈ </span> 1,900 USD
+                    </span>
+                  </p>
+                </p>
 
+                <div className="flex gap-2 small wrap">
+                    <div onClick={() => setShow("Deposit")}>
+                    <Btn
+                        color="#FFFFFF"
+                        icon={<MdArrowOutward size={20} color="white" />}
+                        title="Deposit"
+                        className={"border border-green-600 bg-green-600 text-white"}
+                      />
+                    </div>
+                    <div onClick={() => setShow("Withdraw")}>
+                      <Btn
+                        color="#FFFFFF"
+                        icon={<GoArrowDownLeft size={20} color="red" />}
+                        title="Withdrawal"
+                        className={"border border-red-600"}
+                      />
+                    </div>
+                  </div>
               </div>
-              </>
-            )}
+              <DepositForm />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
