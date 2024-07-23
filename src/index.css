@@ -154,6 +154,7 @@ tr:nth-child(even) {
 }
 .grey{
   color: #727272;
+
 }
 .grey{
   color: #727272;
@@ -182,6 +183,9 @@ tr:nth-child(even) {
   }
   .input-witd {
     width: 10rem !important;
+  }
+  .card{
+    width: 200rem !important;
   }
   .pro2{
     margin-left: 0rem !important ;

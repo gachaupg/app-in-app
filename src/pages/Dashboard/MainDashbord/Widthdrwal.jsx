@@ -13,7 +13,7 @@ const DepositForm = () => {
         className="border small size border-gray-700 wrap secondary w-full rounded-2xl p-3    flex flex-col justify-between"
       >
         <div className="flex w-full flex-row justify-between gap-10 wrap items-center ">
-          <div style={{ width: "50%" }} className="flex flex-col p-1 it gap-2 ">
+          <div style={{ width: "50%" }} className="flex small flex-col p-1 it gap-2 ">
             <p className="grey"> Asset</p>
             <div className="mainGrey p-1 pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
               <div className="mainGrey  flex flex-row items-center gap-1 w-full">
@@ -28,9 +28,9 @@ const DepositForm = () => {
               <IoMdArrowDropdown color="white" />
             </div>
           </div>
-          <div style={{ width: "50%" }}>
+          <div style={{ width: "50%" }} className="small">
             <p className="grey"> Network</p>
-            <div className="mainGrey p-1 pr-2 mt-2 rounded-2xl flex flex-row justify-between w-full items-center">
+            <div className="mainGrey p-1 pr-2 mt-2 rounded-2xl  flex flex-row justify-between w-full items-center">
               <div className="mainGrey items-center flex flex-row gap-1 w-full">
                 <img
                   src="https://res.cloudinary.com/pitz/image/upload/v1721628835/TRC20_j1e6si.png"
@@ -53,12 +53,12 @@ const DepositForm = () => {
           </div>
         </div>
         <div></div>
-        <p>Wallet Type</p>
+        <p className="mb-2">Wallet Type</p>
         <div
           style={{
             width: "38%",
           }}
-          className="border small ml-1 p-1 flex flex-row border-green-600 gap-6 rounded-lg"
+          className="border small wrap ml-1 p-1 flex flex-row border-green-600 gap-6 rounded-lg"
         >
           <button className="border mainGrey small flex flex-row items-center gap-1 p-1 border-green-600 rounded-lg">
             <img
@@ -84,8 +84,8 @@ const DepositForm = () => {
             />
           </button>
         </div>
-        <div className="flex w-full flex-row justify-between gap-10 items-center ">
-          <div style={{ width: "50%" }} className="flex  flex-col p-2 gap-2 ">
+        <div className="flex w-full flex-row justify-between wrap gap-10 items-center ">
+          <div style={{ width: "50%" }} className="flex  small flex-col p-2 gap-2 ">
             <p className="grey"> I want to withdrawal</p>
             <div className="border border-slate-700 p-1 pr-2 h-10 rounded-2xl flex flex-row justify-between w-full items-center">
               <div className="  flex flex-row gap-1 w-full">
@@ -104,7 +104,7 @@ const DepositForm = () => {
               </p>
             </div>
           </div>
-          <div style={{ width: "50%" }}>
+          <div className="small" style={{ width: "50%" }}>
             <div className="flex flex-row mt-2 justify-between">
               <p className="grey"> I want to receive</p>
               <p className="grey">

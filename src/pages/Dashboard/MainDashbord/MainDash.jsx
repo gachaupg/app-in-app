@@ -23,7 +23,7 @@ const MainDash = () => {
     },
     {
       name: "P2P Trading",
-      icon: "https://res.cloudinary.com/pitz/image/upload/v1721368327/settings_mezmwi.png",
+      icon: "https://res.cloudinary.com/pitz/image/upload/v1721678697/users-profiles-left_1_nypmot.png",
     }, // Add the icon URL for P2P Trading
 
     {
@@ -70,7 +70,7 @@ const MainDash = () => {
                 fontSize: tab.name === "Buy Crypto" ? "15.5px" : "h-6",
               }}
               className={`flex items-center justify-between ml-5 w-full`}
-            >
+             >
               {tab.name}
               {tab.name === "Account" && (
                 <MdOutlineKeyboardArrowDown className="ml-2" />
@@ -145,7 +145,7 @@ const MainDash = () => {
               Individual{" "}
             </p>
           </div>
-          <div className="flex flex-row items-center gap-5">
+          <div className="flex flex-row wrap items-center gap-5">
             <div className="flex flex-row gap-3">
               <Btn
                 title="Post Buy Add"
@@ -177,10 +177,10 @@ const MainDash = () => {
                 style={{
                   width: "70%",
                 }}
-                className="  flex flex-col gap-2"
+                className="  flex  small flex-col gap-2"
               >
                 <p className="white"> P2P Wallet</p>
-                <div className="border small size border-gray-700 wrap secondary rounded-2xl p-1 items-center   flex flex-row justify-between">
+                <div className="border  small size border-gray-700 wrap secondary rounded-2xl p-1 items-center   flex flex-row justify-between">
                   <p className="white ml-2">
                     <p className="grey">Balance</p>
                     <p className="flex flex-row">
@@ -298,7 +298,7 @@ const MainDash = () => {
         {show === "Withdraw" && (
           <>
             <div>
-              <p className="white"> P2P Wallet</p>
+              <p className="white"> P2P Withdraw</p>
               <div className="border small size border-gray-700 wrap secondary rounded-2xl p-1 items-center   flex flex-row justify-between">
                 <p className="white ml-2">
                   <p className="grey">Balance</p>
@@ -337,7 +337,7 @@ const MainDash = () => {
          {show === "Deposit" && (
           <>
             <div>
-              <p className="white"> P2P Wallet</p>
+              <p className="white"> P2P Deposit</p>
               <div className="border small size border-gray-700 wrap secondary rounded-2xl p-1 items-center   flex flex-row justify-between">
                 <p className="white ml-2">
                   <p className="grey">Balance</p>
