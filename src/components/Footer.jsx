@@ -4,62 +4,106 @@ import {
   FaSnapchatGhost,
   FaTwitter,
   FaTiktok,
-  FaTelegram,
+  // FaTelegram,
   FaYoutube,
   FaFacebook,
   FaInstagram,
   FaPhone,
   FaEnvelope,
 } from "react-icons/fa";
-import { FaLocationPin } from "react-icons/fa6";
+
+import {
+  TelegramIcon,
+  YoutubeIcon,
+  FacebookIcon,
+  WhatsappIcon,
+  InstagramIcon,
+  SnapchatIcon,
+  TwitterIcon,
+  TiktokIcon,
+  PhoneIcon,
+  EmailIcon,
+  LocationIcon,
+  WhatsIcon,
+} from "./Icons";
 
 const Footer = () => {
   return (
     <footer className="primary text-white py-4">
-      <div className="container footer mx-auto flex justify-between flex-wrap items-center">
-        <div className="flex space-x-4 flex-col  w-56 gap-6 items-center justify-center">
+      <div className=" container mx-auto flex justify-between flex-wrap items-center">
+        <div className="flex flex-col   gap-6 items-start justify-start">
           <div className="log mt-12">
             <img
-              className="flex pl-16 w-64 space-x-4"
-              height={100}
-              style={{
-                height: "3rem",
-              }}
-              src="https://res.cloudinary.com/pitz/image/upload/v1721366723/Frame_rmtgyx.png"
+              className="  w-64  h-[86px]"
+              src="https://res.cloudinary.com/pitz/image/upload/v1721366723/Frame_rmtgyx.png "
               alt=""
             />
           </div>
           <p className="text-white"> Follow us on : </p>
-          <div className="flex pl-20 space-x-4">
+          <div className="flex gap-4">
             <a href="#" className="hover:text-gray-300">
-              <FaTelegram />
+              <img
+                className="h-[24px] w-25 "
+                src="https://res.cloudinary.com/dkqqg46sx/image/upload/v1721664488/Telegram_auibdu.png"
+                alt="Telegram"
+              />
             </a>
             <a href="#" className="hover:text-gray-300">
-              <FaYoutube />
+              {/* <FaYoutube /> */}
+              <img
+                className="h-[24px] w-25 "
+                src="https://res.cloudinary.com/dkqqg46sx/image/upload/v1721664570/Youtube_xrzkof.png"
+                alt="YouTube"
+              />
             </a>
             <a href="#" className="hover:text-gray-300">
-              <FaFacebook />
+              <img
+                className="h-[24px] w-25 "
+                src="https://res.cloudinary.com/dkqqg46sx/image/upload/v1721664650/Facebook_ls7rxb.png"
+                alt="Facebook"
+              />
             </a>
             <a href="#" className="hover:text-gray-300">
-              <FaInstagram />
+              <img
+                className="h-[24px] w-25 "
+                src="https://res.cloudinary.com/dkqqg46sx/image/upload/v1721664610/Instagram_w4q0f0.png"
+                alt="Instagram"
+              />
             </a>
           </div>
-          <div className="flex pl-20  space-x-4">
+          <div className="flex  gap-4">
             <a href="#" className="hover:text-gray-300">
-              <FaWhatsapp />
+              {/* <FaWhatsapp /> */}
+              <img
+                className="h-[24px] w-25 "
+                src=" https://res.cloudinary.com/dkqqg46sx/image/upload/v1721670746/Vector_4_i92pxd.png"
+                alt="whatsapp"
+              />
             </a>
             <a href="#" className="hover:text-gray-300">
-              <FaSnapchatGhost />
+              <img
+                className="h-[24px] w-25 "
+                src="https://res.cloudinary.com/dkqqg46sx/image/upload/v1721664650/Facebook_ls7rxb.png"
+                alt="Snapchat"
+              />
             </a>
             <a href="#" className="hover:text-gray-300">
-              <FaTwitter />
+              <img
+                className="h-[23px] w-23 "
+                src="https://res.cloudinary.com/dkqqg46sx/image/upload/v1721673628/Vector_5_dgbfrh.png"
+                alt="Twitter"
+              />
             </a>
             <a href="#" className="hover:text-gray-300">
-              <FaTiktok />
+              <img
+                className="h-[24px] w-25 "
+                src="https://res.cloudinary.com/dkqqg46sx/image/upload/v1721664205/Vector_3_qxcbf9.png"
+                alt="TikTok"
+              />
             </a>
           </div>
         </div>
-
+        {/* Quick links */}
         <div className="flex  flex-col gap-6  justify-center">
           <h3 className="hover:text-gray-300 font-bold">Quick Links</h3>
           <a href="#" className="hover:text-gray-300 text-xs">
@@ -72,6 +116,7 @@ const Footer = () => {
             FAQ
           </a>
         </div>
+        {/* company */}
         <div className="flex  flex-col gap-6  justify-center">
           <h3 className="hover:text-gray-300  font-bold">Company</h3>
           <a href="#" className="hover:text-gray-300 text-xs">
@@ -84,12 +129,13 @@ const Footer = () => {
             About us
           </a>
         </div>
+        {/* legalpolicies */}
         <div className="flex  flex-col gap-6   mt-20 justify-center">
           <a href="#" className="hover:text-gray-300  font-bold">
             Legal Policies
           </a>
           <a href="#" className="hover:text-gray-300 text-xs">
-          Terms of Service
+            Terms of Service
           </a>
           <a href="#" className="hover:text-gray-300 text-xs">
             Privacy Policy
@@ -111,37 +157,62 @@ const Footer = () => {
                     <a href="#" className="hover:text-gray-300">Disclaimer Policy</a>
                     <a href="#" className="hover:text-gray-300">Payment Policy</a>
                 </div> */}
-
+        {/* contact us */}
         <div className="flex flex-col gap-6 mt-10  justify-center">
           <a href="#" className="hover:text-gray-300  font-bold">
             Contact us{" "}
           </a>
           <a
             href="#"
-            className="hover:text-gray-300  flex text-xs center gap-2  "
+            className="hover:text-gray-300  flex text-xs items-center gap-2  "
           >
-            <FaPhone />
+            <img
+              className="h-[24px] w-25 "
+              src=" https://res.cloudinary.com/dkqqg46sx/image/upload/v1721670211/phone_ws8osw.png"
+              alt="Phone"
+            />
             <p>25212345668</p>{" "}
           </a>
           <a
             href="#"
-            className="hover:text-gray-300  flex text-xs center gap-2  "
+            className="hover:text-gray-300  flex text-xs items-center gap-2  "
           >
-            <FaWhatsapp /> <p>25212345668</p>{" "}
+            <img
+              className="h-[24px] w-25 "
+              src=" https://res.cloudinary.com/dkqqg46sx/image/upload/v1721670746/Vector_4_i92pxd.png"
+              alt="whatsapp"
+            />
+            {/* <WhatsIcon className="size-[34px]" />  */}
+            <p>25212345668</p>{" "}
           </a>
           <a
             href="#"
-            className="hover:text-gray-300  flex text-xs center gap-2  "
+            className="hover:text-gray-300  flex text-xs items-center gap-2  "
           >
-            <FaEnvelope /> <p> info@OMAYAExpress.com</p>
+            <img
+              className="h-[24px] w-25 "
+              src="https://res.cloudinary.com/dkqqg46sx/image/upload/v1721670143/email_dx5vrt.png"
+              alt="Email"
+            />
+
+            {/* <EmailIcon className="size-[34px]"/>  */}
+            <p> info@OMAYAExpress.com</p>
           </a>
           <a
             href="#"
-            className="hover:text-gray-300  flex text-xs center gap-2  "
+            className="hover:text-gray-300  flex text-xs items-center gap-2  "
           >
-            <FaLocationPin /> <p> KM4,Mogadishu, Somalia</p>
+            <img
+              className="h-[24px] w-25 "
+              src="https://res.cloudinary.com/dkqqg46sx/image/upload/v1721670274/ci_location_toretk.png"
+              alt="Location"
+            />
+
+            {/* <LocationIcon className="size-[34px]"/> */}
+            <p> KM4,Mogadishu, Somalia</p>
           </a>
         </div>
+        {/* qrcode */}
         <div className="flex flex-col gap-5 mt-10">
           <div className="flex t bg-  space-x-4">
             <img
@@ -157,6 +228,7 @@ const Footer = () => {
           </div>
         </div>
       </div>{" "}
+      {/* copyright */}
       <div className="flex space-x-4 flex-col gap-6  justify-center">
         <div className="mt-2"></div>
         <Divider className="bg-gray-800 mt-2 " />
@@ -166,7 +238,7 @@ const Footer = () => {
             {" "}
             Powered By:{" "}
             <img
-              className="h-10 w-24 items-center"
+              className="h-[24px] w-25 items-center"
               src="https://res.cloudinary.com/pitz/image/upload/v1721366723/Frame_rmtgyx.png"
               alt=""
             />
