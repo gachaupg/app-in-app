@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars */
 import { QuestionMark } from "@mui/icons-material";
 import { Copy, DollarSign, Dot, Wallet } from "lucide-react";
 import { IoMdArrowDropdown } from "react-icons/io";
@@ -21,9 +22,13 @@ const DepositForm = () => {
                   src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
                   alt=""
                 />
+                
                 <p>
                   USDT <span className="grey">Tether USDT</span>
+                  
                 </p>
+              
+                
               </div>
               <IoMdArrowDropdown color="white" />
             </div>
@@ -47,6 +52,7 @@ const DepositForm = () => {
                     Tron
                   </span>
                 </p>
+              
               </div>
               <IoMdArrowDropdown color="white" />
             </div>
@@ -98,31 +104,44 @@ const DepositForm = () => {
             </li>
           </ul>
         </div>
-        <div className=" p-2 pr-2  small  rounded-2xl w-full flex mt-3  flex-col gap-3 border border-yellow-700 ">
-          <div className="flex flex-row items-center gap-2">
-            <p  style={{
-            fontSize:'14px'
-          }}>Upload Documents</p>
-            <button className="bg-slate-100 p-1 w-12 flex justify-center items-center text-center  rounded-lg ">
-              <FiUpload className="text-yellow-700" />
-            </button>
-          </div>
-          <p 
-          
-           style={{
-            fontSize:'14px',
-            color:"#788099            "
-          }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat
-          </p>
-        </div>
-        <div className="flex flex-row items-center gap-2">
-          <input className="border border-green-600 bg-green-600" type="checkbox" />
-          <p>I confirm that I sent the payment</p>
-        </div>
+        <div className="p-2 pr-2 small rounded-2xl w-full flex mt-3 flex-col gap-3 border border-yellow-700">
+  <div className="flex flex-row items-center gap-2">
+    <p style={{ fontSize: '14px' }}>Upload Documents</p>
+    <label htmlFor="file-upload" className="cursor-pointer">
+      <button 
+        className="bg-slate-100 p-1 w-12 flex justify-center items-center text-center rounded-lg"
+        onClick={() => document.getElementById('file-upload').click()}
+      >
+        <FiUpload className="text-yellow-700" />
+      </button>
+    </label>
+    <input
+      id="file-upload"
+      type="file"
+      className="hidden"
+      onChange={(e) => {
+        console.log(e.target.files);
+      }}
+    />
+  </div>
+  <p style={{ fontSize: '14px', color: "#788099" }}>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+  </p>
+</div>
+
+<div className="flex flex-row items-center gap-2">
+  <input 
+    type="checkbox" 
+    className="w-5 h-5 appearance-none rounded-md border-2 border-green-600 bg-white checked:bg-green-600 checked:border-green-600 cursor-pointer relative"
+    style={{
+      WebkitAppearance: 'none', // Ensures that the custom styles are applied across browsers
+    }}
+  />
+  <label className="text-white">I confirm that I sent the payment</label>
+</div>
+
+
+
         <div className="flex mt-4 mb-4 flex-row items-center justify-center gap-20">
           <button onClick={(e) => {
                 window.location.reload();
