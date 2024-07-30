@@ -34,3 +34,4 @@ export const updateSeller = (form, id) =>
   API.patch(`products/update-bought/${id}`, form);
   export const updateReview = (form, id) =>
   API.put(`products/rate/${id}`, form);
+  export const createDeposit = (formData) => API.post("/trading_engine/deposit/", formData);
