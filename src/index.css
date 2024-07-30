@@ -147,17 +147,39 @@ tr:nth-child(even) {
 .shadow-yellow-inset2 {
   box-shadow: inset 0 0 10px 2px rgba(234, 8, 38, 0.5);
 }
+.focus {
+  border: none; /* initial border */
+}
+
+.focus:focus {
+  outline: none; /* remove the outline on focus */
+  border: none; /* remove the border on focus */
+}
+.txt1{
+  color: white !important;
+  background-color: #1D8751 !important;
+  width: 100%;
+}
+.txt{
+  color: white !important;
+  border: 1px solid #35353a !important ;
+  width: 100%;
+}
 .icon{
   margin: 0 !important;
   padding:  0 !important;
   gap: 0 !important;
 }
+.g{
+  color: #788099;
+}
 .grey{
   color: #727272;
 
 }
-.grey{
-  color: #727272;
+.greybg{
+  background-color: #35353E
+  ;
 }
 .white{
   color: #FFFFFF;
@@ -431,6 +453,11 @@ tr:nth-child(even) {
 .nav-text{
   display: none !important;
 }
+.p{
+  padding: 2px !important;
+  padding-left: 2px !important;
+  padding-right: 2px !important;
+}
  .register img{
 display: none !important;
 }
@@ -496,6 +523,14 @@ padding-left: 25rem !important;
 .side{
   display: flex;
 }
+.checkbox-custom {
+  background-color: yellow;
+  border: 2px solid red;
+}
+.border-bottom {
+  border-bottom: 1px solid #3b3d3f; /* You can change the color and width as needed */
+}
+
 .pr{
   color: green !important;
   background-color: white !important;
@@ -514,11 +549,11 @@ padding-left: 25rem !important;
 .navbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   flex-wrap: wrap;
   background-color:#1D1D23 !important;
   color: azure !important;
-  padding-left: 1rem;
+  /* padding-left: 1rem; */
   /* height: 4rem; */
 }
 .links {

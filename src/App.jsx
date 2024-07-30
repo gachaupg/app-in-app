@@ -24,6 +24,10 @@ import Market from "./pages/p2p/Market";
 import Blog from "./pages/blog/Blogs";
 import Orders from "./pages/p2p/Orders";
 import MainDash from "./pages/Dashboard/MainDashbord/MainDash";
+import BuyPage from "./pages/Dashboard/Trade/BuyPage";
+import SellPage from "./pages/Dashboard/Trade/SellPage";
+import Adds from "./pages/Dashboard/Trade/p2pCenter/adds";
+import HomePage from "./pages/landing-page/Home";
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -48,8 +52,8 @@ function App() {
       <ToastContainer />
       <Routes>
         <Route path="/login" element={<Login />} />
-        {/* <Route path="/home" element={<Home />} /> */}
-        <Route path="/" element={<MainDash/>}/>
+        <Route path="/" element={<HomePage/>}/>
+        <Route path="/dashboard" element={<MainDash/>}/>
         <Route path="/exchange" element={<MainExchange/>}/>
         <Route path="/market" element={<Market/>}/>
         <Route path="/login" element={<Login />} />
@@ -62,6 +66,9 @@ function App() {
         <Route path="/blog" element={<Blog/>}/> 
         <Route path="/orders" element={<Orders/>}/> 
         <Route path="/reset-password" element={<ForgotPasswordButton />} />
+        <Route path="/buy" element={<BuyPage />} />
+        <Route path="/sell" element={<SellPage />} />
+        <Route path="/adds" element={<Adds />} />
       </Routes>
       <Footer />
     </div>

@@ -10,10 +10,10 @@ const DepositForm = () => {
     <div className="text-white mt-2">
       <div
         style={{ width: "100%" }}
-        className="border small size border-gray-700 wrap secondary w-full rounded-2xl p-3    flex flex-col justify-between"
+        className="border small size border-gray-700 wrap mt-6 secondary w-full rounded-2xl p-3    flex flex-col justify-between"
       >
-        <div className="flex w-full flex-row justify-between gap-10 wrap items-center ">
-          <div style={{ width: "50%" }} className="flex small flex-col p-1 it gap-2 ">
+        <div className="flex w-full flex-row justify-between  gap-10 wrap items-center ">
+          <div style={{ width: "50%" }} className="flex small   flex-col p-1 it gap-2 ">
             <p className="grey"> Asset</p>
             <div className="mainGrey p-1 pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
               <div className="mainGrey  flex flex-row items-center gap-1 w-full">
@@ -187,12 +187,12 @@ const DepositForm = () => {
               onClick={(e) => {
                 window.location.reload();
               }}
-              className="border p-1 w-32 rounded-lg border-slate-700"
+              className="border p-2 w-32 rounded-lg border-slate-700"
             >
               Cancel
             </button>
           </Link>
-          <button className=" p-1 w-32 rounded-lg bg-red-700">Withdraw</button>
+          <button className=" p-2 w-32 rounded-lg bg-red-700">Withdraw</button>
         </div>
       </div>
     </div>

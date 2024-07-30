@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useSelector } from "react-redux";
 import {
   ArticlesSection,
@@ -10,13 +11,13 @@ import {
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Home = () => {
-  const users = JSON.parse(localStorage.getItem("profile"));
-const navigate=useNavigate()
-  const { user } = useSelector((state) => ({ ...state.auth }));
-  console.log('====================================');
-  console.log('logged in usersss',users);
-  console.log('====================================');
+const HomePage = () => {
+//   const users = JSON.parse(localStorage.getItem("profile"));
+// const navigate=useNavigate()
+//   const { user } = useSelector((state) => ({ ...state.auth }));
+//   console.log('====================================');
+//   console.log('logged in usersss',users);
+//   console.log('====================================');
   // useEffect(() => {
   //   if (user?.access) {
   //     navigate("/dashboard");
@@ -36,4 +37,4 @@ const navigate=useNavigate()
   );
 };
 
-export default Home;
+export default HomePage;
