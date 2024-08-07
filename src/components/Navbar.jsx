@@ -449,7 +449,7 @@ const Navbar = () => {
                 </button>
               </Link>
               <Link to="/login">
-                <button className=" bg-black p-1 rounded-lg flex items-center justify-center w-24 h-9">
+                <button className=" primary p-1 rounded-lg flex items-center justify-center w-24 h-9">
                   Login
                 </button>
               </Link>
