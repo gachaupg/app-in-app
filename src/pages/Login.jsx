@@ -84,7 +84,7 @@ export default function SignInSide() {
             </p>
           </div>
           <div
-            className="pt-16"
+            className="pt-16 test"
             style={{
               display: "flex",
               flexDirection: "column",

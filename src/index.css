@@ -281,6 +281,9 @@ input[type="number"] {
   .social-btn1 {
     width: 100% !important;
   }
+  .test{
+    padding-top: 5rem !important;
+  }
   .dash-side{
     display: none !important;
   }
