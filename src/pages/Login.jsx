@@ -105,7 +105,7 @@ export default function SignInSide() {
                   color="green"
                 />
                 <input
-                  className={` small w-full rounded-tr-3xl rounded-br-3xl  secondary  h-11 ${
+                  className={` small w-full no-border rounded-tr-3xl rounded-br-3xl  secondary  h-11 ${
                     errors.email && "border-red-500"
                   }`}
                   required
@@ -120,7 +120,7 @@ export default function SignInSide() {
               <div className="flex pr-2 border mb-5  pl-2 border-slate-200 rounded-3xl items-center h-12 flex-row  gap-1 w-full secondary small">
                 <CiLock size={28} className="text-green-600" color="green" />
                 <input
-                  className={`border  secondary w-full h-11 ${
+                  className={`border no-border secondary w-full h-11 ${
                     errors.password && "border-red-500"
                   }`}
                   required
