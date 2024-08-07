@@ -4,7 +4,7 @@ import commentReducer from "./features/commentSlice";
 import invoiceReducer from "./features/invoiceSlice";
 import quizReducer from "./features/quizSlice";
 import feedbackReducer from "./features/feedback";
-import ProductReducer from "./features/productSlice";
+import ProductReducer from "./features/widthdrwal";
 import MpesaReducer from "./features/mpesa";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
@@ -20,7 +20,6 @@ const rootReducer = combineReducers({
   todosState: todosReducer,
   todos: commentReducer,
   invoice: invoiceReducer,
-  todos: quizReducer,
   todos: feedbackReducer,
   project: ProductReducer,
   mpesa: MpesaReducer,

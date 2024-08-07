@@ -5,8 +5,14 @@ import { Copy, DollarSign, Dot, Wallet } from "lucide-react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { SlQuestion } from "react-icons/sl";
 import { FiUpload } from "react-icons/fi";
+import { useState } from "react";
 
 const DepositForm = () => {
+
+
+  const [files,setFile]=useState('');
+
+// console.log('files',files[0].name);
   return (
     <div className="text-white mt-2">
       <div
@@ -14,7 +20,10 @@ const DepositForm = () => {
         className="border small size border-gray-700 wrap secondary w-full rounded-2xl p-3    flex flex-col justify-between"
       >
         <div className="flex w-full flex-row gap-10 wrap items-center ">
-          <div style={{ width: "50%" }} className="flex small flex-col p-1 it gap-2 ">
+          <div
+            style={{ width: "50%" }}
+            className="flex small flex-col p-1 it gap-2 "
+          >
             <p className="grey"> Asset</p>
             <div className="mainGrey p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
               <div className="mainGrey  flex flex-row items-center gap-1 w-full">
@@ -22,13 +31,10 @@ const DepositForm = () => {
                   src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
                   alt=""
                 />
-                
+
                 <p>
                   USDT <span className="grey">Tether USDT</span>
-                  
                 </p>
-              
-                
               </div>
               <IoMdArrowDropdown color="white" />
             </div>
@@ -52,7 +58,6 @@ const DepositForm = () => {
                     Tron
                   </span>
                 </p>
-              
               </div>
               <IoMdArrowDropdown color="white" />
             </div>
@@ -84,7 +89,7 @@ const DepositForm = () => {
         <div
           style={{
             background: "#18181D",
-            fontSize:'14px'
+            fontSize: "14px",
           }}
           className=" p-1 pr-2 rounded-2xl w-full flex  flex-row gap-3 justify-between border border-green-700 items-center"
         >
@@ -105,47 +110,57 @@ const DepositForm = () => {
           </ul>
         </div>
         <div className="p-2 pr-2 small rounded-2xl w-full flex mt-3 flex-col gap-3 border border-yellow-700">
-  <div className="flex flex-row items-center gap-2">
-    <p style={{ fontSize: '14px' }}>Upload Documents</p>
-    <label htmlFor="file-upload" className="cursor-pointer">
-      <button 
-        className="bg-slate-100 p-1 w-12 flex justify-center items-center text-center rounded-lg"
-        onClick={() => document.getElementById('file-upload').click()}
-      >
-        <FiUpload className="text-yellow-700" />
-      </button>
-    </label>
-    <input
-      id="file-upload"
-      type="file"
-      className="hidden"
-      onChange={(e) => {
-        console.log(e.target.files);
-      }}
-    />
-  </div>
-  <p style={{ fontSize: '14px', color: "#788099" }}>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-  </p>
-</div>
+          <div className="flex flex-row items-center gap-2">
+            <p style={{ fontSize: "14px" }}>Upload Documents</p>
+            <label htmlFor="file-upload" className="cursor-pointer">
+              <button
+                className="bg-slate-100 p-1 w-12 flex justify-center items-center text-center rounded-lg"
+                onClick={() => document.getElementById("file-upload").click()}
+              >
+                <FiUpload className="text-yellow-700" />
+              </button>
+            </label>
+            <input
+              id="file-upload"
+              type="file"
+              className="hidden"
+              onChange={(e) => {
+                console.log(e.target.files);
+                setFile(e.target.files)
+              }}
+            />
+          </div>
+          <p style={{ fontSize: "14px", color: "#788099" }}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat.
+          </p>
+          {/* <div>
+            <img src={files[0].name} alt="" />
+          </div> */}
+        </div>
 
-<div className="flex flex-row items-center gap-2">
-  <input 
-    type="checkbox" 
-    className="w-5 h-5 appearance-none rounded-md border-2 border-green-600 bg-white checked:bg-green-600 checked:border-green-600 cursor-pointer relative"
-    style={{
-      WebkitAppearance: 'none', // Ensures that the custom styles are applied across browsers
-    }}
-  />
-  <label className="text-white">I confirm that I sent the payment</label>
-</div>
-
-
+        <div className="flex flex-row items-center gap-2">
+          <input
+            type="checkbox"
+            className="w-5 h-5 appearance-none rounded-md border-2 border-green-600 bg-white checked:bg-green-600 checked:border-green-600 cursor-pointer relative"
+            style={{
+              WebkitAppearance: "none", // Ensures that the custom styles are applied across browsers
+            }}
+          />
+          <label className="text-white">
+            I confirm that I sent the payment
+          </label>
+        </div>
 
         <div className="flex mt-4 mb-4 flex-row items-center justify-center gap-20">
-          <button onClick={(e) => {
-                window.location.reload();
-              }} className="border p-1 w-32 rounded-lg border-slate-700">
+          <button
+            onClick={(e) => {
+              window.location.reload();
+            }}
+            className="border p-1 w-32 rounded-lg border-slate-700"
+          >
             Cancel
           </button>
           <button className=" p-1 w-32 rounded-lg bg-green-600">Deposit</button>

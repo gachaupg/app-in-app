@@ -41,6 +41,7 @@ import { RiDashboardLine } from "react-icons/ri";
 import { setLogout } from "../redux/features/authSlice";
 import { toast } from "react-toastify";
 import { Wallet } from "lucide-react";
+import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 
 const drawerWidth = 240;
 
@@ -66,9 +67,15 @@ const Main = styled("main", {
 const Navbar = () => {
   const [show, setShow] = React.useState(false);
   const [show1, setShow1] = React.useState(false);
+  const [tabs, setTabs] = React.useState(false);
   const [ProPro, setProPro] = useState(false);
   const { user } = useSelector((state) => ({ ...state.auth }));
   const [showLog, setShowLog] = React.useState(false);
+
+  const showTabs = () => {
+    setTabs(!tabs);
+  };
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleShowLog = () => {
@@ -175,7 +182,38 @@ const Navbar = () => {
   };
 
   // setShow1(!show1);
-
+  const [activeTab, setActiveTab] = useState("P2P Trading");
+  const [activeTab1, setActiveTab1] = useState("Dashboard");
+  const tab = [
+    {
+      name: "Dashboard",
+      icon: "https://res.cloudinary.com/pitz/image/upload/v1721367990/svgexport-54_1_ww7fdx.png",
+    },
+    {
+      name: "Exchange",
+      icon: "https://res.cloudinary.com/pitz/image/upload/v1721368341/uil_exchange_craxj9.png",
+    },
+    {
+      name: "P2P Trading",
+      icon: "https://res.cloudinary.com/pitz/image/upload/v1721678697/users-profiles-left_1_nypmot.png",
+    },
+    {
+      name: "Swap Crypto",
+      icon: "https://res.cloudinary.com/pitz/image/upload/v1721368339/Group_164002_jqrdb5.png",
+    },
+    {
+      name: "Buy Crypto",
+      icon: "https://res.cloudinary.com/pitz/image/upload/v1721368332/Group_164004_ddibmc.png",
+    },
+    {
+      name: "Account",
+      icon: "https://res.cloudinary.com/pitz/image/upload/v1721368328/key-01_njdjyg.png",
+    },
+    {
+      name: "Settings",
+      icon: "https://res.cloudinary.com/pitz/image/upload/v1721368327/settings_mezmwi.png",
+    },
+  ];
   return (
     <div className="navbar w-full p flex justify-around items-center sm:p-1  ">
       <div className="lo">
@@ -200,25 +238,25 @@ const Navbar = () => {
             onClick={() => {
               setShow(false);
               showLang1();
-              handleShowLog1();
+              handleShowLog1();egist
             }}
             activeClassName="active"
           >
             Home
           </NavLink> */}
-          {!user ? (
+          {/* {!user ? (
             ""
-          ) : (
-            <Link
-              onClick={() => setShow(false)}
-              className="flex items-center cursor-pointer"
-              to="/dashboard"
-              // activeClassName="active"
-            >
-              <p>Dashboard</p>{" "}
-            </Link>
-          )}
-
+          ) : ( */}
+          <Link
+            onClick={() => setShow(false)}
+            className="flex items-center cursor-pointer"
+            to="/dashboard"
+            // activeClassName="active"
+          >
+            <p>Dashboard</p>{" "}
+          </Link>
+          {/* )} */}
+          {/*  */}
           <p
             className="cursor-pointer"
             onClick={() => {
@@ -242,77 +280,12 @@ const Navbar = () => {
             Blog
           </NavLink>
         </div>
-        {show && (
-          <div className="dashboard-links">
-            <p>
-              <NavLink
-                activeClassName="active-link" // Add this line
-                onClick={handleShow}
-                className="flex items-center gap-2   "
-                to="/"
-              >
-                <FaExchangeAlt color="green" />
-                <a
-                  href="http://https://changenow.io/currencies/bitcoin"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <p className="text-white">Exchange</p>
-                </a>
-              </NavLink>
-            </p>
-            <p>
-              <NavLink
-                activeClassName="active-link" // Add this line
-                onClick={handleShow}
-                className="flex items-center gap-2 pt-3 "
-                to="/"
-              >
-                <IoMdPeople color="green" />
-                <Link to="/deposit">
-                  <p className="text-white">P2P</p>
-                </Link>
-              </NavLink>
-            </p>
-            <p>
-              <NavLink
-                activeClassName="active-link" // Add this line
-                onClick={handleShow}
-                className="flex items-center gap-2 pt-3 "
-                to="/"
-              >
-                <PiSwap color="green" />
-                <a
-                  href="http://https://changenow.io/exchange?from=usd&to=btc&fiatMode=true"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <p className="text-white">Swap</p>
-                </a>
-              </NavLink>
-            </p>
-            <p>
-              <NavLink
-                activeClassName="active-link" // Add this line
-                onClick={handleShow}
-                className="flex items-center gap-2 pt-3 "
-                to="/"
-              >
-                <CiMoneyCheck1 color="green" />
-                <a
-                  href="http://https://changenow.io/exchange?from=usd&to=btc&fiatMode=true"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <p className="text-white">Buy</p>
-                </a>
-              </NavLink>
-            </p>
-          </div>
-        )}
+        {/* {show && (
+          
+        )} */}
       </div>
 
-      <div>
+      {/* <div>
         {show && (
           <div className="dashboard-links">
             <p>
@@ -361,15 +334,15 @@ const Navbar = () => {
             </p>
           </div>
         )}
-      </div>
-      <div className="nav-btns nav-text p-6 pr-32 ">
+      </div> */}
+      <div className="nav-btns nav-text p-6 pr-24 ">
         {/* {user ? ( */}
         {user ? (
           <>
             <button
               style={{
                 background: "#1D8751",
-                fontSize:'12px'
+                fontSize: "12px",
               }}
               onClick={() => setShow(false)}
               className=" rounded-lg p-1 w-24 h-8 flex flex-row items-center gap-1"
@@ -406,33 +379,35 @@ const Navbar = () => {
                 //   toast.warning('Logged out!', { position: 'top-right' });
                 //   navigate('/');
                 // }}
-                className="lang mt-3 p-2  w-64 border-slate-700  bg-gray-950 border rounded-lg absolute top-12  "
+                className="lang mt-3 p-2 lang  w-64 border-slate-700  primary border rounded-lg absolute top-12  "
               >
                 <div className="flex flex-col items-center justify-center gap-3">
-                  <div onClick={handleShow1} ref={profileRef}>
+                  <div onClick={handleShow1} >
                     <Cancel className="items-left float-left ml-44" />
                   </div>
-                  <Link className="w-full" to="/profile">
-                    <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
+                  <Link onClick={handleShow} className="w-full" to="/account">
+                    <div  className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                       <AccountCircle />
                       <button>Profile</button>
                     </div>
                   </Link>
-                  <Link className="w-full" to="/wallet">
+                  <Link onClick={handleShow} className="w-full" to="/wallet">
                     <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                       <Wallet />
                       <button>Wallet</button>
                     </div>
                   </Link>
-                  <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
+                 <Link onClick={handleShow} className="w-full" to="/kyc">
+                 <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                     <Verified />
                     <button>KYC</button>
                   </div>
-                  <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
+                 </Link>
+                  <div onClick={handleShow} className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                     <PrivacyTip />
                     <button>Privacy and Security</button>
                   </div>
-                  <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
+                  <div onClick={handleShow} className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                     <RefreshRounded />
                     <button>Referral</button>
                   </div>
@@ -441,6 +416,7 @@ const Navbar = () => {
                       dispatch(setLogout(null));
                       toast.warning("Logged out!", { position: "top-right" });
                       navigate("/");
+                      handleShow();
                     }}
                     className="flex justify-between w-full p-1 cursor-pointer gap-3 border-slate-700  border rounded-lg"
                   >
@@ -468,10 +444,14 @@ const Navbar = () => {
           ) : (
             <>
               <Link to="/register">
-                <button className="nav-reg">Register</button>
+                <button className=" greenbg p-1 rounded-lg flex items-center justify-center w-24 h-9">
+                  Register
+                </button>
               </Link>
               <Link to="/login">
-                <button className="nav-reg1">Login</button>
+                <button className=" bg-black p-1 rounded-lg flex items-center justify-center w-24 h-9">
+                  Login
+                </button>
               </Link>
             </>
           )}
@@ -516,16 +496,16 @@ const Navbar = () => {
           </p>
         </div>
       </div>
-      <div className="sidebar">
+      <div className="sidebar h-full p-3">
         <Box
           className="sidebar"
-          sx={{ display: "flex", background: "rgb(39, 37, 37)" }}
+          sx={{ display: "flex", background: "#1D1D23" }}
         >
           <CssBaseline />
           <AppBar
             position="fixed"
             style={{
-              background: "rgb(39, 37, 37)",
+              background: "#1D1D23",
               height: "4rem",
               width: "100%",
             }}
@@ -554,93 +534,152 @@ const Navbar = () => {
               </Typography>
             </Toolbar>
           </AppBar>
-          <Drawer
-            sx={{
-              width: drawerWidth,
-              flexShrink: 0,
-              "& .MuiDrawer-paper": {
+          <div className="bg-black">
+            <Drawer
+              className="primary"
+              sx={{
+                background: "black",
                 width: drawerWidth,
-                boxSizing: "border-box",
-              },
-            }}
-            variant="persistent"
-            anchor="left"
-            open={open}
-          >
-            <div>
-              <IconButton onClick={handleDrawerClose}>
-                {theme.direction === "ltr" ? (
-                  <ChevronLeftIcon />
-                ) : (
-                  <ChevronRightIcon />
-                )}
-              </IconButton>
-            </div>
-            <Divider />
-            <List>
-              <div className="flex ml-10 flex-col justify-center gap-5">
-                <NavLink exact to="/" activeClassName="active">
-                  Home
-                </NavLink>
-                <NavLink to="/trade" activeClassName="active">
-                  Trade
-                </NavLink>
-                <NavLink to="/market" activeClassName="active">
-                  Market
-                </NavLink>
-                <NavLink to="/rates" activeClassName="active">
-                  Rates
-                </NavLink>
-                <NavLink to="/contact" activeClassName="active">
-                  Contact us
-                </NavLink>
-                {!user ? (
-                  ""
+                flexShrink: 0,
+                "& .MuiDrawer-paper": {
+                  width: drawerWidth,
+                  boxSizing: "border-box",
+                  background: "#1D1D23",
+                  color: "white",
+                  marginRight: 5,
+                },
+              }}
+              variant="persistent"
+              anchor="left"
+              open={open}
+            >
+              <div className="sidebar">
+                <IconButton
+                  onClick={handleDrawerClose}
+                  style={{ color: "white" }}
+                >
+                  {theme.direction === "ltr" ? (
+                    <ChevronLeftIcon />
+                  ) : (
+                    <ChevronRightIcon />
+                  )}
+                </IconButton>
+              </div>
+              <Divider className="bg-slate-700" style={{ backgroundColor: "" }} />
+              <List className="sidebar">
+                <div className="flex sidebar ml-10 flex-col justify-center gap-5">
+                  <NavLink exact to="/" activeClassName="active">
+                    Home
+                  </NavLink>
+                  <NavLink to="/trade" activeClassName="active">
+                    Trade
+                  </NavLink>
+                  <NavLink to="/market" activeClassName="active">
+                    Market
+                  </NavLink>
+                  <NavLink to="/rates" activeClassName="active">
+                    Rates
+                  </NavLink>
+                  <NavLink to="/contact" activeClassName="active">
+                    Contact us
+                  </NavLink>
+                  {!user ? (
+                    ""
+                  ) : (
+                    <>
+                      <NavLink
+                        onClick={showTabs}
+                        className="flex items-center cursor-pointer "
+                        to="/dashboard"
+                        activeClassName="active"
+                      >
+                        <p>Dashboard</p> <IoIosArrowDropdownCircle />
+                      </NavLink>
+                    </>
+                  )}
+
+                  {tabs && (
+                    <>
+                      <div className="border border-slate-700 p-1  w-48 rounded-lg">
+                        <div
+                          style={{ color: "#727272", fontSize: "15px" }}
+                          className="small flex flex-col gap-6 pt-12"
+                        >
+                          {tab.map((tab) => (
+                            <div
+                              key={tab.name}
+                              className={`flex w-full flex-row   items-center rounded-tr-lg rounded-br-lg gap-4 p-2 `}
+                              style={{
+                                cursor: "pointer",
+                                background:
+                                  activeTab === tab.name ? "#303038" : "",
+                              }}
+                              onClick={() => setActiveTab(tab.name)}
+                            >
+                              <img
+                                className={`${
+                                  tab.name === "Buy Crypto" ? "h-5" : "h-6"
+                                }`}
+                                src={tab.icon}
+                                alt={tab.name}
+                              />
+                              <div
+                                style={{
+                                  fontSize:
+                                    tab.name === "Buy Crypto"
+                                      ? "15.5px"
+                                      : "h-6",
+                                }}
+                                className={`flex items-center ${
+                                  activeTab === tab.name ? "white" : ""
+                                } justify-between ml-5 w-full`}
+                              >
+                                {tab.name}
+                                {tab.name === "Account" && (
+                                  <MdOutlineKeyboardArrowDown className="ml-2" />
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </List>
+              <Divider className="bg-slate-700" style={{ backgroundColor: "" }} />
+              <List className="sidebar">
+                {user ? (
+                  <>
+                    <div
+                      onClick={() => {
+                        dispatch(setLogout(null));
+                        toast.warning("Logged out!", { position: "top-left" });
+                        navigate("/");
+                      }}
+                      className="lang mt-3 w-32 text-center p-1 secondary text-white border rounded-lg absolute ml-7"
+                    >
+                      Log out <LogoutOutlined />
+                    </div>
+                  </>
                 ) : (
                   <>
-                    <NavLink
-                      onClick={handleShow}
-                      className="flex items-center"
-                      to="/dashboard"
-                      activeClassName="active"
-                    >
-                      <p>Dashboard</p> <IoIosArrowDropdownCircle />
-                    </NavLink>
+                    <div className="flex ml-10 flex-col justify-center gap-5">
+                      <Link to="/register">
+                        <button className="nav-reg p-1 w-32">Register</button>
+                      </Link>
+                      <Link to="/login">
+                        <button className="nav-reg p-1 w-32">Login</button>
+                      </Link>
+                    </div>
                   </>
                 )}
-              </div>
-            </List>
-            <Divider />
-            <List>
-              {user ? (
-                <>
-                  <div
-                    onClick={() => {
-                      dispatch(setLogout(null));
-                      toast.warning("Logged out!", { position: "top-left" });
-                      navigate("/");
-                    }}
-                    className="lang mt-3 w-32 text-center p-1 secondary  text-white border rounded-lg absolute ml-7 "
-                  >
-                    Log out <LogoutOutlined />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex ml-10 flex-col justify-center gap-5">
-                    <Link to="/register">
-                      <button className="nav-reg p-1 w-32">Register</button>
-                    </Link>
-                    <Link to="/login">
-                      <button className="nav-reg p-1 w-32">Login</button>
-                    </Link>
-                  </div>
-                </>
-              )}
-            </List>
-          </Drawer>
+              </List>
+            </Drawer>
+          </div>
         </Box>
       </div>
+
       {/* </div> */}
     </div>
   );

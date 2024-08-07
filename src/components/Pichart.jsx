@@ -1,53 +1,62 @@
-import React, { useEffect, useRef } from 'react';
-import Chart from 'chart.js/auto';
+/* eslint-disable no-unused-vars */
+// src/DoughnutChart.js
+import React from 'react';
+import { Doughnut } from 'react-chartjs-2';
+import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 
-const DonutChart = () => {
-  const chartContainer = useRef(null);
+// Register the necessary components
+ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
-  useEffect(() => {
-    if (chartContainer && chartContainer.current) {
-      const ctx = chartContainer.current.getContext('2d');
-      new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Deposits', 'Widthdrawal', 'In progress', 'P2p'],
-          datasets: [{
-            label: 'Dataset 1',
-            data: [12, 19, 3, 5],
-            backgroundColor: ['red', 'blue', 'yellow', 'green'],
-            borderColor: 'rgba(255, 255, 255, 0.2)',
-            borderWidth: 1
-          }]
+const DoughnutChart = () => {
+  const data = [50, 60, 95, 25]; // One segment is empty
+
+  // Define the data for the chart
+  const chartData = {
+    labels: ['Data 1', 'Data 2', 'Data 3', 'Data 4'],
+    datasets: [
+      {
+        data: data,
+        backgroundColor: ['#FEC228', '#386AB5', '#1D8751', '#E23D3A'], // Yellow, Blue, Green, Red
+        borderColor: 'transparent',
+        borderWidth: 0,
+        borderRadius: 20, // Increase the border radius to make edges more rounded
+        hoverBorderWidth: 3, // Optional: makes the segments more pronounced on hover
+        hoverBorderColor: '#ffffff', // Optional: a color for hover border
+      },
+    ],
+  };
+
+  // Define the options for the chart
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom', // Position legend at the bottom
+        labels: {
+          boxWidth: 20,
+          padding: 15,
+          font: {
+            size: 12,
+          },
+          usePointStyle: true, // Use point style for legend
         },
-        options: {
-          cutout: '80%', // Adjust this to control the size of the center hole
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: true,
-              position: 'bottom',
-              labels: {
-                font: {
-                  size: 18,
-                  color:'white'
-                },
-                // Display labels vertically
-                flexDirection: 'column',
-              }
-            }
-          }
-        }
-      });
-    }
-  }, []);
+      },
+      tooltip: {
+        callbacks: {
+          label: function(tooltipItem) {
+            return `${tooltipItem.label}: ${tooltipItem.raw}`;
+          },
+        },
+      },
+    },
+    cutout: '87%', // Adjust the cutout percentage to control the size of the hole
+  };
 
   return (
-    <div style={{ position: 'relative', width: '300px', height: '300px' }}>
-      <canvas ref={chartContainer} />
-    <p className='absolute bottom-44 right-32'>00.00USDT</p>
+    <div className="primary h-96 flex flex-col items-center">
+      <Doughnut data={chartData} options={options} className="small-chart" />
     </div>
   );
 };
 
-export default DonutChart;
+export default DoughnutChart;

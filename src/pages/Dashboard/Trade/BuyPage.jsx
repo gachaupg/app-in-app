@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 import { AttachFile } from "@mui/icons-material";
 import { Copy, DollarSign, Dot } from "lucide-react";
@@ -9,7 +10,14 @@ import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import { SlLike } from "react-icons/sl";
 import { BsExclamationCircle } from "react-icons/bs";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { endpoint } from "../../../utils/APIRoutes";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { CircularProgress, Typography } from "@mui/material";
+import { IoCheckmarkCircleSharp } from "react-icons/io5";
 
 const style = {
   position: "absolute",
@@ -26,11 +34,173 @@ const style = {
 };
 const BuyPage = () => {
   const [open, setOpen] = React.useState(false);
+
+  // console.log('====================================');
+  // console.log(payments);
+  // console.log('====================================');
+  const params = useParams();
+  const { id } = params;
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => ({ ...state.auth }));
+
+  const [show, setShow] = useState("Buy");
+  const [payments, setPayments] = useState(null);
+  const [loading1, setLoading1] = useState(true);
+
+  const initialState = {
+    order_type: "buy",
+    currency: payments?.currency || "",
+    amount: payments?.amount || 0,
+    commission_rate: payments?.commission_rate || 0,
+    exchange_rate: payments?.exchange_rate || 0,
+    payment_method: payments?.payment_method || "",
+    payment_provider: payments?.payment_provider || "",
+    limit: payments?.limit_duration || 0,
+    completion_time: payments?.completion_time || 0,
+    completion_rate: payments?.completion_rate || 0,
+    asset: payments?.asset || "",
+    advertiser_name: payments?.advertiser_name || "",
+    auto_reply: payments?.auto_reply || "",
+    terms_and_conditions:payments?.terms_and_conditions || "",
+  };
+
+  const [buy, setBuy] = useState(initialState);
+  console.log("====================================");
+  // console.log("buyddd", payments);
+  console.log("====================================");
+  useEffect(() => {
+    fetchData();
+  }, [user.access]);
+
+  useEffect(() => {
+    if (payments) {
+      setBuy({
+        order_type: "buy",
+        currency: payments.currency,
+        amount: payments.amount,
+        commission_rate: payments.commission_rate,
+        exchange_rate: payments.exchange_rate,
+        payment_method: payments.payment_method,
+        payment_provider: payments.payment_provider,
+        limit: 10.00,
+        terms_and_conditions:payments.terms_and_conditions,
+        completion_time: payments.completion_time,
+        completion_rate: payments.completion_rate,
+        asset: payments.asset,
+        advertiser_name: payments.advertiser_name,
+        auto_reply: payments.auto_reply,
+      });
+    }
+  }, [payments]);
+
   const handleOpen = () => {
     setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
+  };
+
+  async function fetchData() {
+    const token = user.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await axios.get(
+        `${endpoint}/trading_engine/p2porders/${id}/`,
+        { headers }
+      );
+      setPayments(res.data);
+      setLoading1(false);
+    } catch (error) {
+      console.log(error);
+      setLoading1(false);
+    }
+  } const [open1, setOpen1] = useState(false);
+  const handleOpen1 = () => setOpen1(true);
+  const handleClose1 = () => setOpen1(false);
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading1(true);
+  
+    // Assuming user.user.access is available in your component's state or context
+    const token = user.access;
+  
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+  
+    if (buy.order_type === 'buy') {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+  
+      try {
+        console.log("Sending request with headers:", buy); // Debugging line
+        console.log(
+          "Sending request to endpoint:",
+          `https://omayaexchangebackend.onrender.com/trading_engine/p2p/orders/`
+        ); // Debugging line
+  
+        const response = await fetch(
+          `https://omayaexchangebackend.onrender.com/trading_engine/p2p/orders/`,
+          {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(buy),
+          }
+        );
+        const data = await response.json();
+  
+        if (response.ok) {
+          toast.success("Bought  successfully!");
+          setOpen1(true);
+        } else {
+          if (data.code === "token_not_valid") {
+            toast.error("Your session has expired. Please log in again.");
+            navigate("/login");
+          } else {
+            toast.error(`Save bank details failed: ${data.message || "Unknown error"}`);
+          }
+          console.error("Error response:", data);
+        }
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+        console.error("Error:", error);
+      } finally {
+        setLoading1(false);
+      }
+    }
+  };
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 350,
+    bgcolor: 'background.black',
+    border: 'none',
+    borderRadius:3,
+    boxShadow: 24,
+    p: 4,
   };
   return (
     <div className="white primary flex justify-between  pt-10  wrap small pr-40 pl-40 ">
@@ -40,6 +210,33 @@ const BuyPage = () => {
         }}
         className="flex flex-col w-full  gap-6"
       >
+         <Modal
+        open={open1}
+        onClose={handleClose1}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box className="flex flex-col primary items-center" sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            <IoCheckmarkCircleSharp className="green" size={40}/>
+                </Typography>
+                <Typography className="white">
+                  Successfully Published
+            </Typography>
+            <Typography style={{
+              fontSize:'13px'
+            }} className="g">
+                  I will receive {payments.amount}
+                </Typography>
+                <button onClick={() => {
+                  handleClose1()
+                 
+                }
+                  
+                  
+                } className="w-full mt-3 p-1 white greenbg rounded-2xl">Provide feedback</button>
+        </Box>
+      </Modal>
         <p>Advertisers Info</p>
         <div
           //   style={{
@@ -49,16 +246,23 @@ const BuyPage = () => {
         >
           <div className="flex w-96 small  flex-row gap-2 items-center">
             <p className=" bg-green-600 h-14 w-14 rounded-lg flex text-center justify-center items-center p-1 text-white">
-              OA
+              <span
+                style={{
+                  fontSize: "16px",
+                }}
+                className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
+              >
+                {payments?.advertiser_name?.username.substring(0, 2)}
+              </span>
             </p>
             <div className="flex flex-col  ">
               <p
                 style={{
                   fontSize: "14px",
                 }}
-                className="flex w-full flex-row items-center  gap-1 text-white"
+                className="flex w-full capitalize flex-row items-center  gap-1 text-white"
               >
-                Advitisers Username{" "}
+                {payments?.advertiser_name.username}
                 <img
                   src="https://res.cloudinary.com/pitz/image/upload/v1721730938/Frame_34214_gjn30n.png"
                   alt=""
@@ -72,7 +276,11 @@ const BuyPage = () => {
                   className="flex g flex-row items-center gap-1"
                 >
                   <span className="text-green-600">120</span> Orders
-                  <span className="text-green-600"> 90.20%</span> Completion
+                  <span className="text-green-600">
+                    {" "}
+                    {payments?.completion_rate * 100} %
+                  </span>{" "}
+                  Completion
                 </p>
                 <p
                   style={{
@@ -84,21 +292,24 @@ const BuyPage = () => {
                   <span className="text-green-600 gap-1 flex flex-row items-center">
                     <SlLike /> 95%
                   </span>
-                  Commission : <span className="text-green-600">0.5%</span>
+                  Commission :{" "}
+                  <span className="text-green-600">
+                    {payments?.commission_rate}%
+                  </span>
                 </p>
               </p>
             </div>
           </div>
           <div className="flex flex-row gap-10 w-full">
             <div className="flex flex-col items-center justify-center gap-1">
-              <p className="white">10 minutes</p>
+              <p className="white">{payments?.limit_duration} minutes</p>
               <p
                 style={{
                   fontSize: "13px",
                 }}
                 className="g"
               >
-                Time limit
+                Time limit :0.7
               </p>
             </div>
             <div className="flex flex-col items-center justify-center gap-1">
@@ -113,7 +324,13 @@ const BuyPage = () => {
               </p>
             </div>
             <div className="flex flex-col items-center justify-center gap-1">
-              <p className="white">1,200 USDT</p>
+              <p className="white">
+                {" "}
+                {payments?.amount !== undefined && payments?.amount !== null
+                  ? Number(payments?.amount).toFixed(2)
+                  : "0.00"}{" "}
+                USDT
+              </p>
               <p
                 style={{
                   fontSize: "13px",
@@ -139,7 +356,7 @@ const BuyPage = () => {
             />{" "}
             Order Number :{" "}
             <span className="text-green-600 flex flex-row items-center gap-1 ml-3">
-              9346457687345 <Copy size={17} />
+              {payments?.id} <Copy size={17} />
             </span>
           </p>
         </div>
@@ -148,7 +365,10 @@ const BuyPage = () => {
             <p className="g">I want to send</p>
             <div className="flex flex-row  justify-between items-center rounded-lg  w-56  gap-1 p-2 border border-slate-700 items-center">
               <p className="green flex justify-around ">
-                <DollarSign /> 200
+                <DollarSign />{" "}
+                {payments?.amount !== undefined && payments?.amount !== null
+                  ? Number(payments?.amount).toFixed(2)
+                  : "0.00"}
               </p>
               <p className="flex flex-row  items-center">
                 USD <IoIosArrowDown className="g" />
@@ -163,7 +383,10 @@ const BuyPage = () => {
                   src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
                   alt=""
                 />{" "}
-                200.1045 <span className="white">USDT</span>
+                {payments?.amount !== undefined && payments?.amount !== null
+                  ? Number(payments?.amount).toFixed(2)
+                  : "0.00"}
+                <span className="white">USDT</span>
               </p>
             </div>
           </div>
@@ -171,7 +394,7 @@ const BuyPage = () => {
             <p className="g">Commission</p>
             <div className="flex g  justify-between items-center rounded-lg w-56  gap-1 p-1 border border-slate-700 items-">
               <p className="green flex p-1 justify-center items-center gap-1">
-                <DollarSign /> 1%
+                <DollarSign /> {payments?.commission_rate}%
               </p>
               <p>USD</p>
             </div>
@@ -189,7 +412,7 @@ const BuyPage = () => {
                   src="https://res.cloudinary.com/pitz/image/upload/v1721888934/Premier_bank_1_ljsbtx.png"
                   alt=""
                 />{" "}
-                Premier bank
+                {payments?.payment_method?.name?payments?.payment_method?.name:"Primer Bank"}
               </p>
             </div>
             <div
@@ -200,7 +423,7 @@ const BuyPage = () => {
                 <p className="g">Account Name</p>
                 <div className="flex flex-row gap-2 justify-between  w-full">
                   <p className="border flex items-center w-full greybg border-green-600 rounded-2xl p-1">
-                    <Dot /> <p>Omar Ali</p>
+                    <Dot /> <p> {payments?.advertiser_name?.username}</p>
                   </p>
                   <p className="text-green-600 flex items-center">
                     {" "}
@@ -212,7 +435,8 @@ const BuyPage = () => {
                 <p className="g">Account Name</p>
                 <div className="flex flex-row gap-2 justify-between  w-full">
                   <p className="border text-green-600 flex items-center w-full greybg border-green-600 rounded-2xl p-1">
-                    <Dot color="green" /> <p>1324244243</p>
+                    <Dot color="green" />{" "}
+                    <p>{payments?.payment_provider}</p>
                   </p>
                   <p className="text-green-600 flex items-center">
                     {" "}
@@ -267,14 +491,14 @@ const BuyPage = () => {
             <button className="border w-full border-slate-700  rounded-lg p-2">
               Cancel
             </button>
-            <button className=" w-full bg-green-600 rounded-lg p-2">
-              Submit
+            <button onClick={handleSubmit} className=" w-full bg-green-600 rounded-lg p-2">
+             {loading1?<CircularProgress/>:"Submit"} 
             </button>
           </div>
         </div>
       </div>
       <Modal
-        className=" rounded-lg"
+        className=" rounded-lg border-slate-700"
         open={open}
         onClose={handleClose}
         aria-labelledby="child-modal-title"
@@ -282,12 +506,17 @@ const BuyPage = () => {
       >
         <Box
           sx={{ ...style, width: "40%" }}
-          className="rounded-lg primary white"
+          className="rounded-lg primary white border-slate-700"
         >
           <h2 className="text-center" id="child-modal-title">
             Submit Appeal
           </h2>
-          <div>
+          <div
+            className="p-1 rounded-lg"
+            style={{
+              background: "#453A30            ",
+            }}
+          >
             <p
               style={{
                 color: "#E06542",
@@ -319,9 +548,12 @@ const BuyPage = () => {
             </select>
           </div>
           <p className="mt-2 mb-2">Upload Documents</p>
-          <p style={{
-            fontSize:'14px'
-          }} className="g">
+          <p
+            style={{
+              fontSize: "14px",
+            }}
+            className="g"
+          >
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
@@ -329,10 +561,20 @@ const BuyPage = () => {
             reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
             pariatur
           </p>
-         <div className="flex flex-row items-center gap-20 mt-4 justify-between">
-         <Button className="white txt border border-slate" onClick={handleClose}>Close </Button>
-          <Button className="white txt1 border border-slate" onClick={handleClose}>Submit</Button>
-         </div>
+          <div className="flex flex-row items-center gap-20 mt-4 justify-between">
+            <Button
+              className="white txt border border-slate"
+              onClick={handleClose}
+            >
+              Close{" "}
+            </Button>
+            <Button
+              className="white txt1 border border-slate"
+              onClick={handleClose}
+            >
+              Submit
+            </Button>
+          </div>
         </Box>
       </Modal>
       <div style={{ width: "30%" }} className="flex small  flex-col ">
@@ -384,11 +626,7 @@ const BuyPage = () => {
         <p className="flex flex-row items-center gap-1">
           Advertiser's Terms <BsExclamationCircle color="red" />
         </p>
-        <img
-          className="mt-6"
-          src="https://res.cloudinary.com/pitz/image/upload/v1721903537/Input_uuxd8r.png"
-          alt=""
-        />
+       {payments.terms_and_conditions}
       </div>
     </div>
   );

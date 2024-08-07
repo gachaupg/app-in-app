@@ -5,21 +5,29 @@ import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { Clock, Eye } from "lucide-react";
 import { MoreHoriz } from "@mui/icons-material";
 import { SlLike } from "react-icons/sl";
+import { useState } from "react";
+import BuyForm from "./BuyForm";
 
-function Table({show}) {
+function Table({ show, payments }) {
   const data = [
     {
       advertiser: "Omar Ali",
       commision: "0.6",
       Available: "1,200 USDT",
       payment: "Salam Bank",
-      trade:"Buy USDT",
+      trade: "Buy USDT",
     },
   ];
+  const [buy, setBuy] = useState(false);
+  const [id, setId] = useState("");
 
   return (
     <div style={{ width: "100%", overflowX: "auto" }} className="Table">
-     
+      {buy && (
+        <>
+          <BuyForm id={id} />
+        </>
+      )}
       <div style={{ overflowX: "auto" }}>
         <table
           className="styled-table rounded-2xl  border b secondary"
@@ -83,8 +91,11 @@ function Table({show}) {
             </tr>
           </thead>
           <tbody className="primary ">
-            {data.map((row) => (
-              <tr style={{ fontSize: "14px" }} key={row.advertiser}>
+            {payments.map((row) => (
+              <>
+                {row.order_type === 'sell' && (
+                  <>
+                   <tr style={{ fontSize: "14px" }} key={row.id}>
                 <td className="flex flex-col i gap-1">
                   <div className="flex flex-row items-center gap-1">
                     <p
@@ -97,11 +108,14 @@ function Table({show}) {
                         style={{
                           fontSize: "16px",
                         }}
-                        className=" h-7 text-center flex items-center justify-center w-8 p-1 bg-green-600 rounded-lg"
+                        className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
                       >
-                        OA
+                        {row.advertiser_name.username.substring(0, 2)}
                       </span>{" "}
-                      Advertiser User Name{" "}
+                      <p className="capitalize">
+                        {" "}
+                        {row.advertiser_name.username}
+                      </p>
                       <img
                         src="https://res.cloudinary.com/pitz/image/upload/v1721730938/Frame_34214_gjn30n.png"
                         alt=""
@@ -115,7 +129,8 @@ function Table({show}) {
                       className="h-5 bg-slate-600"
                       style={{ width: "1px" }}
                     ></span>{" "}
-                    <span className="green">90.2%</span> Completion
+                    <span className="green">{row.completion_rate}%</span>{" "}
+                    Completion
                   </p>
                   <p className="flex flex-row items-center gap-1 green">
                     <SlLike /> 95%{" "}
@@ -123,62 +138,70 @@ function Table({show}) {
                       className="h-5 bg-slate-600"
                       style={{ width: "1px" }}
                     ></span>{" "}
-                    <Clock size={14} /> 20 min
+                    <Clock size={14} /> {row.completion_time} min
                   </p>
                 </td>
-                <td>{row.commision} %</td>
+                <td>{row.commission_rate} %</td>
                 <td className="flex flex-col gap-1">
-                  {row.Available}
+                  {row.amount} USDT
                   <p>
                     <span className="g">Limit </span> : 100-1000 USD
                   </p>
                 </td>
-               <td>
-               <div className="flex flex-col flex-wrap  ">
-                  <div className="flex gap-10 flex-row mb-6">
-                  <div className="flex w-32 flex-row gap-1">
-                    <img
-                      src="https://res.cloudinary.com/pitz/image/upload/v1721732255/Dahabshiil-International-Bank_1_noogfv.png"
-                      alt=""
-                    />{" "}
-                    {row.payment}
-                  </div>
-                  <div className="flex w-32 flex-row gap-1">
-                    <img
-                      src="https://res.cloudinary.com/pitz/image/upload/v1721732255/Dahabshiil-International-Bank_1_noogfv.png"
-                      alt=""
-                    />{" "}
-                    {row.payment}
-                  </div>
-                  
-                  </div>
-                 
-                  <div className="flex gap-10 flex-row mb-6">
-                  <div className="flex w-36 flex-row gap-1">
-                    <img
-                      src="https://res.cloudinary.com/pitz/image/upload/v1721732255/Dahabshiil-International-Bank_1_noogfv.png"
-                      alt=""
-                    />{" "}
-                    {row.payment}
-                  </div>
-                  <div className="flex w-36 flex-row gap-1">
-                    <img
-                      src="https://res.cloudinary.com/pitz/image/upload/v1721732255/Dahabshiil-International-Bank_1_noogfv.png"
-                      alt=""
-                    />{" "}
-                    Dahabshiil Bank
-                  </div>
-                  
-                  </div>
-                  
-                </div>
-               </td>
                 <td>
-                  <button className={`p-1 ${show==="Buy"?"bg-green-600":"bg-red-600"} rounded-lg w-32 `}>
-                    {row.trade}
+                  <div className="flex flex-col flex-wrap  ">
+                    <div className="flex gap-10 flex-row mb-6">
+                      <div className="flex w-32 flex-row gap-1">
+                        <img
+                          src="https://res.cloudinary.com/pitz/image/upload/v1721732255/Dahabshiil-International-Bank_1_noogfv.png"
+                          alt=""
+                        />{" "}
+                        {/* {row.payment} */} Salaam Bank
+                      </div>
+                      <div className="flex w-32 flex-row gap-1">
+                        <img
+                          src="https://res.cloudinary.com/pitz/image/upload/v1721732255/Dahabshiil-International-Bank_1_noogfv.png"
+                          alt=""
+                        />{" "}
+                        {/* {row.payment} */} Salaam Bank
+                      </div>
+                    </div>
+
+                    <div className="flex gap-10 flex-row mb-6">
+                      <div className="flex w-36 flex-row gap-1">
+                        <img
+                          src="https://res.cloudinary.com/pitz/image/upload/v1721732255/Dahabshiil-International-Bank_1_noogfv.png"
+                          alt=""
+                        />{" "}
+                        {/* {row.payment} */} Salaam Bank
+                      </div>
+                      {/* <div className="flex w-36 flex-row gap-1">
+                        <img
+                          src="https://res.cloudinary.com/pitz/image/upload/v1721732255/Dahabshiil-International-Bank_1_noogfv.png"
+                          alt=""
+                        />{" "}
+                        Dahabshiil Bank
+                      </div> */}
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <button
+                    onClick={() => {
+                      setBuy(true);
+                      setId(row.id);
+                    }}
+                    className={`p-2 ${
+                      show === "Buy" ? "bg-green-600" : "bg-red-600"
+                    } rounded-lg w-32 `}
+                  >
+                    Buy USDT
                   </button>
                 </td>
               </tr>
+                  </>
+                )}
+              </>
             ))}
           </tbody>
         </table>

@@ -1,4 +1,5 @@
-import { Copy, Plus } from "lucide-react";
+/* eslint-disable no-unused-vars */
+import { Copy, Plus, Wallet } from "lucide-react";
 import { useEffect, useState } from "react";
 import Btn from "../../../components/Button";
 import { MdArrowOutward, MdOutlineKeyboardArrowDown } from "react-icons/md";
@@ -10,7 +11,7 @@ import Widthdrwal from "./Widthdrwal";
 import Market from "../Trade/Market";
 import Orders from "../Trade/Orders";
 import Center from "../Trade/Center";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../../redux/features/authSlice";
 
@@ -41,26 +42,37 @@ const MainDash = () => {
     {
       name: "Dashboard",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721367990/svgexport-54_1_ww7fdx.png",
+      link:"dashboard"
     },
     {
       name: "Exchange",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368341/uil_exchange_craxj9.png",
+      link:"exchange"
+
     },
     {
       name: "P2P Trading",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721678697/users-profiles-left_1_nypmot.png",
+      link:"dashboard"
+
     },
     {
       name: "Swap Crypto",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368339/Group_164002_jqrdb5.png",
+      link:"swap"
+
     },
     {
       name: "Buy Crypto",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368332/Group_164004_ddibmc.png",
+      link:"buy"
+
     },
     {
       name: "Account",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368328/key-01_njdjyg.png",
+      link:"account"
+
     },
     {
       name: "Settings",
@@ -82,11 +94,12 @@ const MainDash = () => {
       <div className="primary  flex wrap small justify-between flex-row ">
         <div
           style={{ width: "18%", color: "#727272", fontSize: "15px" }}
-          className="small flex flex-col gap-6 pt-12"
-        >
+          className="small dash-side flex flex-col gap-6 pt-12"
+         >
           {tabs.map((tab) => (
-            <div
-              key={tab.name}
+          <Link key={tab.name} to={`/${tab.link}`}>
+              <div
+              
               className={`flex w-full flex-row  pl-20 items-center rounded-tr-lg rounded-br-lg gap-4 p-2 `}
               style={{
                 cursor: "pointer",
@@ -103,7 +116,7 @@ const MainDash = () => {
                 style={{
                   fontSize: tab.name === "Buy Crypto" ? "15.5px" : "h-6",
                 }}
-                className={`flex items-center justify-between ml-5 w-full`}
+                className={`flex items-center ${activeTab === tab.name ? "white" :""} justify-between ml-5 w-full`}
               >
                 {tab.name}
                 {tab.name === "Account" && (
@@ -111,12 +124,13 @@ const MainDash = () => {
                 )}
               </div>
             </div>
+            </Link>
           ))}
         </div>
 
         <div
           style={{ width: "83%" }}
-          className="small p-2 pt-12 flex pr-36 pl-10 flex-col gap-4"
+          className="small p-2 pt-12 flex pr-36 pl-24 flex-col gap-4"
         >
           <div className="flex flex-row small wrap width-full gap-4">
             <p
@@ -192,10 +206,10 @@ const MainDash = () => {
                       Hello, {user.user.username}!
                     </p>
                     <p
-                      style={{ fontSize: "12px" }}
-                      className="green flex flex-row items-center gap-1 "
+                      style={{ fontSize: "12px",color:"#F79330" }}
+                      className=" flex flex-row items-center gap-1 "
                     >
-                      Verified account{" "}
+                      Unerified account{" "}
                       <img
                         className="h-4"
                         src="https://res.cloudinary.com/pitz/image/upload/v1721370408/Frame_34216_jnzjpy.png"
@@ -281,7 +295,7 @@ const MainDash = () => {
                               color="#FFFFFF"
                               icon={<GoArrowDownLeft size={20} color="red" />}
                               title="Withdrawal"
-                              className={"border border-red-600"}
+                              className={`border border-red-600`}
                             />
                           </div>
                         </div>
@@ -390,7 +404,7 @@ const MainDash = () => {
                         <div onClick={() => setShow("Deposit")}>
                           <Btn
                             color="#FFFFFF"
-                            icon={<MdArrowOutward size={20} color="white" />}
+                            icon={<Wallet size={20} color="white" />}
                             title="Deposit"
                             className={
                               "border border-green-600 bg-green-600 text-white"
@@ -400,9 +414,9 @@ const MainDash = () => {
                         <div onClick={() => setShow("Withdraw")}>
                           <Btn
                             color="#FFFFFF"
-                            icon={<GoArrowDownLeft size={20} color="red" />}
+                            icon={<Wallet size={20} color="white" />}
                             title="Withdrawal"
-                            className={"border border-red-600"}
+                            className={"border bg-red-600 border-red-600"}
                           />
                         </div>
                       </div>

@@ -8,11 +8,15 @@ export const createProject = createAsyncThunk(
   "project/createProject",
   async (formData) => {
     try {
-      const response = await api.createTour(formData)
+      const response = await api.createWidthdrawal(formData)
       toast.success("post Successfully");
-      return response.data;
+      // return response.data;
+      console.log(response.data);
 
     } catch (error) {
+      console.log('====================================');
+      console.log(error);
+      console.log('====================================');
       if(!formData){
         toast.error('error');
 
@@ -193,9 +197,7 @@ export const getRelatedTours = createAsyncThunk(
       projec:{},
       project:[],
       projects:[],
-      projec:[],
       // userProjects:[],
-      error: "",
     },
     reducers: {
     //   setUser: (state, action) => {

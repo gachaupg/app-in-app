@@ -119,26 +119,27 @@ const Register = () => {
   };
 
   return (
-    <div className="register gap-10 pb-5">
+    <div className="register gap-10 items-center justify-center pb-5">
       <div className="reg-left gap-10">
         <img
           style={{
-            height: "40rem",
+            height: "35rem",
             objectFit: "fill",
-            marginBottom:'7rem'
+            marginBottom: "7rem",
           }}
-          src="http://localhost:5173/src/assets/landing-page/phone.png"
+          src="https://omaya.lbmdemo.com/images/login/login.png"
           alt=""
         />
       </div>
-      <div className="reg-right">
+      <div className="mt-16 reg-right">
         <p>Please Register with correct information</p>
         <h6>Account Type*</h6>
         <div className="account-type mb-10">
           <button
             onClick={handleType}
             style={{
-              background: type === "Individual" ? "green" : "#1f1f27 ",
+              background:
+                type === "Individual" ? "#1D8751              " : "#1f1f27 ",
             }}
             className="type-btn"
           >
@@ -148,7 +149,8 @@ const Register = () => {
           <button
             onClick={handleType}
             style={{
-              background: type === "Institution" ? "green" : "#1f1f27 ",
+              background:
+                type === "Institution" ? "#1D8751              " : "#1f1f27 ",
             }}
             className="type-btn1"
           >
@@ -402,18 +404,21 @@ const Register = () => {
                 alt=""
               />
             </div>
-           { loading ? <>
-           <div className="flex items-center justify-center">
-         <CircularProgress/>
-           </div>
-           </>:<>
-           <div className="btn-submit mt-5 flex bg-green-600 p-2 rounded-3xl justify-center">
-              <button type="submit" className="submit-btn">
-                {loading ? "Submitting" : "Register"}
-              </button>
-            </div>
-           </>}
-           
+            {loading ? (
+              <>
+                <div className="flex items-center justify-center">
+                  <CircularProgress />
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="btn-submit mt-5 flex greenbg p-2 rounded-3xl justify-center">
+                  <button type="submit" className="submit-btn">
+                    {loading ? "Submitting" : "Register"}
+                  </button>
+                </div>
+              </>
+            )}
 
             <div className="flex flex-col items-center justify-center">
               <p className="mt-5 mb-3 flex text-center">
@@ -694,7 +699,7 @@ const Register = () => {
                 alt=""
               />
             </div>
-            <div className="btn-submit mt-5 flex bg-green-600 p-2 rounded-3xl justify-center">
+            <div className="btn-submit mt-5 flex greenbg p-2 rounded-3xl justify-center">
               <button type="submit" className="submit-btn">
                 {loading ? "submitting" : "Register"}
               </button>

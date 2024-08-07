@@ -66,6 +66,64 @@ td, th {
 tr:nth-child(even) {
   /* background-color: #dddddd; */
 }
+/* src/DoughnutChart.css */
+.small-chart {
+  width: 100px; /* Adjust width as needed */
+  height: 100px; /* Adjust height as needed */
+}
+/* Add this CSS to your styles file */
+
+.legend-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.legend-item span {
+  width: 12px; /* Adjust size as needed */
+  height: 12px;
+  display: inline-block;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+
+.no-border {
+  border: none;
+  outline: none;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide the spin buttons in Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.custom-placeholder::placeholder {
+  color: white; /* Change this to the desired color */
+  font-weight: bold; /* Add other styles as needed */
+}
+.lang {
+  position: absolute; /* or fixed, depending on your needs */
+  top: 3rem;
+  /* left: 0; Adjust as needed */
+  z-index: 9999; /* Ensure this value is higher than other elements */
+}
+
+.no-border:focus,
+.no-border:active {
+  border: none;
+  outline: none;
+}
 
 * {
   padding: 0;
@@ -177,6 +235,22 @@ tr:nth-child(even) {
   color: #727272;
 
 }
+/* styles.css */
+.no-border {
+  border: none;
+  outline: none;
+}
+
+.no-border:focus {
+  border: none;
+  outline: none;
+}
+
+.no-border option {
+  border: none;
+  outline: none;
+}
+
 .greybg{
   background-color: #35353E
   ;
@@ -185,10 +259,11 @@ tr:nth-child(even) {
   color: #FFFFFF;
 }
 .green{
-  color: #1D8751;
+  color: #1D8751 !important
+  ;
 }
 .greenbg{
-  background-color: #1D8751;
+  background-color: #1D8751 !important;
 }
 .secondary{
   background-color: #1D1D23;
@@ -199,9 +274,15 @@ tr:nth-child(even) {
 .pro2{
   margin-left: 10rem ;
 }
+.dash-side{
+  display: flex;
+}
 @media only screen and (max-width: 600px) {
   .social-btn1 {
     width: 100% !important;
+  }
+  .dash-side{
+    display: none !important;
   }
   .input-witd {
     width: 10rem !important;
@@ -512,6 +593,7 @@ display: none !important;
  .sidebar{
   display: flex !important;
   width: 17rem !important;
+  background-color: #18181D !important;
  }
  .pro{
   padding-left: 0rem !important;
@@ -556,6 +638,9 @@ padding-left: 25rem !important;
   /* padding-left: 1rem; */
   /* height: 4rem; */
 }
+.sidebar{
+  background-color:#1D1D23 !important;
+}
 .links {
   display: flex;
   align-items: center;
@@ -576,7 +661,7 @@ padding-left: 25rem !important;
   color: green !important;
 }
 .login-btn{
-  background-color: green !important;
+  background-color: #1D8751 !important;
   border-radius: 2rem !important;
   color: aliceblue !important;
   padding: 0.5rem !important;

@@ -20,13 +20,13 @@ const ProfileCard = () => {
   console.log('====================================');
   console.log('logged in uss',user);
   console.log('====================================');
-  useEffect(() => {
-    if (user?.access) {
-      navigate("/dashboard");
-    }else{
-      navigate("/")
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user?.access) {
+  //     navigate("/dashboard");
+  //   }else{
+  //     navigate("/")
+  //   }
+  // }, [user]);
   return (
     <div
       style={{ width: "100%" }}

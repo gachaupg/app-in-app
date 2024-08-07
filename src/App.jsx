@@ -28,6 +28,8 @@ import BuyPage from "./pages/Dashboard/Trade/BuyPage";
 import SellPage from "./pages/Dashboard/Trade/SellPage";
 import Adds from "./pages/Dashboard/Trade/p2pCenter/adds";
 import HomePage from "./pages/landing-page/Home";
+import Test from "./pages/Auth/Test";
+import DoughnutChart from "./components/Pichart";
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -39,21 +41,14 @@ function App() {
   console.log('====================================');
   console.log('logged in uss',user);
   console.log('====================================');
-  useEffect(() => {
-    if (user?.access) {
-      navigate("/dashboard");
-    }else{
-      navigate("/")
-    }
-  }, [user]);
+
   return (
     <div className="App">
       <Navbar />
       <ToastContainer />
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<HomePage/>}/>
-        <Route path="/dashboard" element={<MainDash/>}/>
+        <Route index path="/" element={<HomePage/>}/>
         <Route path="/exchange" element={<MainExchange/>}/>
         <Route path="/market" element={<Market/>}/>
         <Route path="/login" element={<Login />} />
@@ -66,9 +61,11 @@ function App() {
         <Route path="/blog" element={<Blog/>}/> 
         <Route path="/orders" element={<Orders/>}/> 
         <Route path="/reset-password" element={<ForgotPasswordButton />} />
-        <Route path="/buy" element={<BuyPage />} />
+        <Route path="/buy/:id" element={<BuyPage />} />
         <Route path="/sell" element={<SellPage />} />
         <Route path="/adds" element={<Adds />} />
+        <Route  path="/account" element={<Test />} />
+        <Route  path="/chats" element={<DoughnutChart />} />
       </Routes>
       <Footer />
     </div>
