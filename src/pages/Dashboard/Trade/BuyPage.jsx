@@ -226,7 +226,7 @@ const BuyPage = () => {
             <Typography style={{
               fontSize:'13px'
             }} className="g">
-                  I will receive {payments.amount}
+                  I will receive {payments?.amount}
                 </Typography>
                 <button onClick={() => {
                   handleClose1()
@@ -242,9 +242,9 @@ const BuyPage = () => {
           //   style={{
           //     width: "100%",
           //   }}
-          className="flex flex-row justify-start gap-2 items-center justify-center  border border-slate-700 rounded-lg secondary p-3  pr-5 pl-5 items-center  "
+          className="flex small wrap flex-row justify-start gap-2 items-center justify-center  border border-slate-700 rounded-lg secondary p-3  pr-5 pl-5 items-center  "
         >
-          <div className="flex w-96 small  flex-row gap-2 items-center">
+          <div className="flex w-96 small wrap  flex-row gap-2 items-center">
             <p className=" bg-green-600 h-14 w-14 rounded-lg flex text-center justify-center items-center p-1 text-white">
               <span
                 style={{
@@ -300,7 +300,7 @@ const BuyPage = () => {
               </p>
             </div>
           </div>
-          <div className="flex flex-row gap-10 w-full">
+          <div className="flex small wrap flex-row gap-10 w-full">
             <div className="flex flex-col items-center justify-center gap-1">
               <p className="white">{payments?.limit_duration} minutes</p>
               <p
@@ -343,7 +343,7 @@ const BuyPage = () => {
           </div>
         </div>
         <div></div>
-        <div className="flex items-center justify-between">
+        <div className="flex  small wrapitems-center justify-between">
           <p> order Info</p>
           <p
             className="flex flex-row items-center gap-2
@@ -360,7 +360,7 @@ const BuyPage = () => {
             </span>
           </p>
         </div>
-        <div className="flex gap-10 justify-around p-1 rounded-lg border border-slate-700 items-center">
+        <div className="flex gap-10 justify-around p-1 small wrap rounded-lg border border-slate-700 items-center">
           <div className="flex flex-col gap-1 p-1  ">
             <p className="g">I want to send</p>
             <div className="flex flex-row  justify-between items-center rounded-lg  w-56  gap-1 p-2 border border-slate-700 items-center">
@@ -401,12 +401,12 @@ const BuyPage = () => {
           </div>
         </div>
         <div className="flex flex-col rounded-lg secondary border border-slate-700  p-2 w-full">
-          <div className="flex flex-row w-full p-1 items-center gap-10 justify-between">
+          <div className="flex small wrap flex-row w-full p-1 items-center gap-10 justify-between">
             <div
               style={{ width: "40%" }}
-              className="primary rounded-lg w-full p-2  h-60"
+              className="primary small rounded-lg w-full p-2  h-60"
             >
-              <p className="flex flex-row items-center  gap-1">
+              <p className="flex small flex-row items-center  gap-1">
                 {" "}
                 <img
                   src="https://res.cloudinary.com/pitz/image/upload/v1721888934/Premier_bank_1_ljsbtx.png"
@@ -487,7 +487,7 @@ const BuyPage = () => {
               Appeal/Complain
             </span>
           </p>
-          <div className="flex flex-row gap-10 justify-between">
+          <div className="flex flex-row small wrap gap-10 justify-between">
             <button className="border w-full border-slate-700  rounded-lg p-2">
               Cancel
             </button>
@@ -626,7 +626,7 @@ const BuyPage = () => {
         <p className="flex flex-row items-center gap-1">
           Advertiser's Terms <BsExclamationCircle color="red" />
         </p>
-       {payments.terms_and_conditions}
+       {payments?.terms_and_conditions}
       </div>
     </div>
   );
