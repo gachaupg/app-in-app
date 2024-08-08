@@ -9,15 +9,15 @@ import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { endpoint } from "../../../../utils/APIRoutes";
 import { CircularProgress } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { IoCheckmarkCircleSharp } from "react-icons/io5";
+import { endpoint } from "../../../../utils/APIRoutes";
 const initialState = {
-  order_type: "sell",
+  order_type: "",
   currency: "USD",
   amount: "",
   commission_rate: "",
@@ -55,8 +55,6 @@ const Adds = () => {
   const [activeTab, setActiveTab] = useState("P2P Trading");
   const [activeTab1, setActiveTab1] = useState("Dashboard");
   const [show, setShow] = useState("P2P");
-  const [active,setActive]=useState("sell")
-
   const tabs = [
     {
       name: "Dashboard",
@@ -91,11 +89,12 @@ const Adds = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [payments, setPayments] = useState([]);
-  const [loading1, setLoading1] = useState(true);
+  const [loading1, setLoading1] = useState(false);
   // console.log("payments", payments);
   const navigate = useNavigate();
   const { user } = useSelector((state) => ({ ...state.auth }));
   const [payments1, setPayments1] = useState([]);
+  const [active, setActive] = useState("buy");
 
   console.log("====================================");
   console.log(payments1);
@@ -109,9 +108,8 @@ const Adds = () => {
         completion_rate: "0.98",
         exchange_rate: "0.8",
         asset: "TRON",
-
-        advertiser_name: user.user,
         order_type:active==="sell"?"sell":"buy",
+        advertiser_name: user.user,
         currency: "USD",
       });
     }
@@ -197,7 +195,7 @@ const Adds = () => {
       return;
     }
 
-    if (sell.order_type === "sell") {
+    if (sell.amount) {
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -230,16 +228,16 @@ const Adds = () => {
           } else {
             toast.error(
               `Save bank details failed: 
-               Amount: ${data.amount || 'N/A'}, 
-               Commission Rate: ${data.commission_rate || 'N/A'}, 
-               Terms and Conditions: ${data.terms_and_conditions || 'N/A'}, 
-               Auto Reply: ${data.auto_reply || 'N/A'}, 
-               Limit: ${data.limit || 'N/A'}`
+               Amount: ${data.amount || "N/A"}, 
+               Commission Rate: ${data.commission_rate || "N/A"}, 
+               Terms and Conditions: ${data.terms_and_conditions || "N/A"}, 
+               Auto Reply: ${data.auto_reply || "N/A"}, 
+               Limit: ${data.limit || "N/A"}`
             );
-            
-            console.log('====================================');
-            console.log('new',data.amount);
-            console.log('====================================');
+
+            console.log("====================================");
+            console.log("new", data.amount);
+            console.log("====================================");
           }
           console.error("Error response:", data);
         }
@@ -303,11 +301,25 @@ const Adds = () => {
           className="small p-2 pt-12 flex pr-32 pl-10 flex-col gap-4"
         >
           <p className="white">Post AD</p>
-          <div className={`border ${active==="sell"?"border-red-700":"border-green-700"} w-36 rounded-lg flex flex-row gap-2 p-1`}>
-            <p onClick={()=>setActive("buy")} className={`white ${active==="buy"?'greenbg':""} rounded-lg w-16 text-center flex items-center justify-center`}>
+          <div
+            className={`border ${
+              active === "sell" ? "border-red-600" : "border-green-600"
+            } w-36 rounded-lg flex flex-row gap-2 p-1`}
+          >
+            <p
+              onClick={() => setActive("buy")}
+              className={`white w-16 ${
+                active === "buy" ? "greenbg" : ""
+              }  text-center flex items-center rounded-lg justify-center`}
+            >
               Buy
             </p>
-            <p onClick={()=>setActive("sell")} className={`${active==="sell"?"bg-red-600 ":""}w-16 text-center rounded-lg p-2 text-white`}>
+            <p
+              onClick={() => setActive("sell")}
+              className={`${
+                active === "sell" ? "bg-red-600" : ""
+              } w-16 text-center rounded-lg p-2 text-white`}
+            >
               Sell
             </p>
           </div>
@@ -635,9 +647,9 @@ const Adds = () => {
                       className="secondary w-full white  w-full  no-border"
                       name=""
                       id=""
-                    >                            <option value="">Account number</option>
-
+                    >
                       {" "}
+                      <option value="">Account number</option>{" "}
                       {payments.map((i) => {
                         return (
                           <>
@@ -685,12 +697,12 @@ const Adds = () => {
               />
             </div>
             <div className=" w-full gap-6 flex items-center mt-3">
-              <button className="border p-2 border-green-600 rounded-2xl w-full p-1 g">
+              <button className="border border-green-600 rounded-2xl w-full p-1 g">
                 Cancel
               </button>
               <button
                 onClick={handleSubmit}
-                className={` ${active==="sell"?"bg-red-700":"greenbg"}  p-2 w-full rounded-2xl p-1 white`}
+                className={` ${active==="sell"?"border-green-600":""} ${active==="sell"?"bg-red-600":"greenbg"} w-full rounded-2xl p-1 white`}
               >
                 {loading1 ? "Submitting..." : "Post Ad"}
               </button>

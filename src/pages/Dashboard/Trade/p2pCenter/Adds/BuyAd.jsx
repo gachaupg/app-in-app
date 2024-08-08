@@ -9,13 +9,13 @@ import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { endpoint } from "../../../../utils/APIRoutes";
 import { CircularProgress } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { IoCheckmarkCircleSharp } from "react-icons/io5";
+import { endpoint } from "../../../../../utils/APIRoutes";
 const initialState = {
   order_type: "sell",
   currency: "USD",
@@ -38,7 +38,7 @@ const initialState = {
   terms_and_conditions: "",
 };
 
-const Adds = () => {
+const Adds1 = () => {
   const [sell, setSell] = useState(initialState);
   const style = {
     position: "absolute",
@@ -55,7 +55,7 @@ const Adds = () => {
   const [activeTab, setActiveTab] = useState("P2P Trading");
   const [activeTab1, setActiveTab1] = useState("Dashboard");
   const [show, setShow] = useState("P2P");
-  const [active,setActive]=useState("sell")
+  const [active,setActive]=useState("buy")
 
   const tabs = [
     {
@@ -702,4 +702,4 @@ const Adds = () => {
   );
 };
 
-export default Adds;
+export default Adds1;

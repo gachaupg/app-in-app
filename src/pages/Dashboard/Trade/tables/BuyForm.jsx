@@ -20,7 +20,7 @@ const initiaalState = {
   completion_rate: "",
 };
 
-const BuyForm = ({ id }) => {
+const BuyForm = ({ id,buy ,setBuy}) => {
   const [show, setShow] = useState("Buy");
   const [payments, setPayments] = useState([]);
   const [loading1, setLoading1] = useState(true);
@@ -209,6 +209,7 @@ const BuyForm = ({ id }) => {
           </div>
           <div className=" w-full mt-7 flex flex-row small wrap  gap-24">
             <button
+              // onClick={()=}
               style={{
                 width: "42%",
               }}
@@ -225,9 +226,9 @@ const BuyForm = ({ id }) => {
               className="p-1 small bg-green-600 white rounded-lg"
             >
               <Link
+              
                 to={{
                   pathname: `/buy/${payments.id}`,
-                  
                 }}
                 style={{
                   color: "white", // Ensures the text is white

@@ -30,6 +30,9 @@ import Adds from "./pages/Dashboard/Trade/p2pCenter/adds";
 import HomePage from "./pages/landing-page/Home";
 import Test from "./pages/Auth/Test";
 import DoughnutChart from "./components/Pichart";
+import BuyAdds from "./pages/Dashboard/Trade/p2pCenter/BuyAdds";
+import BuyASdss from "./pages/Dashboard/Trade/p2pCenter/Adds/BuyAd";
+import Adds1 from "./pages/Dashboard/Trade/p2pCenter/Adds/BuyAd";
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -54,7 +57,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot" element={<Forgot />} />
-        <Route path="/profile" element={<MainProfile />} />
+        {/* <Route path="/profile" element={<MainProfile />} /> */}
         <Route path="/dashboard" element={<MainDash/>}/> 
         <Route path="/kyc" element={<KYC/>}/> 
         <Route path="/wallet" element={<Wallet/>}/> 
@@ -66,6 +69,7 @@ function App() {
         <Route path="/adds" element={<Adds />} />
         <Route  path="/account" element={<Test />} />
         <Route  path="/chats" element={<DoughnutChart />} />
+        <Route  path="/buy-adds" element={<Adds1 />} />
       </Routes>
       <Footer />
     </div>

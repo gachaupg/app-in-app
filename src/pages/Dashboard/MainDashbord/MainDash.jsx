@@ -27,13 +27,13 @@ const MainDash = () => {
   // console.log('====================================');
   // console.log('logged in uss',user);
   // console.log('====================================');
-  // useEffect(() => {
-  //   if (user?.access) {
-  //     navigate("/dashboard");
-  //   }else{
-  //     navigate("/")
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (user?.access) {
+      navigate("/dashboard");
+    }else{
+      navigate("/")
+    }
+  }, [user]);
 
   const [activeTab, setActiveTab] = useState("P2P Trading");
   const [activeTab1, setActiveTab1] = useState("Dashboard");
@@ -82,7 +82,7 @@ const MainDash = () => {
 
   return (
     <>
-      {activeTab1 === "Market" && (
+      {/* {activeTab1 === "Market" && (
         <div className="w-full">
           <img
             className="h-28 object-cover w-full"
@@ -90,7 +90,7 @@ const MainDash = () => {
             alt=""
           />
         </div>
-      )}
+      )} */}
       <div className="primary  flex wrap small justify-between flex-row ">
         <div
           style={{ width: "18%", color: "#727272", fontSize: "15px" }}
@@ -203,7 +203,7 @@ const MainDash = () => {
                   />
                   <div>
                     <p style={{ fontSize: "16px" }} className="white">
-                      Hello, {user.user.username}!
+                      Hello, {user?.user?.username}!
                     </p>
                     <p
                       style={{ fontSize: "12px",color:"#F79330" }}
@@ -223,7 +223,7 @@ const MainDash = () => {
                     Use ID
                   </p>
                   <p className="white flex flex-row items-center gap-1">
-                    {user.user.id} <Copy size={16} style={{ color: "#F79330" }} />
+                    {user?.user?.id} <Copy size={16} style={{ color: "#F79330" }} />
                   </p>
                 </div>
                 <div className="flex flex-col gap-2">
@@ -231,11 +231,12 @@ const MainDash = () => {
                     User Type
                   </p>
                   <p className="white flex flex-row items-center gap-1">
-                    {user.user.user_type}{" "}
+                    {user?.user?.user_type}{" "}
                   </p>
                 </div>
                 <div className="flex flex-row wrap items-center gap-5">
                   <div className="flex flex-row gap-3">
+                    <Link to="/buy-adds">
                     <Btn
                       title="Post Buy Add"
                       icon={<Plus size={15} />}
@@ -244,6 +245,8 @@ const MainDash = () => {
                       className="additional-class-name"
                     />
 
+                    </Link>
+                    <Link to="/adds">
                     <Btn
                       title="Post Sell Add"
                       icon={<Plus size={15} />}
@@ -251,6 +254,7 @@ const MainDash = () => {
                       color="#FFFFFF"
                       className="additional-class-name"
                     />
+                  </Link>
                   </div>
                   <img
                     className="h-10"

@@ -119,7 +119,7 @@ const Register = () => {
   };
 
   return (
-    <div className="register gap-10 items-center justify-center pb-5">
+    <div className=" flex  flex-row primary g items-center justify-evenly pb-5">
       <div className="reg-left gap-10">
         <img
           style={{
@@ -353,15 +353,15 @@ const Register = () => {
             </div>
             <p className="flex flex-row items-center ">
               <Dot color="green" size="40" />
-              <p>At least 8 characters</p>
+              <p className="g">At least 8 characters</p>
             </p>
             <p className="flex flex-row items-center ">
               <Dot color="green" size="40" />
-              <p>At least one number or symbol</p>
+              <p className="g">At least one number or symbol</p>
             </p>
             <p className="flex flex-row items-center ">
               <Dot color="green" size="40" />
-              <p>Both uppercase and lowercase</p>
+              <p className="g">Both uppercase and lowercase</p>
             </p>
             <div
               style={{
@@ -412,7 +412,7 @@ const Register = () => {
               </>
             ) : (
               <>
-                <div className="btn-submit mt-5 flex greenbg p-2 rounded-3xl justify-center">
+                <div className="btn-submit white mt-5 flex greenbg p-2 rounded-3xl justify-center">
                   <button type="submit" className="submit-btn">
                     {loading ? "Submitting" : "Register"}
                   </button>
@@ -421,9 +421,9 @@ const Register = () => {
             )}
 
             <div className="flex flex-col items-center justify-center">
-              <p className="mt-5 mb-3 flex text-center">
+              <p className="mt-5 mb-3 flex g text-center">
                 Already have an account?{" "}
-                <Link to="/login" className="text-blue-500">
+                <Link to="/login" className="green">
                   Login here
                 </Link>
               </p>
@@ -699,7 +699,7 @@ const Register = () => {
                 alt=""
               />
             </div>
-            <div className="btn-submit mt-5 flex greenbg p-2 rounded-3xl justify-center">
+            <div className="btn-submit white mt-5 flex greenbg p-2 rounded-3xl justify-center">
               <button type="submit" className="submit-btn">
                 {loading ? "submitting" : "Register"}
               </button>

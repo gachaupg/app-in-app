@@ -41,7 +41,7 @@ import { RiDashboardLine } from "react-icons/ri";
 import { setLogout } from "../redux/features/authSlice";
 import { toast } from "react-toastify";
 import { Wallet } from "lucide-react";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { MdKeyboardArrowRight, MdOutlineKeyboardArrowDown } from "react-icons/md";
 
 const drawerWidth = 240;
 
@@ -71,7 +71,11 @@ const Navbar = () => {
   const [ProPro, setProPro] = useState(false);
   const { user } = useSelector((state) => ({ ...state.auth }));
   const [showLog, setShowLog] = React.useState(false);
+  const [showSideDash, setSideDash] = useState(false);
 
+  const handleShowSide = () => {
+    setSideDash(!showSideDash);
+  };
   const showTabs = () => {
     setTabs(!tabs);
   };
@@ -215,11 +219,11 @@ const Navbar = () => {
     },
   ];
   return (
-    <div className="navbar w-full p flex justify-around items-center sm:p-1  ">
+    <div className="navbar flex flex-row justify-between pl-24 pr-16 ">
       <div className="lo">
         <Link to="/">
           <img
-            className="mt-2 pl-6"
+            className="mt-2 mr-28"
             style={{
               height: "2.6rem",
               width: "9rem",
@@ -230,33 +234,17 @@ const Navbar = () => {
           />
         </Link>
       </div>
-      <div className="side p-4 pr-48">
+      <div className="side p-4 ">
         <div className="links">
-          {/* <NavLink
-            exact
-            to="/"
-            onClick={() => {
-              setShow(false);
-              showLang1();
-              handleShowLog1();egist
-            }}
-            activeClassName="active"
-          >
-            Home
-          </NavLink> */}
-          {/* {!user ? (
-            ""
-          ) : ( */}
           <Link
             onClick={() => setShow(false)}
             className="flex items-center cursor-pointer"
             to="/dashboard"
-            // activeClassName="active"
+            activeClassName="active"
           >
             <p>Dashboard</p>{" "}
           </Link>
-          {/* )} */}
-          {/*  */}
+
           <p
             className="cursor-pointer"
             onClick={() => {
@@ -280,62 +268,9 @@ const Navbar = () => {
             Blog
           </NavLink>
         </div>
-        {/* {show && (
-          
-        )} */}
       </div>
 
-      {/* <div>
-        {show && (
-          <div className="dashboard-links">
-            <p>
-              <NavLink
-                activeClassName="active-link"
-                onClick={handleShow}
-                className="flex items-center gap-2   "
-                to="/"
-              >
-                <FaExchangeAlt color="green" />
-                <p className="text-white">Exchange</p>
-              </NavLink>
-            </p>
-            <p>
-              <NavLink
-                activeClassName="active-link"
-                onClick={handleShow}
-                className="flex items-center gap-2 pt-3 "
-                to="/"
-              >
-                <IoMdPeople color="green" />
-                <p className="text-white">P2P</p>
-              </NavLink>
-            </p>
-            <p>
-              <NavLink
-                activeClassName="active-link"
-                onClick={handleShow}
-                className="flex items-center gap-2 pt-3 "
-                to="/"
-              >
-                <PiSwap color="green" />
-                <p className="text-white">Swap</p>
-              </NavLink>
-            </p>
-            <p>
-              <NavLink
-                activeClassName="active-link"
-                onClick={handleShow}
-                className="flex items-center gap-2 pt-3 "
-                to="/"
-              >
-                <CiMoneyCheck1 color="green" />
-                <p className="text-white">Buy</p>
-              </NavLink>
-            </p>
-          </div>
-        )}
-      </div> */}
-      <div className="nav-btns nav-text p-6 pr-24 ">
+      <div className="nav-btns nav-text p-6   ">
         {/* {user ? ( */}
         {user ? (
           <>
@@ -344,7 +279,10 @@ const Navbar = () => {
                 background: "#1D8751",
                 fontSize: "12px",
               }}
-              onClick={() => setShow(false)}
+              onClick={() => {
+                setShow(false);
+                handleShowSide();
+              }}
               className=" rounded-lg p-1 w-24 h-8 flex flex-row items-center gap-1"
             >
               <img
@@ -370,23 +308,15 @@ const Navbar = () => {
                 src="https://res.cloudinary.com/pitz/image/upload/v1721370408/Frame_34216_jnzjpy.png"
                 alt=""
               />
-              {/* <RiDashboardLine onClick={handleShowLog} className="text-green-500 absolute top-10" /> */}
             </div>
             {ProPro && (
-              <div
-                // onClick={() => {
-                //   dispatch(setLogout(null));
-                //   toast.warning('Logged out!', { position: 'top-right' });
-                //   navigate('/');
-                // }}
-                className="lang mt-3 p-2 lang  w-64 border-slate-700  primary border rounded-lg absolute top-12  "
-              >
+              <div className="lang mt-3 p-2 lang  w-64 border-slate-700  primary border rounded-lg absolute top-12  ">
                 <div className="flex flex-col items-center justify-center gap-3">
-                  <div onClick={handleShow1} >
+                  <div onClick={handleShow1}>
                     <Cancel className="items-left float-left ml-44" />
                   </div>
                   <Link onClick={handleShow} className="w-full" to="/account">
-                    <div  className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
+                    <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                       <AccountCircle />
                       <button>Profile</button>
                     </div>
@@ -397,17 +327,23 @@ const Navbar = () => {
                       <button>Wallet</button>
                     </div>
                   </Link>
-                 <Link onClick={handleShow} className="w-full" to="/kyc">
-                 <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
-                    <Verified />
-                    <button>KYC</button>
-                  </div>
-                 </Link>
-                  <div onClick={handleShow} className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
+                  <Link onClick={handleShow} className="w-full" to="/kyc">
+                    <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
+                      <Verified />
+                      <button>KYC</button>
+                    </div>
+                  </Link>
+                  <div
+                    onClick={handleShow}
+                    className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg"
+                  >
                     <PrivacyTip />
                     <button>Privacy and Security</button>
                   </div>
-                  <div onClick={handleShow} className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
+                  <div
+                    onClick={handleShow}
+                    className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg"
+                  >
                     <RefreshRounded />
                     <button>Referral</button>
                   </div>
@@ -466,7 +402,7 @@ const Navbar = () => {
           />
           <TiArrowSortedDown color="green" onClick={showLang} />
 
-          {show1 && (
+          {/* {show1 && (
             <div className="lang mt-3 p-2  w-48 right-0  absolute  border border-slate-700 rounded-lg top-8 secondary">
               <p className="flex items-center justify-start gap-2 p-2">
                 <img
@@ -485,6 +421,64 @@ const Navbar = () => {
                 Somali
               </p>
             </div>
+          )} */}
+          {showSideDash && (
+            <>
+              <div className="sideDash flex flex-col gap-5 p-3">
+                <Link onClick={handleShowSide} to="/exchange" className="flex flex-row  items-center  gap-10 w-full">
+                  <img src="https://res.cloudinary.com/pitz/image/upload/v1723104409/uil_exchange_1_tjzevh.png" alt="" />
+                  <div>
+                    <p className="white mr-5">Exchange</p>
+                    <p style={{
+                      fontSize:'12px'
+                    }} className="g">
+                      Trade cryptocurrencies on the exchange with advanced tools
+                      and features for optimal transactions{" "}
+                    </p>
+                  </div>
+                  <MdKeyboardArrowRight size={30}/>
+                </Link>
+                <Link onClick={handleShowSide} to="/dashboard" className="flex flex-row  items-center  gap-10 w-full">
+                  <img src="https://res.cloudinary.com/pitz/image/upload/v1723104921/users-profiles-left_2_bunnsy.png" alt="" />
+                  <div>
+                    <p className="white mr-5">P2P</p>
+                    <p style={{
+                      fontSize:'12px'
+                    }} className="g">
+                      Trade cryptocurrencies on the exchange with advanced tools
+                      and features for optimal transactions{" "}
+                    </p>
+                  </div>
+                  <MdKeyboardArrowRight size={30}/>
+                </Link>
+                <Link onClick={handleShowSide} to="/dashboard" className="flex flex-row  items-center  gap-10 w-full">
+                  <img src="https://res.cloudinary.com/pitz/image/upload/v1723104988/Group_164002_1_oovexn.png" alt="" />
+                  <div>
+                    <p className="white mr-5">Swap</p>
+                    <p style={{
+                      fontSize:'12px'
+                    }} className="g">
+                      Trade cryptocurrencies on the exchange with advanced tools
+                      and features for optimal transactions{" "}
+                    </p>
+                  </div>
+                  <MdKeyboardArrowRight size={30}/>
+                </Link>
+                <Link onClick={handleShowSide} to="/dashboard" className="flex flex-row  items-center  gap-10 w-full">
+                  <img src="https://res.cloudinary.com/pitz/image/upload/v1723105029/Group_164004_1_urbeen.png" alt="" />
+                  <div>
+                    <p className="white mr-5">Buy</p>
+                    <p style={{
+                      fontSize:'12px'
+                    }} className="g">
+                      Trade cryptocurrencies on the exchange with advanced tools
+                      and features for optimal transactions{" "}
+                    </p>
+                  </div>
+                  <MdKeyboardArrowRight size={30}/>
+                </Link>
+              </div>
+            </>
           )}
         </div>
         <div className=" flex items-center mr-16">
@@ -496,6 +490,7 @@ const Navbar = () => {
           </p>
         </div>
       </div>
+
       <div className="sidebar h-full p-3">
         <Box
           className="sidebar"
@@ -565,7 +560,10 @@ const Navbar = () => {
                   )}
                 </IconButton>
               </div>
-              <Divider className="bg-slate-700" style={{ backgroundColor: "" }} />
+              <Divider
+                className="bg-slate-700"
+                style={{ backgroundColor: "" }}
+              />
               <List className="sidebar">
                 <div className="flex sidebar ml-10 flex-col justify-center gap-5">
                   <NavLink exact to="/" activeClassName="active">
@@ -647,7 +645,10 @@ const Navbar = () => {
                   )}
                 </div>
               </List>
-              <Divider className="bg-slate-700" style={{ backgroundColor: "" }} />
+              <Divider
+                className="bg-slate-700"
+                style={{ backgroundColor: "" }}
+              />
               <List className="sidebar">
                 {user ? (
                   <>

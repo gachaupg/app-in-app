@@ -66,7 +66,7 @@ const MarketPage = () => {
           Buy
         </button>
         <button
-          // onClick={() => setShow("Sell")}
+          onClick={() => setShow("Sell")}
           className={`p-1 ${
             show === "Sell" ? "bg-red-600" : ""
           } rounded-lg text-center flex items-center justify-center w-16 text-white`}
@@ -74,23 +74,29 @@ const MarketPage = () => {
           Sell
         </button>
       </div>
-      {loading1 ? (
+      {/* {loading1 ? (
         <div className="flex items-center justify-center mt-20">
            <CircularProgress className="green" />
        </div>
-      ) : (
-        <>
-          {show === "Buy" ? (
-            <>
-              <Buy payments={payments} show={show} />
-            </>
-          ) : (
-            <>
-              <Sell show={show} />
-            </>
-          )}
-        </>
-      )}
+      ) : ( */}
+      <>
+        {show === "Buy" && (
+          <>
+            <Buy payments={payments} show={show} isLoading={loading1} />
+          </>
+        )}
+        
+        {show === "Sell" && (
+          <>
+         
+       
+            <Sell payments={payments} show={show} isLoading={loading1} />
+       
+       
+          </>
+        )}
+      </>
+      {/* )} */}
     </div>
   );
 };

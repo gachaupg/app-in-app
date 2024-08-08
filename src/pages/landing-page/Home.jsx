@@ -15,9 +15,9 @@ const HomePage = () => {
   const users = JSON.parse(localStorage.getItem("profile"));
 const navigate=useNavigate()
   const { user } = useSelector((state) => ({ ...state.auth }));
-  console.log('====================================');
-  console.log('logged in usersss',users);
-  console.log('====================================');
+  // console.log('====================================');
+  // console.log('logged in usersss',users);
+  // console.log('====================================');
   useEffect(() => {
     if (user?.access) {
       navigate("/dashboard");
