@@ -30,7 +30,7 @@
 .filler {
   height: 100%;
   width: 0;
-  background-color: rgb(31, 68, 31);
+  background-color: rgb(246, 250, 246);
   transition: width 0.5s ease-in-out;
 }
 
@@ -185,6 +185,16 @@ input[type="number"] {
 }
 .mainGrey{
   background-color: #35353E;
+  
+}
+.hover{
+  cursor: pointer !important;
+}
+.hover:hover{
+padding: 4px;
+background: #18181D !important;
+border-radius: 2px;
+cursor: pointer !important;
 }
 .input-text{
   /* width: 20.5rem; */
@@ -465,6 +475,9 @@ input[type="number"] {
   .dash-hero{
    
   }
+  .small-gap{
+    margin-top: 10px;
+  }
   .Table{
     width: 22rem !important;
   }
@@ -645,9 +658,13 @@ padding-left: 25rem !important;
   border: 2px solid red;
 }
 .border-bottom {
-  border-bottom: 1px solid #3b3d3f; /* You can change the color and width as needed */
+  border-bottom: 1px solid #1E2329 !important; /* You can change the color and width as needed */
 }
-
+.check{
+  /* border:1px solid #1D8751  !important; */
+  /* background-color: #1D?8751 !important; */
+  color: #1D8751 !important;
+}
 .pr{
   color: green !important;
   background-color: white !important;

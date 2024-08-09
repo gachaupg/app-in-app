@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 import { AttachFile } from "@mui/icons-material";
@@ -11,13 +13,14 @@ import Button from "@mui/material/Button";
 import { SlLike } from "react-icons/sl";
 import { BsExclamationCircle } from "react-icons/bs";
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { endpoint } from "../../../utils/APIRoutes";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { CircularProgress, Typography } from "@mui/material";
 import { IoCheckmarkCircleSharp } from "react-icons/io5";
+import { useLocation } from "react-router-dom"
 
 const style = {
   position: "absolute",
@@ -32,12 +35,13 @@ const style = {
   px: 4,
   pb: 3,
 };
-const BuyPage = () => {
+const BuyPage = (props) => {
   const [open, setOpen] = React.useState(false);
-
-  // console.log('====================================');
-  // console.log(payments);
-  // console.log('====================================');
+  const location = useLocation()
+  const fromDashboard = location.state?.amount;
+  console.log('====================================');
+  console.log(fromDashboard);
+  console.log('====================================');
   const params = useParams();
   const { id } = params;
   const navigate = useNavigate();
@@ -71,13 +75,15 @@ const BuyPage = () => {
   useEffect(() => {
     fetchData();
   }, [user.access]);
+  
 
   useEffect(() => {
+
     if (payments) {
       setBuy({
         order_type: "buy",
         currency: payments.currency,
-        amount: payments.amount,
+        amount: fromDashboard,
         commission_rate: payments.commission_rate,
         exchange_rate: payments.exchange_rate,
         payment_method: payments.payment_method,
@@ -146,7 +152,7 @@ const BuyPage = () => {
       return;
     }
   
-    if (buy.order_type === 'buy') {
+    if (buy.amount) {
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -246,14 +252,15 @@ const BuyPage = () => {
         >
           <div className="flex w-96 small wrap  flex-row gap-2 items-center">
             <p className=" bg-green-600 h-14 w-14 rounded-lg flex text-center justify-center items-center p-1 text-white">
-              <span
-                style={{
-                  fontSize: "16px",
-                }}
-                className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
-              >
-                {payments?.advertiser_name?.username.substring(0, 2)}
-              </span>
+            <span
+  style={{
+    fontSize: "16px",
+  }}
+  className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
+>
+  {payments?.advertiser_name?.username.substring(0, 1).toUpperCase() + payments?.advertiser_name.username.substring(1, 2).toUpperCase()}
+</span>
+
             </p>
             <div className="flex flex-col  ">
               <p
@@ -366,9 +373,7 @@ const BuyPage = () => {
             <div className="flex flex-row  justify-between items-center rounded-lg  w-56  gap-1 p-2 border border-slate-700 items-center">
               <p className="green flex justify-around ">
                 <DollarSign />{" "}
-                {payments?.amount !== undefined && payments?.amount !== null
-                  ? Number(payments?.amount).toFixed(2)
-                  : "0.00"}
+                {fromDashboard}
               </p>
               <p className="flex flex-row  items-center">
                 USD <IoIosArrowDown className="g" />
@@ -383,9 +388,7 @@ const BuyPage = () => {
                   src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
                   alt=""
                 />{" "}
-                {payments?.amount !== undefined && payments?.amount !== null
-                  ? Number(payments?.amount).toFixed(2)
-                  : "0.00"}
+               {fromDashboard-0.5}
                 <span className="white">USDT</span>
               </p>
             </div>
@@ -489,10 +492,10 @@ const BuyPage = () => {
           </p>
           <div className="flex flex-row small wrap gap-10 justify-between">
             <button className="border w-full border-slate-700  rounded-lg p-2">
-              Cancel
+              Cancel Transaction
             </button>
-            <button onClick={handleSubmit} className=" w-full bg-green-600 rounded-lg p-2">
-             {loading1?<CircularProgress/>:"Submit"} 
+            <button onClick={handleSubmit} className=" w-full greenbg rounded-lg p-2">
+             {loading1?<CircularProgress/>:"Money sent,notify seller "} 
             </button>
           </div>
         </div>

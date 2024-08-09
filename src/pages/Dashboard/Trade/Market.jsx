@@ -14,7 +14,7 @@ const MarketPage = () => {
   const [show, setShow] = useState("Buy");
   const [payments, setPayments] = useState([]);
   const [loading1, setLoading1] = useState(true);
-  // console.log("payments", payments);
+  console.log("payments", payments);
   const { user } = useSelector((state) => ({ ...state.auth }));
   const navigate = useNavigate("");
   useEffect(() => {

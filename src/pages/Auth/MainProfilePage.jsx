@@ -1,0 +1,110 @@
+/* eslint-disable no-unused-vars */
+import { Key, Settings, Wallet2 } from "lucide-react";
+import { useState } from "react";
+import Test from "./Test";
+import ProfileTab from "./ProfileTab";
+import KYC from "../Dashboard/DashboardTabs/KYC";
+import Profile from "../../components/Profile";
+import Privacy from "./Privacy";
+import Wallet from "../Dashboard/DashboardTabs/Wallet";
+import Referal from "./Referal";
+
+const MainProfilePage = () => {
+  const [active, setActive] = useState("settings");
+  return (
+    <div className="primary  small wrap flex flex-col items-center justify-center gap-5 small pt-10 pl-40 pr-40">
+      <div className="flex small wrap flex-roe justify-between w-full items-center secondary border  border-slate-700 rounded-lg p-2">
+        <div
+          onClick={() => setActive("settings")}
+          className={`flex cursor-pointer flex-row items-center g gap-2 ${
+            active === "settings" ? "green" : "g"
+          }`}
+        >
+          <Settings /> Profile Setting
+        </div>
+        <div
+          onClick={() => setActive("kyc")}
+          className={`flex cursor-pointer flex-row items-center g gap-2 ${
+            active === "kyc" ? "green" : "g"
+          }`}
+        >
+          <img
+            src="https://res.cloudinary.com/pitz/image/upload/v1723197241/file-lock-02_ftwlxo.png"
+            alt=""
+          />{" "}
+          KYC
+        </div>
+        <div
+          onClick={() => setActive("key")}
+          className={`flex cursor-pointer flex-row items-center g gap-2 ${
+            active === "key" ? "green" : "g"
+          }`}
+        >
+          <Key height={40} /> Privacy and Security
+        </div>
+        <div
+          onClick={() => setActive("wallet")}
+          className={`flex cursor-pointer flex-row items-center g gap-2 ${
+            active === "wallet" ? "green" : "g"
+          }`}
+        >
+          <Wallet2 height={40} /> Wallet Address
+              </div>
+              <div
+          onClick={() => setActive("refer")}
+          className={`flex cursor-pointer flex-row items-center g gap-2 ${
+            active === "refer" ? "green" : "g"
+          }`}
+        >
+          <Wallet2 height={40} /> Referral
+        </div>
+      </div>
+      <div className="w-full flex flex-row small wrap  gap-16">
+        <div
+          style={{
+            width: "70%",
+          }}
+          className="w-full small"
+        >
+          {active === "settings" && (
+            <>
+              <Test />
+            </>
+          )}
+          {active === "kyc" && (
+            <>
+              <KYC />
+            </>
+          )}
+          {active === "key" && (
+            <>
+              <Privacy />
+            </>
+          )}
+          {active === "wallet" && (
+            <>
+              <Wallet />
+            </>
+                  )}
+                  {active === "refer" && (
+            <>
+              <Referal />
+            </>
+          )}
+        </div>
+        <div
+          style={{
+            width: "25%",
+          }}
+          className="w-full small"
+        >
+          <ProfileTab />
+        </div>
+      </div>
+      {/* <ProfileDetail/> */}
+      {/* <ProfileTab/> */}
+    </div>
+  );
+};
+
+export default MainProfilePage;

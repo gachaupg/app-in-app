@@ -10,6 +10,7 @@ import { CheckBox } from "@mui/icons-material";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../utils/APIRoutes";
 import axios from "axios";
+import { CircularProgress } from "@mui/material";
 
 const Center = () => {
   const [show, setShow] = useState("Payments");
@@ -31,37 +32,36 @@ const Center = () => {
 
   useEffect(() => {
     fetchData();
-  }, [user.access]); 
-    async function fetchData() {
-      const token = user.access;
-  
-      if (!token) {
-        toast.error("Authentication token is missing. Please log in again.");
-        navigate("/login");
-        setLoading(false);
-        return;
-      }
-  
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
-  
-      try {
-        const res = await axios.get(`${endpoint}/trading_engine/bank-details/`, { headers });
-        setLoading1(false);
-        setPayments(res.data);  // Assuming the response data is what you need to set
-        console.log("hello", res.data);
-      } catch (error) {
-        console.log(error);
-        setLoading1(false);
-      }
+  }, [user.access]);
+  async function fetchData() {
+    const token = user.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading(false);
+      return;
     }
-  
-    // Add token to the dependency array
-  
 
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
 
+    try {
+      const res = await axios.get(`${endpoint}/trading_engine/bank-details/`, {
+        headers,
+      });
+      setLoading1(false);
+      setPayments(res.data); // Assuming the response data is what you need to set
+      console.log("hello", res.data);
+    } catch (error) {
+      console.log(error);
+      setLoading1(false);
+    }
+  }
+
+  // Add token to the dependency array
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,7 +100,7 @@ const Center = () => {
         const data = await response.json();
         if (response.ok) {
           toast.success("Added successful!");
-          fetchData()
+          fetchData();
         } else if (data.code === "token_not_valid") {
           toast.error("Your session has expired. Please log in again.");
           navigate("/login"); // Redirect to login page or handle re-authentication
@@ -123,7 +123,7 @@ const Center = () => {
     }
   };
   return (
-    <div className="flex rounded-lg flex-col pr-10 gap-2 w-full">
+    <div className="flex rounded-lg flex-col  gap-2 w-full">
       <div
         className={`secondary wrap small border border-slate-700 p-2  rounded-lg flex flex-row justify-between `}
       >
@@ -159,7 +159,7 @@ const Center = () => {
             </button>
           </div>
         </div>
-        <div className="flex flex-col gap-2 items-center justify-center float-left">
+        <div className="flex flex-col gap-2 items-center mt-5 justify-center float-left">
           <p className="green float-left">P2P Balance</p>
           <p className="g">
             <span className="white"> 00.00 USDT</span> ≈ 00.00 USD
@@ -171,10 +171,10 @@ const Center = () => {
       </div>
 
       <div
-        className={`secondary small border border-slate-700 p-2 wrap  rounded-lg flex flex-row justify-between `}
+        className={`secondary small border border-slate-700 p-2 wrap mt-5  rounded-lg flex flex-row justify-between `}
       >
         <div className=" flex white flex-col">
-          120
+          {payments.length}
           <p style={{ fontSize: "13px" }} className="g">
             Trades
           </p>
@@ -198,7 +198,7 @@ const Center = () => {
           </p>
         </div>
         <div className=" flex white flex-col">
-          120 USD
+          00.00 USD
           <p style={{ fontSize: "13px" }} className="g">
             Total volume
           </p>
@@ -343,12 +343,18 @@ const Center = () => {
                 />
               </div>
               <div>
-                <button
-                  onClick={handleSubmit}
-                  className="p-2 w-16 bg-green-700 rounded-lg text-white"
-                >
-                  Add
-                </button>
+                {loading === true ? (
+                  <>
+                    <CircularProgress />
+                  </>
+                ) : (
+                  <button
+                    onClick={handleSubmit}
+                    className="p-2 w-16 bg-green-700 rounded-lg text-white"
+                  >
+                    Add
+                  </button>
+                )}
               </div>
             </div>
             <p className="white mt-4 flex flex-row items-center gap-1">
@@ -403,47 +409,47 @@ const Center = () => {
               }}
               className="w-full bg-slate-700 mt-2 mb-2"
             ></p>
-            {payments.length === 0?(
-              <p className="white">
-                No payment methods Added
-              </p>
-            ):(
-                <>{payments.map((payment) => {
+            {payments.length === 0 ? (
+              <p className="white">No payment methods Added</p>
+            ) : (
+              <>
+                {payments.map((payment) => {
                   return (
                     <>
-                     <div className="flex small wrap flex-row w-full gap-7 p-3 items-center justify-between">
-              <div className="flex flex-col gap-2">
-                <p className="white">Mobile Money</p>
-                <p className="flex flex-row small wrap white items-center gap-2">
-                  <img
-                    className="rounded-full"
-                    src="https://res.cloudinary.com/pitz/image/upload/v1721980076/image_1_dfpk3p.png"
-                    alt=""
-                  />{" "}
-                  {payment.name}
-                </p>
-              </div>
-              <Trash2Icon color="green" />
-            </div>
-            <div className="flex flex-row small wrap gap-6 items-center w-full">
-              <div className="flex flex-col w-full  gap-1">
-                <p className="g">Wallet Name</p>
-                <div className="primary mt-2  rounded-3xl w-full p-2">
-                  <p className="green">{payment.account_name}</p>
-                </div>
-              </div>
-              <div className="flex flex-col w-full  gap-1">
-                <p className="g">Wallet Number</p>
-                <div className="primary mt-2  rounded-3xl w-full p-2">
-                  <p className="green">{payment.account_number}</p>
-                </div>
-              </div>
-            </div>
+                      <div className="flex small wrap flex-row w-full gap-7 p-3 items-center justify-between">
+                        <div className="flex flex-col gap-2">
+                          <p className="white">Mobile Money</p>
+                          <p className="flex flex-row small wrap white items-center gap-2">
+                            <img
+                              className="rounded-full"
+                              src="https://res.cloudinary.com/pitz/image/upload/v1721980076/image_1_dfpk3p.png"
+                              alt=""
+                            />{" "}
+                            {payment.name}
+                          </p>
+                        </div>
+                        <Trash2Icon color="green" />
+                      </div>
+                      <div className="flex flex-row small wrap gap-6 items-center w-full">
+                        <div className="flex flex-col w-full  gap-1">
+                          <p className="g">Wallet Name</p>
+                          <div className="primary mt-2  rounded-3xl w-full p-2">
+                            <p className="green">{payment.account_name}</p>
+                          </div>
+                        </div>
+                        <div className="flex flex-col w-full  gap-1">
+                          <p className="g">Wallet Number</p>
+                          <div className="primary mt-2  rounded-3xl w-full p-2">
+                            <p className="green">{payment.account_number}</p>
+                          </div>
+                        </div>
+                      </div>
                     </>
-                  )
-            })}</>
+                  );
+                })}
+              </>
             )}
-           
+
             <button className="flex border border-green-700 rounded-3xl text-center green  justify-center p-1 mt-4 flex-row gap-6 items-center w-full">
               Update
             </button>

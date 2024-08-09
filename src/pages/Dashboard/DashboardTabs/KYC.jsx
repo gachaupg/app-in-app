@@ -23,29 +23,29 @@ const style = {
 const customStyles = {
   control: (provided) => ({
     ...provided,
-    backgroundColor: '#1D1D23',
-    color: 'white',
+    backgroundColor: "#1D1D23",
+    color: "white",
     width: "100%",
-    padding:2 ,
-    borderRadius:22,
-    border:"1px solid #35353E"
+    padding: 2,
+    borderRadius: 22,
+    border: "1px solid #35353E",
   }),
   singleValue: (provided) => ({
     ...provided,
-    color: 'white',
+    color: "white",
   }),
   menu: (provided) => ({
     ...provided,
-    backgroundColor: '#1D1D23',
-    width: "100%"
+    backgroundColor: "#1D1D23",
+    width: "100%",
   }),
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isSelected ? 'gray' : '#1D1D23',
-    color: 'white',
+    backgroundColor: state.isSelected ? "gray" : "#1D1D23",
+    color: "white",
     width: "100%",
-    '&:hover': {
-      backgroundColor: 'gray',
+    "&:hover": {
+      backgroundColor: "gray",
     },
   }),
 };
@@ -73,10 +73,10 @@ const KYC = () => {
       style={{
         height: "70vh",
       }}
-      className="flex p-3 main items-justify-between"
+      className="flex   w-full primary  items-justify-between"
     >
       <div>
-        <h2 className="text-slate-400 ml-52 mb-3">KYC Verification</h2>
+        <h2 className="text-slate-400  mb-3">KYC Verification</h2>
 
         <Modal
           className="rounded-lg border-slate-700"
@@ -123,7 +123,7 @@ const KYC = () => {
                     }
                     styles={customStyles}
                   />
-                   <input
+                  <input
                     placeholder="City"
                     required
                     type="date"
@@ -131,7 +131,7 @@ const KYC = () => {
                   />
                 </div>
                 <div className="flex flex-col items-center w-full gap-7">
-                <input
+                  <input
                     placeholder="Email"
                     required
                     type="email"
@@ -149,16 +149,18 @@ const KYC = () => {
                     type="date"
                     className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
                   />
-                 <Select
-  placeholder="Select Country"
-  className="w-full primary text-white rounded-3xl"
-  options={countries}
-  value={selectedCountry}
-  onChange={(selectedOption) => setSelectedCountry(selectedOption)}
-  styles={customStyles}
-/>
+                  <Select
+                    placeholder="Select Country"
+                    className="w-full primary text-white rounded-3xl"
+                    options={countries}
+                    value={selectedCountry}
+                    onChange={(selectedOption) =>
+                      setSelectedCountry(selectedOption)
+                    }
+                    styles={customStyles}
+                  />
 
-                   <input
+                  <input
                     placeholder="City"
                     required
                     type="date"
@@ -166,27 +168,27 @@ const KYC = () => {
                   />
                 </div>
               </div>
-             <div className="flex flex-row items-center mt-10 justify-between p-2 w-full gap-6 wrap small">
-             <Button
-                className="white txt border border-slate"
-                onClick={handleClose}
-              >
-                Close
-              </Button>
-              <Button
-                className="white txt1 border border-slate"
-                onClick={handleClose}
-              >
-                Submit
-              </Button>
-             </div>
+              <div className="flex flex-row items-center mt-10 justify-between p-2 w-full gap-6 wrap small">
+                <Button
+                  className="white txt border border-slate"
+                  onClick={handleClose}
+                >
+                  Close
+                </Button>
+                <Button
+                  className="white txt1 border border-slate"
+                  onClick={handleClose}
+                >
+                  Submit
+                </Button>
+              </div>
             </div>
           </Box>
         </Modal>
 
-        <div className="flex flex-col items-center p-3">
+        <div className="flex w-full primary flex-col items-center p-3">
           <div
-            style={{ width: "70%" }}
+            style={{ width: "100%" }}
             className="flex flex-col gap-10 border border-slate-600 secondary p-2 rounded-lg"
           >
             <p className="text-slate-300">

@@ -77,7 +77,7 @@ export default function SignInSide() {
                 height: "33rem",
                 objectFit: "fill",
               }}
-              src="https://omaya.lbmdemo.com/images/login/login.png"
+              src="https://res.cloudinary.com/pitz/image/upload/v1723127986/Frame_34357_uyqvfq.png"
               alt=""
             />
             <p className="g">

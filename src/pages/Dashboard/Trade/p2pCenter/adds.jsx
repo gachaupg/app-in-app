@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { IoIosArrowDown, IoMdArrowDropdown } from "react-icons/io";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../../utils/APIRoutes";
 import { CircularProgress } from "@mui/material";
@@ -91,7 +91,7 @@ const Adds = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [payments, setPayments] = useState([]);
-  const [loading1, setLoading1] = useState(true);
+  const [loading1, setLoading1] = useState(false);
   // console.log("payments", payments);
   const navigate = useNavigate();
   const { user } = useSelector((state) => ({ ...state.auth }));
@@ -264,13 +264,14 @@ const Adds = () => {
         </div>
       )}
       <div className="primary  flex wrap small justify-between flex-row ">
-        <div
+      <div
           style={{ width: "18%", color: "#727272", fontSize: "15px" }}
-          className="small flex flex-col gap-6 pt-12"
-        >
+          className="small dash-side flex flex-col gap-6 pt-12"
+         >
           {tabs.map((tab) => (
-            <div
-              key={tab.name}
+          <Link key={tab.name} to={`/${tab.link}`}>
+              <div
+              
               className={`flex w-full flex-row  pl-20 items-center rounded-tr-lg rounded-br-lg gap-4 p-2 `}
               style={{
                 cursor: "pointer",
@@ -287,7 +288,7 @@ const Adds = () => {
                 style={{
                   fontSize: tab.name === "Buy Crypto" ? "15.5px" : "h-6",
                 }}
-                className={`flex items-center justify-between ml-5 w-full`}
+                className={`flex items-center ${activeTab === tab.name ? "white" :""} justify-between ml-5 w-full`}
               >
                 {tab.name}
                 {tab.name === "Account" && (
@@ -295,6 +296,7 @@ const Adds = () => {
                 )}
               </div>
             </div>
+            </Link>
           ))}
         </div>
 
@@ -304,10 +306,10 @@ const Adds = () => {
         >
           <p className="white">Post AD</p>
           <div className={`border ${active==="sell"?"border-red-700":"border-green-700"} w-36 rounded-lg flex flex-row gap-2 p-1`}>
-            <p onClick={()=>setActive("buy")} className={`white ${active==="buy"?'greenbg':""} rounded-lg w-16 text-center flex items-center justify-center`}>
+            <p onClick={()=>setActive("buy")} className={`white ${active==="buy"?'greenbg':""} rounded-lg cursor-pointer w-16 text-center flex items-center justify-center`}>
               Buy
             </p>
-            <p onClick={()=>setActive("sell")} className={`${active==="sell"?"bg-red-600 ":""}w-16 text-center rounded-lg p-2 text-white`}>
+            <p onClick={()=>setActive("sell")} className={`${active==="sell"?"bg-red-600 ":""}w-16 text-center cursor-pointer rounded-lg p-2 text-white`}>
               Sell
             </p>
           </div>
@@ -483,7 +485,7 @@ const Adds = () => {
                       onChange={(e) =>
                         setSell({ ...sell, payment_method: e.target.value })
                       }
-                      className="primary p-1 w-full white no-border"
+                      className="primary p-1 cursor-pointer w-full white no-border"
                       name=""
                       id=""
                     >
@@ -525,7 +527,7 @@ const Adds = () => {
                           payment_provider: e.target.value,
                         })
                       }
-                      className="primary white  w-full  no-border"
+                      className="primary white cursor-pointer  w-full  no-border"
                       name=""
                       id=""
                     >
@@ -563,7 +565,7 @@ const Adds = () => {
                       onChange={(e) =>
                         setSell({ ...sell, limit: e.target.value })
                       }
-                      className="primary p-1 w-full white no-border"
+                      className="primary p-1 cursor-pointer w-full white no-border"
                       name=""
                       id=""
                     >
@@ -600,7 +602,7 @@ const Adds = () => {
                       //     payment_provider: e.target.value,
                       //   })
                       // }
-                      className="secondary  w-full white  w-full  no-border"
+                      className="secondary  w-full white  cursor-pointer  no-border"
                       name=""
                       id=""
                     >
@@ -632,7 +634,7 @@ const Adds = () => {
                       //     payment_method: e.target.value,
                       //   })
                       // }
-                      className="secondary w-full white  w-full  no-border"
+                      className="secondary w-full white  cursor-pointer no-border"
                       name=""
                       id=""
                     >                            <option value="">Account number</option>

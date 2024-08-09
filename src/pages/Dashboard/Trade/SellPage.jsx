@@ -1,20 +1,26 @@
+/* eslint-disable no-undef */
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 import { AttachFile } from "@mui/icons-material";
-import { Clock, Copy, DollarSign, Dot } from "lucide-react";
+import { Copy, DollarSign, Dot } from "lucide-react";
 import { IoIosArrowDown } from "react-icons/io";
 import { RiOrderPlayLine } from "react-icons/ri";
 import { IoMdArrowRoundForward } from "react-icons/io";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
-import React, { useEffect, useState } from "react";
-import { CircularProgress, Typography } from "@mui/material";
-import { IoCheckmarkCircleSharp } from "react-icons/io5";
-import  TextField  from '@mui/material/TextField';
-import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
 import { SlLike } from "react-icons/sl";
 import { BsExclamationCircle } from "react-icons/bs";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { endpoint } from "../../../utils/APIRoutes";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { CircularProgress, Typography } from "@mui/material";
+import { IoCheckmarkCircleSharp } from "react-icons/io5";
+import { useLocation } from "react-router-dom"
 
 const style = {
   position: "absolute",
@@ -29,19 +35,173 @@ const style = {
   px: 4,
   pb: 3,
 };
-const SellPage = () => {
+const SellPage = (props) => {
   const [open, setOpen] = React.useState(false);
+  const location = useLocation()
+  const fromDashboard = location.state?.amount;
+  console.log('====================================');
+  console.log(fromDashboard);
+  console.log('====================================');
+  const params = useParams();
+  const { id } = params;
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => ({ ...state.auth }));
+
+  const [show, setShow] = useState("Buy");
+  const [payments, setPayments] = useState(null);
+  const [loading1, setLoading1] = useState(false);
+
+  const initialState = {
+    order_type: "sell" ||"",
+    currency: payments?.currency || "",
+    amount: payments?.amount || 0,
+    commission_rate: payments?.commission_rate || 0,
+    exchange_rate: payments?.exchange_rate || 0,
+    payment_method: '1' || "",
+    payment_provider:'1' || "",
+    limit: payments?.limit_duration || 0,
+    completion_time: payments?.completion_time || 0,
+    completion_rate: payments?.completion_rate || 0,
+    asset: payments?.asset || "",
+    advertiser_name: payments?.advertiser_name || "",
+    auto_reply: payments?.auto_reply || "",
+    terms_and_conditions:payments?.terms_and_conditions || "",
+  };
+
+  const [buy, setBuy] = useState(initialState);
+  console.log("====================================");
+  console.log("buyddd", payments);
+  console.log("====================================");
+  useEffect(() => {
+    fetchData();
+  }, [user.access]);
+  
+
+  useEffect(() => {
+
+    if (payments) {
+      setBuy({
+        order_type:"sell",
+        currency: payments.currency,
+        amount: fromDashboard,
+        commission_rate: payments.commission_rate,
+        exchange_rate: payments.exchange_rate,
+        payment_method: payments.payment_method,
+        payment_provider: payments.payment_provider,
+        limit: 10.00,
+        terms_and_conditions:payments.terms_and_conditions,
+        completion_time: payments.completion_time,
+        completion_rate: payments.completion_rate,
+        asset: payments.asset,
+        advertiser_name: payments.advertiser_name,
+        auto_reply: payments.auto_reply,
+      });
+    }
+  }, [payments]);
+
   const handleOpen = () => {
     setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
   };
-  const [open1, setOpen1] = useState(false);
+
+  async function fetchData() {
+    const token = user.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await axios.get(
+        `${endpoint}/trading_engine/p2porders/${id}/`,
+        { headers }
+      );
+      setPayments(res.data);
+      setLoading1(false);
+      console.log(res);
+
+    } catch (error) {
+      console.log(error);
+      console.log('====================================');
+      console.log(error);
+      console.log('====================================');
+      setLoading1(false);
+    }
+  } const [open1, setOpen1] = useState(false);
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
-  const [feedback, close1] = useState(true);
-  const[comment,setComment]=useState()
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading1(true);
+   console.log('====================================');
+   console.log(buy);
+   console.log('====================================');
+    // Assuming user.user.access is available in your component's state or context
+    const token = user.access;
+  
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+  
+    if (buy.order_type === 'sell') {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+  
+      try {
+        console.log("Sending request with headers:", buy); // Debugging line
+        console.log(
+          "Sending request to endpoint:",
+          `https://omayaexchangebackend.onrender.com/trading_engine/p2p/orders/`
+        ); // Debugging line
+  
+        const response = await fetch(
+          `https://omayaexchangebackend.onrender.com/trading_engine/p2p/orders/`,
+          {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(buy),
+          }
+        );
+        const data = await response.json();
+  
+        if (response.ok) {
+          toast.success("Sold  successfully!");
+          setOpen1(true);
+        } else {
+          if (data.code === "token_not_valid") {
+            toast.error("Your session has expired. Please log in again.");
+            navigate("/login");
+          } else {
+            toast.error(`Save bank details failed: ${data.message || "Unknown error"}`);
+          }
+          console.error("Error response:", data);
+        }
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+        console.error("Error:", error);
+      } finally {
+        setLoading1(false);
+      }
+    }
+  };
 
   const style = {
     position: 'absolute',
@@ -55,13 +215,6 @@ const SellPage = () => {
     boxShadow: 24,
     p: 4,
   };
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-   
-  };
   return (
     <div className="white primary flex justify-between  pt-10  wrap small pr-40 pl-40 ">
       <div
@@ -70,7 +223,7 @@ const SellPage = () => {
         }}
         className="flex flex-col w-full  gap-6"
       >
-           <Modal
+         <Modal
         open={open1}
         onClose={handleClose1}
         aria-labelledby="modal-modal-title"
@@ -86,7 +239,7 @@ const SellPage = () => {
             <Typography style={{
               fontSize:'13px'
             }} className="g">
-                   You receive 100USD
+                  I will receive {payments?.amount}
                 </Typography>
                 <button onClick={() => {
                   handleClose1()
@@ -97,91 +250,33 @@ const SellPage = () => {
                 } className="w-full mt-3 p-1 white greenbg rounded-2xl">Provide feedback</button>
         </Box>
       </Modal>
-      
-      <Modal
-        open={isModalOpen}
-        onClose={handleCloseModal}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
-      >
-        <Box sx={style} className="flex flex-col items-center">
-          <Typography id="modal-title" variant="h6" component="h2" align="center">
-            {/* <FaThumbsUp size={40} style={{ color: feedback === 'positive' ? 'green' : 'gray' }} />
-            <FaThumbsDown size={40} style={{ color: feedback === 'negative' ? 'red' : 'gray' }} /> */}
-          </Typography>
-          <Typography variant="h6" component="p" align="center" sx={{ mt: 2 }}>
-            Rate your experience with the Merchant
-          </Typography>
-          
-          <Box className="flex justify-center gap-4 mb-4">
-            <Button
-              variant="contained"
-              color="success"
-              sx={{ flex: 1, mx: 1 }}
-            >
-              Positive
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              sx={{ flex: 1, mx: 1 }}
-            >
-              Negative
-            </Button>
-          </Box>
-
-          <Typography variant="body2" component="p" align="center" sx={{ mt: 2 }}>
-            Leave a comment (optional)
-          </Typography>
-          <TextField
-            variant="outlined"
-            multiline
-            rows={4}
-            fullWidth
-            sx={{ mt: 2, mb: 2 }}
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder="Placeholder for the comments"
-          />
-
-          <Box className="flex justify-between" sx={{ mt: 2 }}>
-            <Button
-              variant="outlined"
-              color="success"
-              onClick={handleCloseModal}
-              sx={{ flex: 1, mr: 1 }}
-            >
-              Close
-            </Button>
-            <Button
-              variant="contained"
-              color="success"
-              sx={{ flex: 1, ml: 1 }}
-            >
-              Submit
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
         <p>Advertisers Info</p>
         <div
           //   style={{
           //     width: "100%",
           //   }}
-          className="flex flex-row justify-start gap-2 items-center justify-center  border border-slate-700 rounded-lg secondary p-3  pr-5 pl-5 items-center  "
+          className="flex small wrap flex-row justify-start gap-2 items-center justify-center  border border-slate-700 rounded-lg secondary p-3  pr-5 pl-5 items-center  "
         >
-          <div className="flex w-96 small  flex-row gap-2 items-center">
+          <div className="flex w-96 small wrap  flex-row gap-2 items-center">
             <p className=" bg-green-600 h-14 w-14 rounded-lg flex text-center justify-center items-center p-1 text-white">
-              OA
+            <span
+  style={{
+    fontSize: "16px",
+  }}
+  className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
+>
+  {payments?.advertiser_name?.username.substring(0, 1).toUpperCase() + payments?.advertiser_name.username.substring(1, 2).toUpperCase()}
+</span>
+
             </p>
             <div className="flex flex-col  ">
               <p
                 style={{
                   fontSize: "14px",
                 }}
-                className="flex w-full flex-row items-center  gap-1 text-white"
+                className="flex w-full capitalize flex-row items-center  gap-1 text-white"
               >
-                Advitisers Username{" "}
+                {payments?.advertiser_name.username}
                 <img
                   src="https://res.cloudinary.com/pitz/image/upload/v1721730938/Frame_34214_gjn30n.png"
                   alt=""
@@ -195,7 +290,11 @@ const SellPage = () => {
                   className="flex g flex-row items-center gap-1"
                 >
                   <span className="text-green-600">120</span> Orders
-                  <span className="text-green-600"> 90.20%</span> Completion
+                  <span className="text-green-600">
+                    {" "}
+                    {payments?.completion_rate * 100} %
+                  </span>{" "}
+                  Completion
                 </p>
                 <p
                   style={{
@@ -207,21 +306,24 @@ const SellPage = () => {
                   <span className="text-green-600 gap-1 flex flex-row items-center">
                     <SlLike /> 95%
                   </span>
-                  Commission : <span className="text-green-600">0.5%</span>
+                  Commission :{" "}
+                  <span className="text-green-600">
+                    {payments?.commission_rate}%
+                  </span>
                 </p>
               </p>
             </div>
           </div>
-          <div className="flex flex-row gap-10 w-full">
+          <div className="flex small wrap flex-row gap-10 w-full">
             <div className="flex flex-col items-center justify-center gap-1">
-              <p className="white">10 minutes</p>
+              <p className="white">{payments?.limit_duration} minutes</p>
               <p
                 style={{
                   fontSize: "13px",
                 }}
                 className="g"
               >
-                Time limit
+                Time limit :0.7
               </p>
             </div>
             <div className="flex flex-col items-center justify-center gap-1">
@@ -236,7 +338,13 @@ const SellPage = () => {
               </p>
             </div>
             <div className="flex flex-col items-center justify-center gap-1">
-              <p className="white">1,200 USDT</p>
+              <p className="white">
+                {" "}
+                {payments?.amount !== undefined && payments?.amount !== null
+                  ? Number(payments?.amount).toFixed(2)
+                  : "0.00"}{" "}
+                USDT
+              </p>
               <p
                 style={{
                   fontSize: "13px",
@@ -249,8 +357,8 @@ const SellPage = () => {
           </div>
         </div>
         <div></div>
-        <div className="flex items-center justify-between">
-          <p> Order Info</p>
+        <div className="flex  small wrapitems-center justify-between">
+          <p> order Info</p>
           <p
             className="flex flex-row items-center gap-2
           "
@@ -262,29 +370,17 @@ const SellPage = () => {
             />{" "}
             Order Number :{" "}
             <span className="text-green-600 flex flex-row items-center gap-1 ml-3">
-              9346457687345 <Copy size={17} />
+              {payments?.id} <Copy size={17} />
             </span>
           </p>
         </div>
-        <div className="flex gap-10 justify-around p-1 rounded-lg border border-slate-700 items-center">
+        <div className="flex gap-10 justify-around p-1 small wrap rounded-lg border border-slate-700 items-center">
           <div className="flex flex-col gap-1 p-1  ">
-            <p className="g">I want to Sell</p>
+            <p className="g">I want to Send</p>
             <div className="flex flex-row  justify-between items-center rounded-lg  w-56  gap-1 p-2 border border-slate-700 items-center">
-            <p className="green flex items-center gap-1">
-                <img
-                  src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
-                  alt=""
-                />{" "}
-                200.1045 <span className="white">USDT</span>
-              </p>
-             
-            </div>
-          </div>
-          <div className="flex flex-col gap-1 p-1  ">
-            <p className="g">I want to Receive</p>
-            <div className="flex flex-row  justify-between items-center rounded-lg  w-56  gap-1 p-2 border border-slate-700 items-center">
-            <p className="green flex p-1 justify-center items-center gap-1">
-                <DollarSign /> 200
+              <p className="green flex justify-around ">
+                <DollarSign />{" "}
+                {fromDashboard}
               </p>
               <p className="flex flex-row  items-center">
                 USD <IoIosArrowDown className="g" />
@@ -292,34 +388,41 @@ const SellPage = () => {
             </div>
           </div>
           <div className="flex flex-col gap-1 p-1  ">
-            <p className="g ">Commission</p>
-            <div className="flex g  justify-between items-center rounded-lg w-56  gap-1 p-1 border border-slate-700 grey">
+            <p className="g">I want to Receive</p>
+            <div className="flex  rounded-lg w-56 flex-col gap-1 p-1 border border-slate-700 items-">
+              <p className="green flex items-center gap-1">
+                <img
+                  src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
+                  alt=""
+                />{" "}
+               {fromDashboard-0.5}
+                <span className="white">USDT</span>
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col gap-1 p-1  ">
+            <p className="g">Commission</p>
+            <div className="flex g  justify-between items-center rounded-lg w-56  gap-1 p-1 border border-slate-700 items-">
               <p className="green flex p-1 justify-center items-center gap-1">
-                <DollarSign /> 1%
+                <DollarSign /> {payments?.commission_rate}%
               </p>
               <p>USD</p>
             </div>
           </div>
         </div>
-        <div className="flex flex-row items-center justify-between">
-          <p>Send money to:</p>
-          <p className="flex flex-row items-center gap-2">
-            <Clock color="green" /> Transaction time : <span className="text-green-600">9:45</span>
-          </p>
-        </div>
         <div className="flex flex-col rounded-lg secondary border border-slate-700  p-2 w-full">
-          <div className="flex flex-row w-full p-1 items-center gap-10 justify-between">
+          <div className="flex small wrap flex-row w-full p-1 items-center gap-10 justify-between">
             <div
               style={{ width: "40%" }}
-              className="primary rounded-lg w-full p-2  h-60"
+              className="primary small rounded-lg w-full p-2  h-60"
             >
-              <p className="flex flex-row items-center  gap-1">
+              <p className="flex small flex-row items-center  gap-1">
                 {" "}
                 <img
                   src="https://res.cloudinary.com/pitz/image/upload/v1721888934/Premier_bank_1_ljsbtx.png"
                   alt=""
                 />{" "}
-                Premier bank
+                {payments?.payment_method?.name?payments?.payment_method?.name:"Primer Bank"}
               </p>
             </div>
             <div
@@ -330,7 +433,7 @@ const SellPage = () => {
                 <p className="g">Account Name</p>
                 <div className="flex flex-row gap-2 justify-between  w-full">
                   <p className="border flex items-center w-full greybg border-green-600 rounded-2xl p-1">
-                    <Dot /> <p>Omar Ali</p>
+                    <Dot /> <p> {payments?.advertiser_name?.username}</p>
                   </p>
                   <p className="text-green-600 flex items-center">
                     {" "}
@@ -342,7 +445,8 @@ const SellPage = () => {
                 <p className="g">Account Number</p>
                 <div className="flex flex-row gap-2 justify-between  w-full">
                   <p className="border text-green-600 flex items-center w-full greybg border-green-600 rounded-2xl p-1">
-                    <Dot color="green" /> <p>1324244243</p>
+                    <Dot color="green" />{" "}
+                    <p>{payments?.payment_provider}</p>
                   </p>
                   <p className="text-green-600 flex items-center">
                     {" "}
@@ -386,43 +490,25 @@ const SellPage = () => {
               </p>
             </p>
           </div>
-          {/* <p className="mt-1 flex items-center gap-2">
-  <input
-    type="checkbox"
-    className="form-checkbox h-4 w-4  border border-green-500 text-green-500 text-decoration-none"
-  />
-  <span>
-    I confirm that I received amount to my Bank account{" "}
-    
-  </span>
-</p> */}
-
-<p className="mt-1 flex items-center gap-2">
-  <div className="relative inline-block">
-    <input
-      type="checkbox"
-      className="h-5 w-5 cursor-pointer appearance-none rounded-md border-2 border-green-500 bg-transparent checked:bg-green-500"
-    />
-
-  </div>
-  <span>
-    I confirm that I received the amount to my bank account.
-  </span>
-</p>
-
-          <div className="flex mt-2 flex-row gap-10 justify-between">
+          {/* <p className="mt-1">
+            I have an issue with{" "}
+            <span onClick={handleOpen} className="span text-red-600">
+              {" "}
+              Appeal/Complain
+            </span>
+          </p> */}
+          <div className="flex mt-7 flex-row small wrap gap-10 justify-between">
             <button className="border w-full border-slate-700  rounded-lg p-2">
-              Cancel
+              Cancel Transaction
             </button>
-            <button className=" w-full bg-red-600 rounded-lg p-2">
-              Money Sent, notify seller
+            <button onClick={handleSubmit} className=" w-full border border-green-700 bg-red-700 rounded-lg p-2">
+             {loading1?<CircularProgress/>:"Money sent,notify seller "} 
             </button>
           </div>
         </div>
       </div>
-     
       <Modal
-        className=" rounded-lg"
+        className=" rounded-lg border-slate-700"
         open={open}
         onClose={handleClose}
         aria-labelledby="child-modal-title"
@@ -430,12 +516,17 @@ const SellPage = () => {
       >
         <Box
           sx={{ ...style, width: "40%" }}
-          className="rounded-lg primary white"
+          className="rounded-lg primary white border-slate-700"
         >
           <h2 className="text-center" id="child-modal-title">
             Submit Appeal
           </h2>
-          <div>
+          <div
+            className="p-1 rounded-lg"
+            style={{
+              background: "#453A30            ",
+            }}
+          >
             <p
               style={{
                 color: "#E06542",
@@ -505,7 +596,7 @@ const SellPage = () => {
               src="https://res.cloudinary.com/pitz/image/upload/v1721844614/Group_34041_rtorm8.png"
               alt=""
             />{" "}
-            Adviteriser user name
+            ADviteriser user name
           </p>
           <p
             style={{ height: "1px" }}
@@ -545,11 +636,7 @@ const SellPage = () => {
         <p className="flex flex-row items-center gap-1">
           Advertiser's Terms <BsExclamationCircle color="red" />
         </p>
-        <img
-          className="mt-6"
-          src="https://res.cloudinary.com/pitz/image/upload/v1721903537/Input_uuxd8r.png"
-          alt=""
-        />
+       {payments?.terms_and_conditions}
       </div>
     </div>
   );

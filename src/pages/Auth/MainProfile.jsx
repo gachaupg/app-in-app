@@ -7,7 +7,7 @@ const MainProfile = () => {
   return (
     <div style={{
       background: "#0c0c0f",
-    }} className="small wrap ">
+     }} className="small wrap ">
       <h2 className="text-white txt ml-40 pt-6">Client Id</h2>
       <div className="flex p-2 flex-row wrap pro2 pro-div justify-around pb-10 pt-5">
         <div style={{

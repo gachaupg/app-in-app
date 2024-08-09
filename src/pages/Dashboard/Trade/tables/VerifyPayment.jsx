@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 import { AttachFile } from "@mui/icons-material";
@@ -307,7 +308,7 @@ const verifyPayment = () => {
       /> */}
     </div>
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-gray-900 border border-blue-500 rounded-lg p-6 w-full max-w-md">
+      <div className="primary border border-slate-800 rounded-lg p-6 w-full max-w-md">
         <h2 className="text-center text-white text-lg font-semibold mb-6">
           Confirm Transaction
         </h2>

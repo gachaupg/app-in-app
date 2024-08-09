@@ -14,6 +14,7 @@ import Center from "../Trade/Center";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../../redux/features/authSlice";
+import { RxAvatar } from "react-icons/rx";
 
 const MainDash = () => {
 
@@ -140,6 +141,7 @@ const MainDash = () => {
                 textDecoration: activeTab1 === "Dashboard" ? "underline" : "",
                 textDecorationColor: activeTab1 === "Dashboard" ? "green" : "",
                 color: activeTab1 === "Dashboard" ? "white" : "grey",
+                cursor:'pointer'
               }}
             >
               P2P Dashboard
@@ -196,11 +198,7 @@ const MainDash = () => {
             <>
               <div className="secondary border rounded-2xl border-gray-700 wrap flex flex-row small wrap w-full justify-between items-center  p-2">
                 <div className="flex flex-row gap-2">
-                  <img
-                    className="h-10"
-                    src="https://res.cloudinary.com/pitz/image/upload/v1721370108/Ellipse_858_1_frdc61.png"
-                    alt=""
-                  />
+                 <RxAvatar className="text-slate-500" size={40}/>
                   <div>
                     <p style={{ fontSize: "16px" }} className="white">
                       Hello, {user?.user?.username}!
@@ -222,7 +220,7 @@ const MainDash = () => {
                   <p style={{ fontSize: "13px" }} className="grey">
                     Use ID
                   </p>
-                  <p className="white flex flex-row items-center gap-1">
+                  <p className="white  cursor-pointer flex flex-row items-center gap-1">
                     {user?.user?.id} <Copy size={16} style={{ color: "#F79330" }} />
                   </p>
                 </div>
@@ -234,11 +232,11 @@ const MainDash = () => {
                     {user?.user?.user_type}{" "}
                   </p>
                 </div>
-                <div className="flex flex-row wrap items-center gap-5">
+                <div className="flex flex-row wrap small-gap items-center gap-5">
                   <div className="flex flex-row gap-3">
                     <Link to="/buy-adds">
                     <Btn
-                      title="Post Buy Add"
+                      title="Post Buy Ad"
                       icon={<Plus size={15} />}
                       bg="#1D8751"
                       color="#FFFFFF"
@@ -248,7 +246,7 @@ const MainDash = () => {
                     </Link>
                     <Link to="/adds">
                     <Btn
-                      title="Post Sell Add"
+                      title="Post Sell Ad"
                       icon={<Plus size={15} />}
                       bg="#E23D3A"
                       color="#FFFFFF"
@@ -334,8 +332,8 @@ const MainDash = () => {
                                 alt=""
                               />
                             </div>
-                            <p className="white mr-10">0.1234</p>
-                            <p className="white mr-6">0.1234</p>
+                            <p className="white mr-10">0.00</p>
+                            <p className="white mr-6">0.00</p>
                           </div>
                         </div>
                       </div>
@@ -365,7 +363,7 @@ const MainDash = () => {
                         alt=""
                       />
                       <Table />
-                      <div className="flex items-center justify-center">
+                      {/* <div className="flex items-center justify-center">
                         <img
                           style={{
                             width: "40%",
@@ -374,7 +372,7 @@ const MainDash = () => {
                           src="https://res.cloudinary.com/pitz/image/upload/v1721386689/Group_164058_cybkz7.png"
                           alt=""
                         />
-                      </div>
+                      </div> */}
                     </div>
                     <div
                       className="ml-10 small wrap "
@@ -396,10 +394,10 @@ const MainDash = () => {
                       <div className="white ml-2">
                         <p className="grey">Balance</p>
                         <p className="flex flex-row">
-                          1900.8648 USDT{" "}
+                          00.00 USDT{" "}
                           <span className="grey flex flex-row">
                             {" "}
-                            <span className="ml-1">≈ </span> 1,900 USD
+                            <span className="ml-1">≈ </span> 00.00 USD
                           </span>
                         </p>
                       </div>
@@ -437,10 +435,10 @@ const MainDash = () => {
                       <div className="white ml-2">
                         <p className="grey">Balance</p>
                         <p className="flex flex-row">
-                          1900.8648 USDT{" "}
+                          00.00 USDT{" "}
                           <span className="grey flex flex-row">
                             {" "}
-                            <span className="ml-1">≈ </span> 1,900 USD
+                            <span className="ml-1">≈ </span> 00.00 USD
                           </span>
                         </p>
                       </div>

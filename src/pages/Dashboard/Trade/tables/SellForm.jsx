@@ -20,13 +20,20 @@ const initiaalState = {
   completion_rate: "",
 };
 
-const SellForm = ({ id,buy ,setBuy}) => {
+const BuyForm = ({ id, buy, setBuy }) => {
   const [show, setShow] = useState("Buy");
+  const [final, setFinal] = useState();
   const [payments, setPayments] = useState([]);
-  const [loading1, setLoading1] = useState(true);
+  const [loading1, setLoading1] = useState(false);
+  const [amount, setAmount] = useState("");
   // console.log("buy", payments);
   const { user } = useSelector((state) => ({ ...state.auth }));
   const navigate = useNavigate("");
+
+  const handleClick = () => {
+    setFinal(!final);
+  };
+
   useEffect(() => {
     fetchData();
   }, [user.access]);
@@ -58,6 +65,9 @@ const SellForm = ({ id,buy ,setBuy}) => {
       setLoading1(false);
     }
   }
+  const routeState = {
+    amount: amount,
+  };
   return (
     <div>
       <div className="secondary w-full flex   flex-row justify-between secondary  border border-slate-700 p-2 rounded-lg ">
@@ -75,7 +85,12 @@ const SellForm = ({ id,buy ,setBuy}) => {
                 }}
                 className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
               >
-                {payments.advertiser_name?.username.substring(0, 2)}
+                {payments?.advertiser_name?.username
+                  .substring(0, 1)
+                  .toUpperCase() +
+                  payments?.advertiser_name?.username
+                    .substring(1, 2)
+                    .toUpperCase()}
               </span>
             </p>
             <div className="flex flex-col  ">
@@ -104,7 +119,7 @@ const SellForm = ({ id,buy ,setBuy}) => {
                     {payments.completion_rate * 100}%
                   </span>{" "}
                   Completion
-                  <span className="text-green-600 flex flex-row items-center">
+                  <span className="text-green-600 flex flex-row justify-between items-center">
                     <SlLike /> 95%
                   </span>
                 </p>
@@ -135,7 +150,13 @@ const SellForm = ({ id,buy ,setBuy}) => {
               </p>
             </div>
             <div className="flex flex-col items-center justify-center gap-1">
-              <p className="white">1,200 USDT</p>
+              <p className="white">
+                {" "}
+                {payments.amount !== undefined && payments.amount !== null
+                  ? Number(payments.amount).toFixed(2)
+                  : "0.00"}{" "}
+                USDT
+              </p>
               <p
                 style={{
                   fontSize: "13px",
@@ -171,36 +192,31 @@ const SellForm = ({ id,buy ,setBuy}) => {
           </p>
           <div className="border primary h- border-slate-700 rounded-2xl w-full p-3 flex flex-row justify-between gap-2">
             <div className="flex flex-col gap-3">
-              <p className="g">I want to sell</p>
+              <p className="g">I want to send</p>
+              <input
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="220 USDT"
+                type="text"
+                className="w-full p-1 primary no-border white place"
+              />
+            </div>
+            <p className="white flex flex-row items-center gap-1">
+              USD <IoIosArrowDown />
+            </p>
+          </div>
+          <div className="border primary  border-slate-700 rounded-2xl w-full p-3 flex flex-row justify-between gap-2">
+            <div className="flex flex-col gap-3">
+              <p className="g">I want to recieve</p>
               <p className="white flex flex-row items-center gap-3">
                 {" "}
                 <img
                   src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
                   alt=""
                 />{" "}
-                
-                220<p className="g">USDT</p>
+                <p>{amount !== "" ? amount - 0.5 : "0.0"}</p>
+                <span className="g ">USD </span>
               </p>
             </div>
-            <p className="text-yellow-500 flex flex-row items-center gap-1">
-              Max
-            </p>
-          </div>
-          <div className="border primary  border-slate-700 rounded-2xl w-full p-3 flex flex-row justify-between gap-2">
-            <div className="flex flex-col gap-3">
-              <p className="g">I want to recieve</p>
-             
-              <p className="white flex flex-row items-center gap-1">
-                <DollarSign color="green" />{" "}
-                {payments.amount !== undefined && payments.amount !== null
-                  ? Number(payments.amount).toFixed(2)
-                  : "0.00"}
-              </p>
-            
-            </div>
-            <p className="white flex flex-row items-center gap-1">
-              USD <IoIosArrowDown />
-            </p>
             {/* <p className="white flex flex-row items-center gap-1">
               USD <IoIosArrowDown />
             </p> */}
@@ -208,14 +224,17 @@ const SellForm = ({ id,buy ,setBuy}) => {
 
           <div className="border primary  border-slate-700 rounded-2xl w-full p-3 flex flex-row justify-between gap-2">
             <select className="primary no-border w-full  g" name="" id="">
+              <option value="">Set my payment method</option>
               <option className="primary g" value="Select the payment method">
-                {payments.payment_method?.name}
+                {payments?.payment_method?.name
+                  ? payments?.payment_method?.name
+                  : "Primer Bank"}
               </option>
             </select>
           </div>
           <div className=" w-full mt-7 flex flex-row small wrap  gap-24">
             <button
-              // onClick={()=}
+              // onClick={()=> hand}
               style={{
                 width: "42%",
               }}
@@ -232,16 +251,14 @@ const SellForm = ({ id,buy ,setBuy}) => {
               className="p-1 small bg-red-600 white rounded-lg"
             >
               <Link
-              
-                to={{
-                  pathname: `/sell/${payments.id}`,
-                }}
+                to={`/sell/${payments.id}`}
+                state={routeState} // Ensure this is correctly defined
                 style={{
                   color: "white", // Ensures the text is white
                   textDecoration: "none", // Removes the underline
                 }}
               >
-                Sell USDT
+                SELL USDT
               </Link>
             </button>
           </div>
@@ -251,4 +268,4 @@ const SellForm = ({ id,buy ,setBuy}) => {
   );
 };
 
-export default SellForm;
+export default BuyForm;

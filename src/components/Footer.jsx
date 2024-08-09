@@ -29,8 +29,8 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="primary text-white py-4">
-      <div className=" container mx-auto flex justify-between flex-wrap items-center">
+    <footer className="primary small wrap text-white py-4">
+      <div className=" container mx-auto small wrap flex justify-between  items-center">
         <div className="flex flex-col   gap-6 items-start justify-start">
           <div className="log mt-12">
             <img
@@ -40,7 +40,7 @@ const Footer = () => {
             />
           </div>
           <p className="text-white"> Follow us on : </p>
-          <div className="flex gap-4">
+          <div className="flex wrap small gap-4">
             <a href="#" className="hover:text-gray-300">
               <img
                 className="h-[24px] w-25 "

@@ -127,7 +127,7 @@ const Register = () => {
             objectFit: "fill",
             marginBottom: "7rem",
           }}
-          src="https://omaya.lbmdemo.com/images/login/login.png"
+          src="https://res.cloudinary.com/pitz/image/upload/v1723127986/Frame_34357_uyqvfq.png"
           alt=""
         />
       </div>
@@ -139,12 +139,12 @@ const Register = () => {
             onClick={handleType}
             style={{
               background:
-                type === "Individual" ? "#1D8751              " : "#1f1f27 ",
+                type === "Individual" ? "#1D8751" : "#1f1f27 ",
             }}
             className="type-btn"
           >
             <BsFillPeopleFill color="white" />
-            <span style={{ marginLeft: "3px" }}>Individual</span>
+            <span style={{ marginLeft: "3px", color:type === "Individual" ? "white" : " ", }}>Individual</span>
           </button>
           <button
             onClick={handleType}

@@ -89,7 +89,7 @@ const navigate=useNavigate()
         <div className='w-full flex pro  flex-wrap gap-7'>
 
             <div className='factor' style={{
-                width: '65%'
+                width: '100%'
             }}>
                 <div className="flex items-center w-full p-5 justify-between">
                     <h2>Wallet Address</h2>

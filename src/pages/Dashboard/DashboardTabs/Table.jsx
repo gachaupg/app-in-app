@@ -1,65 +1,78 @@
+/* eslint-disable no-unused-vars */
+import React from "react";
+import Skeleton from "react-loading-skeleton";
 import { TiArrowUnsorted } from "react-icons/ti";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { Eye } from "lucide-react";
 import { MoreHoriz } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { CircularProgress } from "@mui/material";
+import { endpoint } from "../../../utils/APIRoutes";
 
-function Table() {
-  const data = [
-    {
-      id: 16657,
-      type: "P2P Buy",
-      date: "12-Jun-2023",
-      amount: 100,
-      status: "Complete",
-    },
-    {
-      id: 26767,
-      type: "P2P Sell",
-      date: "12-Jun-2023",
-      amount: 200,
-      status: "Pending",
-    },
-    {
-      id: 37766,
-      type: "P2p Sell",
-      date: "12-Jun-2023",
-      amount: 300,
-      status: "Complete",
-    },
-    {
-      id: 48888,
-      type: "P2P Buy",
-      date: "12-Jun-2023",
-      amount: 400,
-      status: "Pending",
-    },
-    {
-      id: 57878,
-      type: "P2P Buy",
-      date: "12-Jun-2023",
-      amount: 500,
-      status: "Complete",
-    },
-  ];
+function OrdersTable() {
+  const [payments, setPayments] = useState([]);
+  const [loading1, setLoading1] = useState(true);
+  const { user } = useSelector((state) => ({ ...state.auth }));
+  const navigate = useNavigate();
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 5;
+
+  useEffect(() => {
+    fetchData();
+  }, [user]);
+
+  async function fetchData() {
+    const token = user.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await axios.get(
+        `${endpoint}/trading_engine/p2p/all-orders/`,
+        { headers }
+      );
+      setLoading1(false);
+      const data = res.data.filter(
+        (data) => data.advertiser_name.id === user.user.id
+      );
+      setPayments(data);
+    } catch (error) {
+      console.log(error);
+      setLoading1(false);
+    }
+  }
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const paginatedPayments = payments.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  const totalPages = Math.ceil(payments.length / rowsPerPage);
 
   return (
     <div style={{ width: "100%", overflowX: "auto" }} className="Table">
-      <div className="p-1 flex flex-row gap-10 mb-2 justify-between items-center">
-        <h2 className="white flex flex-row gap-1">
-          Transaction History{" "}
-          <p className="grey flex flex-row gap-1  items-center">
-            month <MdOutlineKeyboardArrowDown />
-          </p>
-        </h2>
-
-        <img
-          src="https://res.cloudinary.com/pitz/image/upload/v1721374921/Group_164057_uqm3f1.png"
-          alt=""
-        />
-      </div>
       <div style={{ overflowX: "auto" }}>
         <table
-          className="styled-table rounded-2xl  border secondary"
+          className="styled-table rounded-2xl border secondary"
           style={{ minWidth: "600px" }}
         >
           <thead
@@ -84,7 +97,7 @@ function Table() {
                   }}
                   className="flex items-center grey"
                 >
-                  ID <TiArrowUnsorted />
+                  Id <TiArrowUnsorted />{" "}
                 </th>
               </th>
               <th>
@@ -104,7 +117,17 @@ function Table() {
                   }}
                   className="flex items-center grey"
                 >
-                  Date <TiArrowUnsorted />{" "}
+                  Amount <TiArrowUnsorted />{" "}
+                </th>
+              </th>
+              {/* <th>
+                <th
+                  style={{
+                    color: "#788099",
+                  }}
+                  className="flex items-center grey"
+                >
+                  Rate <TiArrowUnsorted />{" "}
                 </th>
               </th>
               <th>
@@ -114,9 +137,9 @@ function Table() {
                   }}
                   className="flex items-center grey"
                 >
-                  Amount <TiArrowUnsorted />{" "}
+                  Date <TiArrowUnsorted />{" "}
                 </th>
-              </th>
+              </th> */}
               <th>
                 <th
                   style={{
@@ -144,55 +167,143 @@ function Table() {
               </th>
             </tr>
           </thead>
-          <tbody className="primary ">
-            {data.map((row) => (
-              <tr style={{ fontSize: "14px" }} key={row.id}>
-                <td className="flex flex-row items-center gap-1">
-                  <img
-                    className="h-8"
-                    src={
-                      row.type === "P2P Buy"
-                        ? "https://res.cloudinary.com/pitz/image/upload/v1721374749/Vector_349_yf15jj.png"
-                        : "https://res.cloudinary.com/pitz/image/upload/v1721381935/Vector_349_1_s2dd2x.png"
-                    }
-                    alt=""
-                  />
-
-                  <img
-                    className="h-10"
-                    src="https://res.cloudinary.com/pitz/image/upload/v1721374473/87496d50-2408-43e1-ad4c-78b47b448a6a.png_aoj8i3.png"
-                    alt=""
-                  />
-                </td>
-                <td className="grey">{row.id}</td>
-                <td>{row.type}</td>
-                <td className="grey"> {row.date}</td>
-                <td className="grey">
-                  {" "}
-                  <span
-                    className={`${
-                      row.type === "P2P Buy" ? "green" : "text-red-600"
-                    }`}
-                  >
-                    {" "}
-                    {row.type === "P2P Buy" ? "+" : "-"} {row.amount}
-                  </span>{" "}
-                  USD
-                </td>
-                <td className="grey">New</td>
-                <td>
-                  <Eye color="green" />
-                </td>
-                <td>
-                  <MoreHoriz color="white" />
+          {loading1 ? (
+            <tbody className="primary">
+              {Array(5)
+                .fill({})
+                .map((_, index) => (
+                  <tr style={{ fontSize: "14px" }} key={index}>
+                    <td className="flex flex-row items-center gap-1">
+                      <Skeleton
+                        className="secondary"
+                        circle
+                        height={40}
+                        width={40}
+                      />
+                      <Skeleton className="secondary" width={80} />
+                    </td>
+                    <td>
+                      <Skeleton className="secondary" width={80} />
+                    </td>
+                    <td>
+                      <Skeleton className="secondary" width={80} />
+                    </td>
+                    <td>
+                      <Skeleton className="secondary" width={80} />
+                    </td>
+                    <td>
+                      <Skeleton className="secondary" width={80} />
+                    </td>
+                    <td>
+                      <Skeleton className="secondary" width={80} />
+                    </td>
+                    <td>
+                      <Skeleton className="secondary" width={80} />
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          ) : payments.length === 0 ? (
+            <tbody className="flex items-center justify-center">
+              <tr>
+                <td colSpan="7">
+                  <p className="white">No orders yet</p>
                 </td>
               </tr>
-            ))}
-          </tbody>
+            </tbody>
+          ) : (
+            <tbody className="primary">
+              {paginatedPayments.map((row) => (
+                <tr
+                  className="order-bottom"
+                  style={{ fontSize: "14px" }}
+                  key={row.id}
+                >
+                  <td className="flex flex-row items-center gap-1">
+                    <img
+                      className="h-10"
+                      src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
+                      alt=""
+                    />{" "}
+                    {row.asset}
+                  </td>
+                  <td
+                    className={`${
+                      row.order_type === "sell"
+                        ? "text-red-700"
+                        : "text-green-700"
+                    } ml-4 pl-6`}
+                  >
+                    {row.id}
+                  </td>
+                  <td
+                    className={`${
+                      row.order_type === "sell"
+                        ? "text-red-700"
+                        : "text-green-700"
+                    }`}
+                  >
+                    {row.order_type==="sell"? "P2P Sell" :"P2P Buy"}
+                  </td>
+                  <td className="grey">
+  <span
+    className={`${
+      row.type === "P2P Buy" ? "green" : "text-red-600"
+    }`}
+  >
+    {row.type === "P2P Buy" ? "+" : "-"} {Number(row.amount).toFixed(2)}
+  </span>{" "}
+  USD
+</td>
+
+                  {/* <td className="grey">{row.commission_rate}</td>
+                  <td className="grey">
+                    {new Date(row.created_on).toLocaleDateString()}
+                  </td> */}
+                  <td className="grey">{row.status}</td>
+                  <td className="flex flex-row items-center gap-2">
+                    <Eye color="green"/>
+                  </td>
+                  <td>
+                    <MoreHoriz/>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
         </table>
+      </div>
+
+      {/* Pagination Controls */}
+      <div className="pagination-controls flex justify-center items-center mt-4">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="pagination-btn mx-2 white"
+        >
+          Previous
+        </button>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            className={`pagination-btn g mx-1 ${
+              currentPage === index + 1 ? "active" : ""
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="pagination-btn mx-2 g"
+        >
+          Next
+        </button>
       </div>
     </div>
   );
 }
 
-export default Table;
+export default OrdersTable;

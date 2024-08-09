@@ -2,7 +2,7 @@
 import { CheckBox } from "@mui/icons-material";
 import { current } from "@reduxjs/toolkit";
 import axios from "axios";
-import { Clock, Copy, DollarSign, Plus } from "lucide-react";
+import { Clock, Copy, DollarSign, Link, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { IoIosArrowDown, IoMdArrowDropdown } from "react-icons/io";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
@@ -197,7 +197,7 @@ const Adds1 = () => {
       return;
     }
 
-    if (sell.order_type === "sell") {
+    if (sell.order_type === "buy") {
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -264,13 +264,14 @@ const Adds1 = () => {
         </div>
       )}
       <div className="primary  flex wrap small justify-between flex-row ">
-        <div
+      <div
           style={{ width: "18%", color: "#727272", fontSize: "15px" }}
-          className="small flex flex-col gap-6 pt-12"
-        >
+          className="small dash-side flex flex-col gap-6 pt-12"
+         >
           {tabs.map((tab) => (
-            <div
-              key={tab.name}
+          <Link key={tab.name} to={`/${tab.link}`}>
+              <div
+              
               className={`flex w-full flex-row  pl-20 items-center rounded-tr-lg rounded-br-lg gap-4 p-2 `}
               style={{
                 cursor: "pointer",
@@ -287,7 +288,7 @@ const Adds1 = () => {
                 style={{
                   fontSize: tab.name === "Buy Crypto" ? "15.5px" : "h-6",
                 }}
-                className={`flex items-center justify-between ml-5 w-full`}
+                className={`flex items-center ${activeTab === tab.name ? "white" :""} justify-between ml-5 w-full`}
               >
                 {tab.name}
                 {tab.name === "Account" && (
@@ -295,6 +296,7 @@ const Adds1 = () => {
                 )}
               </div>
             </div>
+            </Link>
           ))}
         </div>
 

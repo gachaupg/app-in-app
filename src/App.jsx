@@ -34,6 +34,7 @@ import DoughnutChart from "./components/Pichart";
 import BuyAdds from "./pages/Dashboard/Trade/p2pCenter/BuyAdds";
 import BuyASdss from "./pages/Dashboard/Trade/p2pCenter/Adds/BuyAd";
 import Adds1 from "./pages/Dashboard/Trade/p2pCenter/Adds/BuyAd";
+import MainProfilePage from "./pages/Auth/MainProfilePage";
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -65,12 +66,14 @@ function App() {
         <Route path="/blog" element={<Blog/>}/> 
         <Route path="/orders" element={<Orders/>}/> 
         <Route path="/reset-password" element={<ForgotPasswordButton />} />
+                {/* <Route path="/sell/:id" element={<VerifyPayment />} /> */}
+
         <Route path="/buy/:id" element={<BuyPage />} />
         {/* <Route path="/sell/:id" element={<VerifyPayment />} /> */}
         <Route path="/sell/:id" element={<SellPage />} />
 
         <Route path="/adds" element={<Adds />} />
-        <Route  path="/account" element={<Test />} />
+        <Route  path="/account" element={<MainProfilePage />} />
         <Route  path="/chats" element={<DoughnutChart />} />
         <Route  path="/buy-adds" element={<Adds1 />} />
       </Routes>

@@ -12,10 +12,10 @@ console.log('====================================');
 console.log(user);
 console.log('====================================');
   return (
-    <div className='flex flex-col w-full primary small pl-52 pr-80'>
+    <div className='flex flex-col w-full primary small '>
        <div  style={{
     }} className="">
-      <div className="flex p-2 flex-row wrap pro2 pro-div justify-around pb-10 pt-5">
+      <div className="justify-around ">
         <div style={{
           width:"100%"
         }} className="flex flex-col  width-change gap-5">
@@ -39,8 +39,8 @@ console.log('====================================');
           <h2 className="text-white ">Basic Info</h2>
           <div className="border secondary pro-div border-slate-800 rounded-lg p-4  flex flex-col   justify-center">
             <h2 className="text-white">Your Client Id</h2>
-            <div className="flex flex-row items-center  main-pro  jus justify- gap-24 pr-20">
-              <div className="flex flex-col ">
+            <div className="flex flex-row items-center  w-full main-pro mt-2  jus justify- gap-24 ">
+              <div className="flex w-full flex-col ">
                 <label className="text-white mt-1" htmlFor="">
                   Full name
                 </label>
@@ -68,10 +68,10 @@ console.log('====================================');
             </button>
           </div>
           <h2 className="text-white ">Password</h2>
-          <div className="border secondary border-slate-800 rounded-lg p-4  flex flex-col   justify-center">
+          <div className="border  secondary border-slate-800 rounded-lg p-4 w-full  flex flex-col   justify-center">
             <h2 className="text-white">Password</h2>
-            <div className="flex flex-row items-center flex-wrap  main-pro gap-44">
-              <div className="flex flex-col w-full md:w-1/2 lg:w-1/3">
+            <div className="flex flex-row justify-between w-full ">
+              <div className="w-full flex flex-col">
                 <label className="text-white mt-1" htmlFor="">
                   {" "}
                   Enter Password
@@ -82,9 +82,9 @@ console.log('====================================');
                   type="password"
                 />
               </div>
-              <div className="flex flex-col w-full md:w-1/2 lg:w-1/3">
+              <div className="">
                 <label className="text-white" htmlFor="">
-                  Enter Password
+                  Confirm Password
                 </label>
                 <input
                   placeholder="Email"
@@ -100,16 +100,16 @@ console.log('====================================');
           <h2 className="text-white ">System Theme</h2>
           <div className="border secondary border-slate-800 rounded-lg p-4  flex flex-col   justify-center">
             <div className="flex flex-row items-center gap-2  jus justify-between">
-              <button className="text-white w-full md:w-1/2 lg:w-1/3 mt-6 text-center rounded-2xl p-1 flex flex-row items-center justify-center pl-2 pr-2 bg-green-600">
+              <button className="text-white w-full md:w-1/2 p-2 lg:w-1/3 mt-6 text-center rounded-2xl p-1 flex flex-row items-center justify-center pl-2 pr-2 bg-green-600">
                 {" "}
                 <CiLight /> Light
               </button>
-              <button className="text-green-600 border border-green-600 w-full md:w-1/2 primary lg:w-1/3 mt-6 text-center rounded-2xl p-1 flex flex-row items-center justify-center pl-2 pr-2 bg-slate-600">
+              <button className="text-green-600 border p-2 border-green-600 w-full md:w-1/2 primary lg:w-1/3 mt-6 text-center rounded-2xl p-1 flex flex-row items-center justify-center pl-2 pr-2 bg-slate-600">
                 <CiLight /> Dark
               </button>
             </div>
             <button className="text-green-600  w-full mt-6 text-center rounded-2xl p-1 flex flex-row items-center justify-center pl-2 pr-2 primary">
-              update
+              Update
             </button>
           </div>
         </div>
