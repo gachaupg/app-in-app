@@ -339,7 +339,7 @@ const SellPage = () => {
                 </div>
               </div>
               <div className="w-full">
-                <p className="g">Account Name</p>
+                <p className="g">Account Number</p>
                 <div className="flex flex-row gap-2 justify-between  w-full">
                   <p className="border text-green-600 flex items-center w-full greybg border-green-600 rounded-2xl p-1">
                     <Dot color="green" /> <p>1324244243</p>
