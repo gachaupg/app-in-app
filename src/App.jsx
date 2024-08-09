@@ -26,6 +26,7 @@ import Orders from "./pages/p2p/Orders";
 import MainDash from "./pages/Dashboard/MainDashbord/MainDash";
 import BuyPage from "./pages/Dashboard/Trade/BuyPage";
 import SellPage from "./pages/Dashboard/Trade/SellPage";
+import VerifyPayment from "./pages/Dashboard/Trade/tables/VerifyPayment";
 import Adds from "./pages/Dashboard/Trade/p2pCenter/adds";
 import HomePage from "./pages/landing-page/Home";
 import Test from "./pages/Auth/Test";
@@ -65,7 +66,9 @@ function App() {
         <Route path="/orders" element={<Orders/>}/> 
         <Route path="/reset-password" element={<ForgotPasswordButton />} />
         <Route path="/buy/:id" element={<BuyPage />} />
+        {/* <Route path="/sell/:id" element={<VerifyPayment />} /> */}
         <Route path="/sell/:id" element={<SellPage />} />
+
         <Route path="/adds" element={<Adds />} />
         <Route  path="/account" element={<Test />} />
         <Route  path="/chats" element={<DoughnutChart />} />
