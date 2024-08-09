@@ -65,7 +65,7 @@ function App() {
         <Route path="/orders" element={<Orders/>}/> 
         <Route path="/reset-password" element={<ForgotPasswordButton />} />
         <Route path="/buy/:id" element={<BuyPage />} />
-        <Route path="/sell" element={<SellPage />} />
+        <Route path="/sell/:id" element={<SellPage />} />
         <Route path="/adds" element={<Adds />} />
         <Route  path="/account" element={<Test />} />
         <Route  path="/chats" element={<DoughnutChart />} />

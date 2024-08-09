@@ -3,13 +3,13 @@
 /* eslint-disable react/prop-types */
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
-import Table from "./tables/BuyTable";
+import Table from "./tables/SellTable";
 import { SlLike } from "react-icons/sl";
 import { DollarSign } from "lucide-react";
 import { IoIosArrowDown } from "react-icons/io";
 import { Link } from "react-router-dom";
 
-const Buy = ({ show ,payments,isLoading}) => {
+const Sell = ({ show ,payments,isLoading}) => {
   return (
     <>
       <div className="   flex wrap small flex-row gap-2w-36 justify-between p-1">
@@ -30,7 +30,7 @@ const Buy = ({ show ,payments,isLoading}) => {
               className="grey bg-slate-600 h-full "
             ></p>
             <select className="secondary text-white" name="" id="">
-              <option value="usdt">USDT</option>
+              <option value="usd">USD</option>
             </select>
            </div>
 
@@ -52,9 +52,9 @@ const Buy = ({ show ,payments,isLoading}) => {
                 </div>{" "}
                 Bank Transfer
               </option>
-              <option value="usdt">Mobile Money</option>
-              <option value="usdt">Merchant</option>
-              <option value="usdt">All</option>
+              <option value="usd">Mobile Money</option>
+              <option value="usd">Merchant</option>
+              <option value="usd">All</option>
             </select>
           </div>
 
@@ -65,11 +65,13 @@ const Buy = ({ show ,payments,isLoading}) => {
               alt=""
             />
             <select className="secondary w-full text-slate-400" name="" id="">
-              <option value="usdt">Salaam Bank</option>
-              <option value="usdt">premier Bank</option>
-              <option value="usdt">Dahabshiil Bank</option>
-              <option value="usdt">Amal Bank</option>
-              <option value="usdt">All</option>
+            <option value="usd">Select Provider</option>
+
+              <option value="usd">Salaam Bank</option>
+              <option value="usd">premier Bank</option>
+              <option value="usd">Dahabshiil Bank</option>
+              <option value="usd">Amal Bank</option>
+              <option value="usd">All</option>
             </select>
           </div>
           <div className="secondary flex h-12  border border-slate-700 p-3 w-12 rounded-lg">
@@ -81,7 +83,7 @@ const Buy = ({ show ,payments,isLoading}) => {
          </div>
          <button
           className={`
-          bg-green-600
+          bg-red-600
            rounded-lg text-center h-12 flex  items-center justify-center w-32 text-white`}
          >
           <img
@@ -96,4 +98,4 @@ const Buy = ({ show ,payments,isLoading}) => {
   );
 };
 
-export default Buy;
+export default Sell;

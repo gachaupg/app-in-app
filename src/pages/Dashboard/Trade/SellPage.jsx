@@ -8,9 +8,13 @@ import { IoMdArrowRoundForward } from "react-icons/io";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
+import React, { useEffect, useState } from "react";
+import { CircularProgress, Typography } from "@mui/material";
+import { IoCheckmarkCircleSharp } from "react-icons/io5";
+import  TextField  from '@mui/material/TextField';
+import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
 import { SlLike } from "react-icons/sl";
 import { BsExclamationCircle } from "react-icons/bs";
-import React from "react";
 
 const style = {
   position: "absolute",
@@ -33,6 +37,31 @@ const SellPage = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  const [open1, setOpen1] = useState(false);
+  const handleOpen1 = () => setOpen1(true);
+  const handleClose1 = () => setOpen1(false);
+  const [feedback, close1] = useState(true);
+  const[comment,setComment]=useState()
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 350,
+    bgcolor: 'background.black',
+    border: 'none',
+    borderRadius:3,
+    boxShadow: 24,
+    p: 4,
+  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+   
+  };
   return (
     <div className="white primary flex justify-between  pt-10  wrap small pr-40 pl-40 ">
       <div
@@ -41,6 +70,99 @@ const SellPage = () => {
         }}
         className="flex flex-col w-full  gap-6"
       >
+           <Modal
+        open={open1}
+        onClose={handleClose1}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box className="flex flex-col primary items-center" sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            <IoCheckmarkCircleSharp className="green" size={40}/>
+                </Typography>
+                <Typography className="white">
+                  Successfully Published
+            </Typography>
+            <Typography style={{
+              fontSize:'13px'
+            }} className="g">
+                   You receive 100USD
+                </Typography>
+                <button onClick={() => {
+                  handleClose1()
+                 
+                }
+                  
+                  
+                } className="w-full mt-3 p-1 white greenbg rounded-2xl">Provide feedback</button>
+        </Box>
+      </Modal>
+      
+      <Modal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box sx={style} className="flex flex-col items-center">
+          <Typography id="modal-title" variant="h6" component="h2" align="center">
+            {/* <FaThumbsUp size={40} style={{ color: feedback === 'positive' ? 'green' : 'gray' }} />
+            <FaThumbsDown size={40} style={{ color: feedback === 'negative' ? 'red' : 'gray' }} /> */}
+          </Typography>
+          <Typography variant="h6" component="p" align="center" sx={{ mt: 2 }}>
+            Rate your experience with the Merchant
+          </Typography>
+          
+          <Box className="flex justify-center gap-4 mb-4">
+            <Button
+              variant="contained"
+              color="success"
+              sx={{ flex: 1, mx: 1 }}
+            >
+              Positive
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ flex: 1, mx: 1 }}
+            >
+              Negative
+            </Button>
+          </Box>
+
+          <Typography variant="body2" component="p" align="center" sx={{ mt: 2 }}>
+            Leave a comment (optional)
+          </Typography>
+          <TextField
+            variant="outlined"
+            multiline
+            rows={4}
+            fullWidth
+            sx={{ mt: 2, mb: 2 }}
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Placeholder for the comments"
+          />
+
+          <Box className="flex justify-between" sx={{ mt: 2 }}>
+            <Button
+              variant="outlined"
+              color="success"
+              onClick={handleCloseModal}
+              sx={{ flex: 1, mr: 1 }}
+            >
+              Close
+            </Button>
+            <Button
+              variant="contained"
+              color="success"
+              sx={{ flex: 1, ml: 1 }}
+            >
+              Submit
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
         <p>Advertisers Info</p>
         <div
           //   style={{
@@ -146,9 +268,22 @@ const SellPage = () => {
         </div>
         <div className="flex gap-10 justify-around p-1 rounded-lg border border-slate-700 items-center">
           <div className="flex flex-col gap-1 p-1  ">
-            <p className="g">I want to send</p>
+            <p className="g">I want to Sell</p>
             <div className="flex flex-row  justify-between items-center rounded-lg  w-56  gap-1 p-2 border border-slate-700 items-center">
-              <p className="green flex justify-around ">
+            <p className="green flex items-center gap-1">
+                <img
+                  src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
+                  alt=""
+                />{" "}
+                200.1045 <span className="white">USDT</span>
+              </p>
+             
+            </div>
+          </div>
+          <div className="flex flex-col gap-1 p-1  ">
+            <p className="g">I want to Receive</p>
+            <div className="flex flex-row  justify-between items-center rounded-lg  w-56  gap-1 p-2 border border-slate-700 items-center">
+            <p className="green flex p-1 justify-center items-center gap-1">
                 <DollarSign /> 200
               </p>
               <p className="flex flex-row  items-center">
@@ -157,20 +292,8 @@ const SellPage = () => {
             </div>
           </div>
           <div className="flex flex-col gap-1 p-1  ">
-            <p className="g">I want to send</p>
-            <div className="flex  rounded-lg w-56 flex-col gap-1 p-1 border border-slate-700 items-">
-              <p className="green flex items-center gap-1">
-                <img
-                  src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
-                  alt=""
-                />{" "}
-                200.1045 <span className="white">USDT</span>
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-col gap-1 p-1  ">
-            <p className="g">Commission</p>
-            <div className="flex g  justify-between items-center rounded-lg w-56  gap-1 p-1 border border-slate-700 items-">
+            <p className="g ">Commission</p>
+            <div className="flex g  justify-between items-center rounded-lg w-56  gap-1 p-1 border border-slate-700 grey">
               <p className="green flex p-1 justify-center items-center gap-1">
                 <DollarSign /> 1%
               </p>
@@ -263,13 +386,30 @@ const SellPage = () => {
               </p>
             </p>
           </div>
-          <p className="mt-1">
-            I have an issue with{" "}
-            <span onClick={handleOpen} className="span text-red-600">
-              {" "}
-              Appeal/Complain
-            </span>
-          </p>
+          {/* <p className="mt-1 flex items-center gap-2">
+  <input
+    type="checkbox"
+    className="form-checkbox h-4 w-4  border border-green-500 text-green-500 text-decoration-none"
+  />
+  <span>
+    I confirm that I received amount to my Bank account{" "}
+    
+  </span>
+</p> */}
+
+<p className="mt-1 flex items-center gap-2">
+  <div className="relative inline-block">
+    <input
+      type="checkbox"
+      className="h-5 w-5 cursor-pointer appearance-none rounded-md border-2 border-green-500 bg-transparent checked:bg-green-500"
+    />
+
+  </div>
+  <span>
+    I confirm that I received the amount to my bank account.
+  </span>
+</p>
+
           <div className="flex mt-2 flex-row gap-10 justify-between">
             <button className="border w-full border-slate-700  rounded-lg p-2">
               Cancel
@@ -280,6 +420,7 @@ const SellPage = () => {
           </div>
         </div>
       </div>
+     
       <Modal
         className=" rounded-lg"
         open={open}
@@ -364,7 +505,7 @@ const SellPage = () => {
               src="https://res.cloudinary.com/pitz/image/upload/v1721844614/Group_34041_rtorm8.png"
               alt=""
             />{" "}
-            ADviteriser user name
+            Adviteriser user name
           </p>
           <p
             style={{ height: "1px" }}

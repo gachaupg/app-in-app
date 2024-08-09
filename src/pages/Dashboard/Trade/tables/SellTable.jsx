@@ -6,19 +6,19 @@ import { Clock, Eye } from "lucide-react";
 import { MoreHoriz } from "@mui/icons-material";
 import { SlLike } from "react-icons/sl";
 import { useState } from "react";
-import BuyForm from "./BuyForm";
+import SellForm from "./SellForm";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
-function Table({ show, payments, isLoading }) {
+function SellTable({ show, payments, isLoading }) {
   const [buy, setBuy] = useState(false);
   const [id, setId] = useState("");
 
   return (
     <div style={{ width: "100%", overflowX: "auto" }} className="Table">
-      {buy &&  (
+      {buy && (
         <>
-          <BuyForm id={id} buy={buy} />
+          <SellForm id={id} buy={buy} />
         </>
       )}
       <div style={{ overflowX: "auto" }}>
@@ -191,11 +191,9 @@ function Table({ show, payments, isLoading }) {
                             setId(row.id);
                            
                           }}
-                          className={`p-2 ${
-                            show === "Buy" ? "bg-green-600" : "bg-red-600"
-                          } rounded-lg w-32 `}
+                          className= "p-2 bg-red-600 rounded-lg w-32"
                         >
-                          BUY USDT
+                          Sell USDT
                         </button>
                       </td>
                      
@@ -211,4 +209,4 @@ function Table({ show, payments, isLoading }) {
   );
 }
 
-export default Table;
+export default SellTable;

@@ -362,7 +362,7 @@ const BuyPage = () => {
         </div>
         <div className="flex gap-10 justify-around p-1 small wrap rounded-lg border border-slate-700 items-center">
           <div className="flex flex-col gap-1 p-1  ">
-            <p className="g">I want to send</p>
+            <p className="g">I want to Send</p>
             <div className="flex flex-row  justify-between items-center rounded-lg  w-56  gap-1 p-2 border border-slate-700 items-center">
               <p className="green flex justify-around ">
                 <DollarSign />{" "}
@@ -376,7 +376,7 @@ const BuyPage = () => {
             </div>
           </div>
           <div className="flex flex-col gap-1 p-1  ">
-            <p className="g">I want to send</p>
+            <p className="g">I want to Receive</p>
             <div className="flex  rounded-lg w-56 flex-col gap-1 p-1 border border-slate-700 items-">
               <p className="green flex items-center gap-1">
                 <img
