@@ -73,14 +73,36 @@ const Navbar = () => {
   const { user } = useSelector((state) => ({ ...state.auth }));
   const [showLog, setShowLog] = React.useState(false);
   const [showSideDash, setSideDash] = useState(false);
-
+  const dropdownRef = useRef(null);
+  const profileRef = useRef(null);
+  const langRef = useRef(null);
+  const sideDashRef = useRef(null);
   const handleShowSide = () => {
     setSideDash(!showSideDash);
   };
   const showTabs = () => {
     setTabs(!tabs);
   };
+  const handleClickOutside = (event) => {
+    if (
+      (dropdownRef.current && !dropdownRef.current.contains(event.target)) ||
+      (profileRef.current && !profileRef.current.contains(event.target)) ||
+      (langRef.current && !langRef.current.contains(event.target))||
+      (sideDashRef.current && !sideDashRef.current.contains(event.target))
+    ) {
+      setSideDash(false);
+      setShowLog(false);
+      setShow1(false);
+      setProPro(false);
+    }
+  };
 
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleShowLog = () => {
@@ -103,9 +125,7 @@ const Navbar = () => {
   //   setShowLog(!showLog);
   // };
 
-  const dropdownRef = useRef(null);
-  const profileRef = useRef(null);
-  const langRef = useRef(null);
+ 
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -283,7 +303,9 @@ const Navbar = () => {
               onClick={() => {
                 setShow(false);
                 handleShowSide();
+                
               }}
+              ref={sideDashRef}
               className=" rounded-lg p-1 w-24 h-8 flex flex-row items-center gap-1"
             >
               <img
@@ -296,8 +318,9 @@ const Navbar = () => {
             <div
               onClick={handleShow1}
               className="relative flex flex-row items-center"
+              ref={profileRef}
             >
-              <RxAvatar size={40}/>
+              <RxAvatar className="g cursor-pointer" size={40}/>
               {/* <img
                 width={30}
                 height={30}
@@ -397,7 +420,7 @@ const Navbar = () => {
         </>
         {/* )} */}
 
-        <div className="image-nav relative " onClick={showLang} ref={langRef}>
+        <div className="image-nav relative cursor-pointer " onClick={showLang}  ref={langRef}>
           <img
             style={{ width: "2rem", height: "2rem", borderRadius: "50%" }}
             src="https://media.istockphoto.com/id/1217765834/photo/flag-of-united-kingdom-blowing-in-the-wind.jpg?s=2048x2048&w=is&k=20&c=W2rAsO5-YNL2o-9i8aqKr6QW3Mqi_lnxmSNPSJxVPaw="
@@ -409,6 +432,7 @@ const Navbar = () => {
             <div className="lang mt-3 p-2  w-48 right-0  absolute  border border-slate-700 rounded-lg top-8 secondary">
               <p className="flex items-center justify-start gap-2 p-2">
                 <img
+                  src="https://res.cloudinary.com/pitz/image/upload/v1723275375/download_17_t9k8ce.jpg"
                   className="flex h-5"
                   alt=""
                 />
@@ -483,7 +507,7 @@ const Navbar = () => {
             </>
           )}
         </div>
-        <div className=" flex items-center mr-16">
+        <div className=" flex items-center cursor-pointer mr-16">
           <p className="flex items-center relative" onClick={handleShowLog}>
             <img
               src="https://res.cloudinary.com/pitz/image/upload/v1721377629/Frame_35160_bm8nbr.png"

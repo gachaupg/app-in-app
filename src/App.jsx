@@ -35,6 +35,7 @@ import BuyAdds from "./pages/Dashboard/Trade/p2pCenter/BuyAdds";
 import BuyASdss from "./pages/Dashboard/Trade/p2pCenter/Adds/BuyAd";
 import Adds1 from "./pages/Dashboard/Trade/p2pCenter/Adds/BuyAd";
 import MainProfilePage from "./pages/Auth/MainProfilePage";
+import MainMarket from "./pages/MainMaket";
 function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -55,7 +56,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route index path="/" element={<HomePage/>}/>
         <Route path="/exchange" element={<MainExchange/>}/>
-        <Route path="/market" element={<Market/>}/>
+        <Route path="/market" element={<MainMarket/>}/>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot" element={<Forgot />} />

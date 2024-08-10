@@ -80,7 +80,7 @@ const MainDash = () => {
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368327/settings_mezmwi.png",
     },
   ];
-
+ const [graph,setGraph]=useState('sells')
   return (
     <>
       {/* {activeTab1 === "Market" && (
@@ -340,13 +340,13 @@ const MainDash = () => {
                       <div className="flex flex-row w-full small wrap justify-between">
                         <div className="flex flex-row items-center gap-3 small wrap ">
                           <p className="  white">P2P Overview (USD)</p>
-                          <button className="border text-green-600  border-green-600 p-1 rounded-2xl w-10">
+                          <button onClick={()=>setGraph('All')} className={`border  white  border-green-600 ${graph==='All' && "bg-green-600"} p-1 rounded-2xl w-12`}>
                             All
                           </button>
-                          <button className="border  white  border-green-600 bg-green-600 p-1 rounded-2xl w-12">
+                          <button onClick={()=>setGraph('sells')} className={`border  white  border-green-600 ${graph==='sells' && "bg-green-600"} p-1 rounded-2xl w-12`}>
                             Sells
                           </button>
-                          <button className="border  pb-1 text-green-600 border-green-600 p-1 rounded-2xl w-12">
+                          <button onClick={()=>setGraph('buys')} className={`border  white  border-green-600 ${graph==='buys' && "bg-green-600"} p-1 rounded-2xl w-12`}>
                             Buys
                           </button>
                         </div>
@@ -357,11 +357,40 @@ const MainDash = () => {
                           />
                         </div>
                       </div>
-                      <img
+
+                      {graph === 'sells' && (
+                          <>
+                          <div>
+                         <img
                         className="mt-2 small wrap "
                         src="https://res.cloudinary.com/pitz/image/upload/v1721372970/Frame_34605_r1ruic.png"
                         alt=""
                       />
+                        </div>
+                          </>
+                        )}
+                      {graph === 'All' && (
+                          <>
+                          <div>
+                         <img
+                        className="mt-2 small wrap "
+                        src="https://res.cloudinary.com/pitz/image/upload/v1723203872/Frame_34605_3_tcvqya.png"
+                        alt=""
+                      />
+                        </div>
+                          </>
+                      )}
+                      {graph === 'buys' && (
+                          <>
+                          <div>
+                         <img
+                        className="mt-2 small wrap "
+                        src="https://res.cloudinary.com/pitz/image/upload/v1723203855/Frame_34605_2_y0thdu.png"
+                        alt=""
+                      />
+                        </div>
+                          </>
+                        )}
                       <Table />
                       {/* <div className="flex items-center justify-center">
                         <img

@@ -147,9 +147,12 @@ const Center = () => {
                 background: "#384B41",
               }}
             >
-              verified merchant
+              unverified merchant
             </button>
             <button
+              onClick={() => {
+                toast.error('Account not verified')
+              }}
               className="p-1 bg-green-600 rounded-3xl h-8 flex items-center justify-center text-white"
               style={{
                 fontSize: "14px",
@@ -211,27 +214,30 @@ const Center = () => {
           <button
             onClick={() => setShow("Payments")}
             style={{ fontSize: "13px" }}
-            className="h-10 w-36 bg-green-600 text-white rounded-3xl"
+            className={`h-10 w-36 ${show==="Payments" &&"bg-green-600"} text-white rounded-3xl`}
           >
             Payment Methods
           </button>
           <button
             onClick={() => setShow("Feedback")}
             style={{ fontSize: "13px" }}
-            className="h-10 border w-36 border-green-600 text-green-600 rounded-3xl"
+            className={`h-10 w-36 ${show==="Feedback" &&"bg-green-600"} text-white rounded-3xl`}
           >
             Feedback <span className="g">(8)</span>
           </button>
           <button
+                        onClick={() => setShow("Settings")}
+
             style={{ fontSize: "13px" }}
-            className=" h-10 border w-36 border-green-600 text-green-600 rounded-3xl"
+            className={`h-10 w-36 ${show==="Settings" &&"bg-green-600"} text-white rounded-3xl`}
           >
             Ad Settings
           </button>
           <button
             onClick={() => setShow("myAds")}
             style={{ fontSize: "13px" }}
-            className="p-2 h-10 border w-36 border-green-600 text-green-600 rounded-3xl"
+                       className={`h-10 w-36 ${show==="myAds" &&"bg-green-600"} text-white rounded-3xl`}
+ 
           >
             My Ads{" "}
             <span
