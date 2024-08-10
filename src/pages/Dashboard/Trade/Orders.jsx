@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Message } from "@mui/icons-material";
 import { IoIosArrowDown } from "react-icons/io";
 import OrdersTable from "./tables/OrdersTable";
@@ -12,6 +12,13 @@ const Orders = () => {
     status: "",
     date: "",
   });
+
+  // Fetch data and apply filters when the component mounts
+  useEffect(() => {
+    const fetchedData = fetchData(activeButton);
+    setOrdersData(fetchedData);
+    applyFilters(fetchedData, filters);
+  }, []);
 
   const handleButtonClick = (buttonName) => {
     setActiveButton(buttonName);
@@ -79,7 +86,7 @@ const Orders = () => {
               fontSize: "14px",
               background: activeButton === "Completed" ? "#1D8751" : "",
             }}
-            className="text-white p-1 small g rounded-lg"
+            className="text-white p-1 small text-slate-300 rounded-lg"
           >
             Completed
           </button>
@@ -89,7 +96,7 @@ const Orders = () => {
               fontSize: "14px",
               background: activeButton === "Processing" ? "#1D8751" : "",
             }}
-            className="text-white p-1 g small rounded-lg"
+            className="text-white p-1 text-slate-300 small rounded-lg"
           >
             Processing <span style={{ color: "#F79330" }}>(2)</span>
           </button>
@@ -99,7 +106,7 @@ const Orders = () => {
               fontSize: "14px",
               background: activeButton === "Canceled" ? "#1D8751" : "",
             }}
-            className="text-white p-1 g small rounded-lg"
+            className="text-white p-1 text-slate-300 small rounded-lg"
           >
             Canceled
           </button>
@@ -115,12 +122,10 @@ const Orders = () => {
         className="flex flex-row small wrap small-gap g mt-4 mb-4 items-center justify-between"
       >
         <button
-
           className="border small-gap small border-slate-600 rounded-2xl flex items-center justify-between gap-16 p-1 pl-2 pr-2 secondary h-10 white"
         >
-          <select className="secondary  no-border w-40" name="" id="">
+          <select className="secondary no-border w-40" name="" id="">
             <option value="">
-              {" "}
               <div className="flex g items-center gap-1">
                 <img
                   className="h-4"
@@ -134,10 +139,9 @@ const Orders = () => {
           </select>
         </button>
         <button
-        
           className="border small-gap small border-slate-600 g rounded-2xl w-56 flex items-center justify-between gap-16 p-1 pl-2 pr-2 secondary h-10 white"
         >
-          <select className="secondary no-border  w-40" name="" id="">
+          <select className="secondary no-border w-40" name="" id="">
             <option value="">
               <div className="flex items-center g gap-1">
                 <img
@@ -153,10 +157,9 @@ const Orders = () => {
           </select>
         </button>
         <button
-          
           className="border small-gap small w-56 border-slate-600 rounded-2xl flex items-center justify-between gap-16 p-1 pl-2 pr-2 secondary h-10 white"
         >
-           <select className="secondary no-border  w-40" name="" id="">
+          <select className="secondary no-border w-40" name="" id="">
             <option value="">
               <div className="flex items-center g gap-1">
                 <img
@@ -191,11 +194,11 @@ const Orders = () => {
 
       {filteredData.length === 0 ? (
         <div className="flex items-center justify-center w-full">
-          <p>No Data Found</p>
+          <p className="g">No Data Found</p>
         </div>
       ) : (
         <>
-          {activeButton == "All Orders" && <OrdersTable data={filteredData} />}
+          {activeButton === "All Orders" && <OrdersTable data={filteredData} />}
         </>
       )}
 

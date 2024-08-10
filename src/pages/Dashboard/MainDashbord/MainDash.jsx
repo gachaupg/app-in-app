@@ -92,42 +92,45 @@ const MainDash = () => {
           />
         </div>
       )} */}
-      <div className="primary  flex wrap small justify-between flex-row ">
+      <div className="primary  flex wrap small  justify-between flex-row ">
         <div
-          style={{ width: "18%", color: "#727272", fontSize: "15px" }}
-          className="small dash-side flex flex-col gap-6 pt-12"
-         >
-          {tabs.map((tab) => (
-          <Link key={tab.name} to={`/${tab.link}`}>
-              <div
-              
-              className={`flex w-full flex-row  pl-20 items-center rounded-tr-lg rounded-br-lg gap-4 p-2 `}
-              style={{
-                cursor: "pointer",
-                background: activeTab === tab.name ? "#303038" : "",
-              }}
-              onClick={() => setActiveTab(tab.name)}
-            >
-              <img
-                className={`${tab.name === "Buy Crypto" ? "h-5" : "h-6"}`}
-                src={tab.icon}
-                alt={tab.name}
-              />
-              <div
-                style={{
-                  fontSize: tab.name === "Buy Crypto" ? "15.5px" : "h-6",
-                }}
-                className={`flex items-center ${activeTab === tab.name ? "white" :""} justify-between ml-5 w-full`}
-              >
-                {tab.name}
-                {tab.name === "Account" && (
-                  <MdOutlineKeyboardArrowDown className="ml-2" />
-                )}
-              </div>
-            </div>
-            </Link>
-          ))}
+  style={{ width: "18%", color: "#727272", fontSize: "15px" }}
+  className="small dash-side  flex flex-col gap-6 pt-12"
+>
+  {tabs.map((tab) => (
+    <Link className="" key={tab.name} to={`/${tab.link}`}>
+      <div
+        className={`flex w-full flex-row pl-20 items-center rounded-tr-lg rounded-br-lg gap-4 p-2 transition-all duration-300 
+          ${activeTab === tab.name ? "bg-[#303038]" : "hover:bg-[#404048]"}
+        `}
+        style={{
+          cursor: "pointer",
+        }}
+        onClick={() => setActiveTab(tab.name)}
+      >
+        <img
+          className={`${tab.name === "Buy Crypto" ? "h-5" : "h-6"}`}
+          src={tab.icon}
+          alt={tab.name}
+        />
+        <div
+          style={{
+            fontSize: tab.name === "Buy Crypto" ? "15.5px" : "h-6",
+          }}
+          className={`flex items-center justify-between ml-5 w-full 
+            ${activeTab === tab.name ? "text-white" : "hover:text-white"}
+          `}
+        >
+          {tab.name}
+          {tab.name === "Account" && (
+            <MdOutlineKeyboardArrowDown className="ml-2" />
+          )}
         </div>
+      </div>
+    </Link>
+  ))}
+</div>
+
 
         <div
           style={{ width: "83%" }}
