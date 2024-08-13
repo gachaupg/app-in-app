@@ -1,18 +1,17 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import emailjs from "@emailjs/browser";
+import { CircularProgress } from "@mui/material";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
 import { DollarSign, Dot, Wallet } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { SlQuestion } from "react-icons/sl";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../utils/APIRoutes";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import { CircularProgress } from "@mui/material";
-import emailjs from "@emailjs/browser";
 
 const style = {
   position: "absolute",
@@ -32,7 +31,7 @@ const initialState = {
   // receiver_id: 2,
   network: "TRON",
   wallet_type: "USDT",
-  email_verification_code: "2622543",
+  email_verification_code: "262256",
   amount: "",
   currency: "USD",
   receiver_wallet: "",
@@ -45,7 +44,7 @@ const DepositForm = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const { user } = useSelector((state) => ({ ...state.auth }));
-console.log(widthdrwal);
+// console.log(widthdrwal);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

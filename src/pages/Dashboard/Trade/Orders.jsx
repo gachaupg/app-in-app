@@ -202,13 +202,13 @@ const Orders = () => {
         </>
       )}
 
-      <div className="flex items-center justify-center w-full">
+      {/* <div className="flex items-center justify-center w-full">
         <img
           className="w-64 flex items-center justify-center"
           src="https://res.cloudinary.com/pitz/image/upload/v1721386689/Group_164058_cybkz7.png"
           alt=""
         />
-      </div>
+      </div> */}
     </div>
   );
 };

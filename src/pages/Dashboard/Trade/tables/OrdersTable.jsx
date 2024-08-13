@@ -1,60 +1,20 @@
-/* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { TiArrowUnsorted } from "react-icons/ti";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { Eye } from "lucide-react";
-import { MoreHoriz } from "@mui/icons-material";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { endpoint } from "../../../../utils/APIRoutes";
 import axios from "axios";
-import { CircularProgress } from "@mui/material";
+import { endpoint } from "../../../../utils/APIRoutes";
 
 function OrdersTable() {
-  const data = [
-    {
-      id: 16657,
-      type: "P2P Buy",
-      date: "12-Jun-2023",
-      amount: 100,
-      status: "Complete",
-    },
-    {
-      id: 26767,
-      type: "P2P Sell",
-      date: "12-Jun-2023",
-      amount: 200,
-      status: "Pending",
-    },
-    {
-      id: 37766,
-      type: "P2p Sell",
-      date: "12-Jun-2023",
-      amount: 300,
-      status: "Complete",
-    },
-    {
-      id: 48888,
-      type: "P2P Buy",
-      date: "12-Jun-2023",
-      amount: 400,
-      status: "Pending",
-    },
-    {
-      id: 57878,
-      type: "P2P Buy",
-      date: "12-Jun-2023",
-      amount: 500,
-      status: "Complete",
-    },
-  ];
   const [payments, setPayments] = useState([]);
   const [loading1, setLoading1] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
   const { user } = useSelector((state) => ({ ...state.auth }));
   const navigate = useNavigate();
+
   useEffect(() => {
     fetchData();
   }, [user]);
@@ -90,11 +50,21 @@ function OrdersTable() {
     }
   }
 
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = payments.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(payments.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div style={{ width: "100%", overflowX: "auto" }} className="Table">
       <div style={{ overflowX: "auto" }}>
         <table
-          className="styled-table rounded-2xl  border secondary"
+          className="styled-table rounded-2xl border secondary"
           style={{ minWidth: "600px" }}
         >
           <thead
@@ -110,7 +80,7 @@ function OrdersTable() {
                 }}
                 className="grey"
               >
-                Asset{" "}
+                Asset
               </th>
               <th>
                 <th
@@ -119,7 +89,7 @@ function OrdersTable() {
                   }}
                   className="flex items-center grey"
                 >
-                  Type <TiArrowUnsorted />{" "}
+                  Type <TiArrowUnsorted />
                 </th>
               </th>
 
@@ -130,7 +100,7 @@ function OrdersTable() {
                   }}
                   className="flex items-center grey"
                 >
-                  Amount <TiArrowUnsorted />{" "}
+                  Amount <TiArrowUnsorted />
                 </th>
               </th>
               <th>
@@ -140,7 +110,7 @@ function OrdersTable() {
                   }}
                   className="flex items-center grey"
                 >
-                  Rate <TiArrowUnsorted />{" "}
+                  Rate <TiArrowUnsorted />
                 </th>
               </th>
               <th>
@@ -150,7 +120,7 @@ function OrdersTable() {
                   }}
                   className="flex items-center grey"
                 >
-                  Date <TiArrowUnsorted />{" "}
+                  Date <TiArrowUnsorted />
                 </th>
               </th>
               <th>
@@ -160,7 +130,7 @@ function OrdersTable() {
                   }}
                   className="flex items-center grey"
                 >
-                  Status <TiArrowUnsorted />{" "}
+                  Status <TiArrowUnsorted />
                 </th>
               </th>
 
@@ -175,11 +145,11 @@ function OrdersTable() {
           </thead>
           {loading1 ? (
             <tbody className="primary">
-              {Array(5)
+              {Array(itemsPerPage)
                 .fill({})
                 .map((_, index) => (
                   <tr style={{ fontSize: "14px" }} key={index}>
-                    <td className="flex  flex-row items-center gap-1">
+                    <td className="flex flex-row items-center gap-1">
                       <Skeleton className="secondary" circle height={40} width={40} />
                       <Skeleton className="secondary" width={80} />
                     </td>
@@ -196,7 +166,7 @@ function OrdersTable() {
                       <Skeleton className="secondary" width={80} />
                     </td>
                     <td>
-                      <Skeleton className="secondary"  width={80} />
+                      <Skeleton className="secondary" width={80} />
                     </td>
                     <td>
                       <Skeleton className="secondary" width={80} />
@@ -214,7 +184,7 @@ function OrdersTable() {
             </tbody>
           ) : (
             <tbody className="primary">
-              {payments.map((row) => (
+              {currentItems.map((row) => (
                 <tr className="order-bottom" style={{ fontSize: "14px" }} key={row.id}>
                   <td className="flex flex-row items-center gap-1">
                     <img
@@ -256,6 +226,29 @@ function OrdersTable() {
             </tbody>
           )}
         </table>
+        <div className="pagination flex items-end justify-center g gap-4">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          {[...Array(totalPages).keys()].map((pageNumber) => (
+            <button
+              key={pageNumber}
+              onClick={() => handlePageChange(pageNumber + 1)}
+              className={pageNumber + 1 === currentPage ? "active" : ""}
+            >
+              {pageNumber + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

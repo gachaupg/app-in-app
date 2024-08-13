@@ -1,48 +1,37 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { IoIosArrowDown, IoMdPeople } from "react-icons/io";
-import { WiMoonWaningCrescent4 } from "react-icons/wi";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { TiArrowSortedDown } from "react-icons/ti";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 import {
   AccountCircle,
-  ArrowBack,
   Cancel,
   Logout,
   LogoutOutlined,
-  People,
   PrivacyTip,
   RefreshRounded,
-  Verified,
+  Verified
 } from "@mui/icons-material";
-import { FaExchangeAlt } from "react-icons/fa";
-import { PiSwap } from "react-icons/pi";
-import { CiMoneyCheck1 } from "react-icons/ci";
-import { IoMdArrowDropdown } from "react-icons/io";
-import { styled, useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import AppBar from "@mui/material/AppBar";
-import Drawer from "@mui/material/Drawer";
-import CssBaseline from "@mui/material/CssBaseline";
-import MuiAppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import logo from "../assets/logo.svg";
-import { useDispatch, useSelector } from "react-redux";
-import { RiDashboardLine } from "react-icons/ri";
-import { setLogout } from "../redux/features/authSlice";
-import { toast } from "react-toastify";
+import MenuIcon from "@mui/icons-material/Menu";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import List from "@mui/material/List";
+import { styled, useTheme } from "@mui/material/styles";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 import { Wallet } from "lucide-react";
 import { MdKeyboardArrowRight, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { RxAvatar } from "react-icons/rx";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { setLogout } from "../redux/features/authSlice";
 
 const drawerWidth = 240;
 
@@ -132,9 +121,9 @@ const Navbar = () => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShow(false);
       }
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setProPro(false);
-      }
+      // if (profileRef.current && !profileRef.current.contains(event.target)) {
+      //   setProPro(false);
+      // }
       if (langRef.current && !langRef.current.contains(event.target)) {
         setShow1(false);
       }
@@ -340,19 +329,19 @@ const Navbar = () => {
                   <div onClick={handleShow1}>
                     <Cancel className="items-left float-left ml-44" />
                   </div>
-                  <Link onClick={handleShow} className="w-full" to="/account">
+                  <Link  className="w-full" to="/account">
                     <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                       <AccountCircle />
                       <button>Profile</button>
                     </div>
                   </Link>
-                  <Link onClick={handleShow} className="w-full" to="/account">
+                  <Link  className="w-full" to="/account">
                     <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                       <Wallet />
                       <button>Wallet</button>
                     </div>
                   </Link>
-                  <Link onClick={handleShow} className="w-full" to="/account">
+                  <Link  className="w-full" to="/account">
                     <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                       <Verified />
                       <button>KYC</button>
@@ -360,19 +349,22 @@ const Navbar = () => {
                   </Link>
                   <Link
                     to='/acount'
-                    onClick={handleShow}
+                    
                     className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg"
                   >
                     <PrivacyTip />
                     <button>Privacy and Security</button>
                   </Link>
-                  <Link to="/account"
-                    onClick={handleShow}
-                    className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg"
-                  >
-                    <RefreshRounded />
-                    <button>Referral</button>
-                  </Link >
+                <div>
+               
+                <Link to="/account"
+                   
+                   className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg"
+                 >
+                   <RefreshRounded />
+                   <button>Referral</button>
+                 </Link >
+                </div>
                   <div
                     onClick={() => {
                       dispatch(setLogout(null));

@@ -1,78 +1,106 @@
 /* eslint-disable no-unused-vars */
 import { Copy, Plus, Wallet } from "lucide-react";
 import { useEffect, useState } from "react";
-import Btn from "../../../components/Button";
-import { MdArrowOutward, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { GoArrowDownLeft } from "react-icons/go";
-import Table from "../DashboardTabs/Table";
+import { MdArrowOutward, MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { RxAvatar } from "react-icons/rx";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import Btn from "../../../components/Button";
 import SideDash from "../DashboardTabs/SideDash";
-import DepositForm from "./DepositForm";
-import Widthdrwal from "./Widthdrwal";
+import Table from "../DashboardTabs/Table";
+import Center from "../Trade/Center";
 import Market from "../Trade/Market";
 import Orders from "../Trade/Orders";
-import Center from "../Trade/Center";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../../../redux/features/authSlice";
-import { RxAvatar } from "react-icons/rx";
+import DepositForm from "./DepositForm";
+import Widthdrwal from "./Widthdrwal";
 
+
+import { Button, Select } from "@mui/material";
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+import BasicArea from "../../../components/chartss/BuyChart";
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 380,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  p: 4,
+};
+
+const initialState = {
+  name: "",
+  phone: "",
+  dob: "",
+  id: "",
+  idImg: "",
+  profile: "",
+  location: "",
+  email: ""
+
+}
 const MainDash = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [data, setdata] = useState(initialState)
   // const users = JSON.parse(localStorage.getItem("profile"));
   // useEffect(() => {
   //   dispatch(setUser(users));
   // }, []);
   const { user } = useSelector((state) => ({ ...state.auth }));
-  // console.log('====================================');
-  // console.log('logged in uss',user);
-  // console.log('====================================');
+
   useEffect(() => {
     if (user?.access) {
       navigate("/dashboard");
-    }else{
+    } else {
       navigate("/")
     }
   }, [user]);
 
   const [activeTab, setActiveTab] = useState("P2P Trading");
+  const [Verified, setVerified] = useState(false);
   const [activeTab1, setActiveTab1] = useState("Dashboard");
   const [show, setShow] = useState("P2P");
   const tabs = [
     {
       name: "Dashboard",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721367990/svgexport-54_1_ww7fdx.png",
-      link:"dashboard"
+      link: "dashboard"
     },
     {
       name: "Exchange",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368341/uil_exchange_craxj9.png",
-      link:"exchange"
+      link: "exchange"
 
     },
     {
       name: "P2P Trading",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721678697/users-profiles-left_1_nypmot.png",
-      link:"dashboard"
+      link: "dashboard"
 
     },
     {
       name: "Swap Crypto",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368339/Group_164002_jqrdb5.png",
-      link:"swap"
+      link: "swap"
 
     },
     {
       name: "Buy Crypto",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368332/Group_164004_ddibmc.png",
-      link:"buy"
+      link: "buy"
 
     },
     {
       name: "Account",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368328/key-01_njdjyg.png",
-      link:"account"
+      link: "account"
 
     },
     {
@@ -80,9 +108,188 @@ const MainDash = () => {
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368327/settings_mezmwi.png",
     },
   ];
- const [graph,setGraph]=useState('sells')
+  const [graph, setGraph] = useState('sells')
+
+  const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const handleOpen1 = () => setOpen1(true);
+  const handleClose1 = () => setOpen1(false);
+
+
+  useEffect((reason) => {
+    if (Verified === false) {
+
+      if (reason !== 'backdropClick') {
+        setOpen(true);
+      }
+    } else {
+      setOpen(false);
+    }
+
+
+  }, [])
+  const [countries, setCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  console.log(countries);
+
+  useEffect(() => {
+    fetch(
+      "https://valid.layercode.workers.dev/list/countries?format=select&flags=true&value=code"
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setCountries(data.countries);
+      });
+  }, []);
+  const customStyles = {
+    control: (provided) => ({
+      ...provided,
+      backgroundColor: "#1D1D23",
+      color: "white",
+      width: "100%",
+      padding: 2,
+      borderRadius: 22,
+      border: "1px solid #35353E",
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: "white",
+    }),
+    menu: (provided) => ({
+      ...provided,
+      backgroundColor: "#1D1D23",
+      width: "100%",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected ? "gray" : "#1D1D23",
+      color: "white",
+      width: "100%",
+      "&:hover": {
+        backgroundColor: "gray",
+      },
+    }),
+  };
   return (
     <>
+      <div>
+        <div>
+
+          <Modal
+            className="rounded-lg border-slate-700"
+            open={open1}
+            onClose={handleClose1}
+            aria-labelledby="child-modal-title"
+            aria-describedby="child-modal-description"
+          >
+            {/* <h2 className="text-slate-400  mb-3">KYC Verification</h2> */}
+
+            <Box
+              sx={{ ...style, width: "68%" }}
+              className="rounded-lg small primary white border-slate-700"
+            >
+              <h2 className="text-center mb-4" id="child-modal-title">
+                KYC Verification Form
+              </h2>
+              <div className="p-1">
+                <div className="flex flex-row items-center justify-between p-2 w-full gap-6 wrap small">
+                  <div className="flex flex-col items-center w-full gap-7">
+                    <input
+                      onChange={(e) => setdata({ ...data, name: e.target.value })}
+                      placeholder="Full Name"
+                      required
+                      type="text"
+                      className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
+                    />
+                    <input
+                      onChange={(e) => setdata({ ...data, phone: e.target.value })}
+
+                      placeholder="Phone Number"
+                      required
+                      type="tel"
+                      className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
+                    />
+                    <input
+                      onChange={(e) => setdata({ ...data, dob: e.target.value })}
+
+                      placeholder="Date of birth"
+                      required
+                      type="date"
+                      className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
+                    />
+
+                    <input
+                      onChange={(e) => setdata({ ...data, id: e.target.value })}
+
+                      placeholder="ID / Passport Number"
+                      required
+                      type="number"
+                      className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
+                    />
+
+                    <input
+                      onChange={(e) => setdata({ ...data, location: e.target.value })}
+
+                      placeholder="City"
+                      required
+                      type="date"
+                      className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
+                    />
+                  </div>
+                  <div className="flex flex-col items-center w-full gap-7">
+                    <input
+                      onChange={(e) => setdata({ ...data, email: e.target.value })}
+
+                      placeholder="Email"
+                      required
+                      type="email"
+                      className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
+                    />
+                    <div className="flex flex-col border border-slate-700 p-2 w-full primary text-white rounded-3xl"
+                    >
+                      <p>Profile image</p>
+                      <input onChange={(e) => setdata({ ...data, profile: e.target.value })}
+                        type="file" />
+                    </div>
+                    <input
+                      placeholder="Location"
+                      required
+                      type="text"
+                      className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
+                    />
+
+                    <div className="flex flex-col border border-slate-700 p-2 w-full primary text-white rounded-3xl"
+                    >
+                      <p>Id image</p>
+                      <input onChange={(e) => setdata({ ...data, idImg: e.target.value })}
+                        type="file" />
+                    </div>
+
+
+                  </div>
+                </div>
+                <div className="flex flex-row items-center mt-10 justify-between p-2 w-full gap-6 wrap small">
+                  <Button
+                    className="white txt border p-1 border-slate"
+                    onClick={handleClose}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    className="white txt1 border p-1 border-slate"
+                    onClick={handleClose}
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </div>
+            </Box>
+          </Modal>
+        </div>
+      </div>
       {/* {activeTab1 === "Market" && (
         <div className="w-full">
           <img
@@ -94,48 +301,69 @@ const MainDash = () => {
       )} */}
       <div className="primary  flex wrap small  justify-between flex-row ">
         <div
-  style={{ width: "18%", color: "#727272", fontSize: "15px" }}
-  className="small dash-side  flex flex-col gap-6 pt-12"
->
-  {tabs.map((tab) => (
-    <Link className="" key={tab.name} to={`/${tab.link}`}>
-      <div
-        className={`flex w-full flex-row pl-20 items-center rounded-tr-lg rounded-br-lg gap-4 p-2 transition-all duration-300 
+          style={{ width: "18%", color: "#727272", fontSize: "15px" }}
+          className="small dash-side  flex flex-col gap-6 pt-12"
+        >
+          {tabs.map((tab) => (
+            <Link className="" key={tab.name} to={`/${tab.link}`}>
+              <div
+                className={`flex w-full flex-row pl-20 items-center rounded-tr-lg rounded-br-lg gap-4 p-2 transition-all duration-300 
           ${activeTab === tab.name ? "bg-[#303038]" : "hover:bg-[#404048]"}
         `}
-        style={{
-          cursor: "pointer",
-        }}
-        onClick={() => setActiveTab(tab.name)}
-      >
-        <img
-          className={`${tab.name === "Buy Crypto" ? "h-5" : "h-6"}`}
-          src={tab.icon}
-          alt={tab.name}
-        />
-        <div
-          style={{
-            fontSize: tab.name === "Buy Crypto" ? "15.5px" : "h-6",
-          }}
-          className={`flex items-center justify-between ml-5 w-full 
+                style={{
+                  cursor: "pointer",
+                }}
+                onClick={() => setActiveTab(tab.name)}
+              >
+                <img
+                  className={`${tab.name === "Buy Crypto" ? "h-5" : "h-6"}`}
+                  src={tab.icon}
+                  alt={tab.name}
+                />
+                <div
+                  style={{
+                    fontSize: tab.name === "Buy Crypto" ? "15.5px" : "h-6",
+                  }}
+                  className={`flex items-center justify-between ml-5 w-full 
             ${activeTab === tab.name ? "text-white" : "hover:text-white"}
           `}
-        >
-          {tab.name}
-          {tab.name === "Account" && (
-            <MdOutlineKeyboardArrowDown className="ml-2" />
-          )}
+                >
+                  {tab.name}
+                  {tab.name === "Account" && (
+                    <MdOutlineKeyboardArrowDown className="ml-2" />
+                  )}
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
-      </div>
-    </Link>
-  ))}
-</div>
 
 
         <div
           style={{ width: "83%" }}
           className="small p-2 pt-12 flex pr-36 pl-24 flex-col gap-4"
         >
+
+          <div className="">
+            <Modal
+              className="no-border"
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box className="primary border no-border mr-20 flex flex-col items-center justify-center g 0" sx={style}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  Verify Account
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  <button onClick={handleOpen1} className="p-2 greenbg rounded-lg w-32 white mt-3">
+                    Verify Now
+                  </button>
+                </Typography>
+              </Box>
+            </Modal>
+          </div>
           <div className="flex flex-row small wrap width-full gap-4">
             <p
               onClick={() => setActiveTab1("Dashboard")}
@@ -144,7 +372,7 @@ const MainDash = () => {
                 textDecoration: activeTab1 === "Dashboard" ? "underline" : "",
                 textDecorationColor: activeTab1 === "Dashboard" ? "green" : "",
                 color: activeTab1 === "Dashboard" ? "white" : "grey",
-                cursor:'pointer'
+                cursor: 'pointer'
               }}
             >
               P2P Dashboard
@@ -192,7 +420,7 @@ const MainDash = () => {
               <Orders />
             </>
           )}
-            {activeTab1 === "Center" && (
+          {activeTab1 === "Center" && (
             <>
               <Center />
             </>
@@ -201,13 +429,13 @@ const MainDash = () => {
             <>
               <div className="secondary border rounded-2xl border-gray-700 wrap flex flex-row small wrap w-full justify-between items-center  p-2">
                 <div className="flex flex-row gap-2">
-                 <RxAvatar className="text-slate-500" size={40}/>
+                  <RxAvatar className="text-slate-500" size={40} />
                   <div>
                     <p style={{ fontSize: "16px" }} className="white">
                       Hello, {user?.user?.username}!
                     </p>
                     <p
-                      style={{ fontSize: "12px",color:"#F79330" }}
+                      style={{ fontSize: "12px", color: "#F79330" }}
                       className=" flex flex-row items-center gap-1 "
                     >
                       Unerified account{" "}
@@ -238,24 +466,24 @@ const MainDash = () => {
                 <div className="flex flex-row wrap small-gap items-center gap-5">
                   <div className="flex flex-row gap-3">
                     <Link to="/buy-adds">
-                    <Btn
-                      title="Post Buy Ad"
-                      icon={<Plus size={15} />}
-                      bg="#1D8751"
-                      color="#FFFFFF"
-                      className="additional-class-name"
-                    />
+                      <Btn
+                        title="Post Buy Ad"
+                        icon={<Plus size={15} />}
+                        bg="#1D8751"
+                        color="#FFFFFF"
+                        className="additional-class-name"
+                      />
 
                     </Link>
                     <Link to="/adds">
-                    <Btn
-                      title="Post Sell Ad"
-                      icon={<Plus size={15} />}
-                      bg="#E23D3A"
-                      color="#FFFFFF"
-                      className="additional-class-name"
-                    />
-                  </Link>
+                      <Btn
+                        title="Post Sell Ad"
+                        icon={<Plus size={15} />}
+                        bg="#E23D3A"
+                        color="#FFFFFF"
+                        className="additional-class-name"
+                      />
+                    </Link>
                   </div>
                   <img
                     className="h-10"
@@ -343,16 +571,18 @@ const MainDash = () => {
                       <div className="flex flex-row w-full small wrap justify-between">
                         <div className="flex flex-row items-center gap-3 small wrap ">
                           <p className="  white">P2P Overview (USD)</p>
-                          <button onClick={()=>setGraph('All')} className={`border  white  border-green-600 ${graph==='All' && "bg-green-600"} p-1 rounded-2xl w-12`}>
+                          <button onClick={() => setGraph('All')} className={`border  white  border-green-600 ${graph === 'All' && "bg-green-600"} p-1 rounded-2xl w-12`}>
                             All
                           </button>
-                          <button onClick={()=>setGraph('sells')} className={`border  white  border-green-600 ${graph==='sells' && "bg-green-600"} p-1 rounded-2xl w-12`}>
+                          <button onClick={() => setGraph('sells')} className={`border  white  border-green-600 ${graph === 'sells' && "bg-green-600"} p-1 rounded-2xl w-12`}>
                             Sells
                           </button>
-                          <button onClick={()=>setGraph('buys')} className={`border  white  border-green-600 ${graph==='buys' && "bg-green-600"} p-1 rounded-2xl w-12`}>
+                          <button onClick={() => setGraph('buys')} className={`border  white  border-green-600 ${graph === 'buys' && "bg-green-600"} p-1 rounded-2xl w-12`}>
                             Buys
                           </button>
                         </div>
+                        {/* <BasicArea/> */}
+
                         <div>
                           <img
                             src="https://res.cloudinary.com/pitz/image/upload/v1721374243/Frame_34636_mplpeh.png"
@@ -360,40 +590,39 @@ const MainDash = () => {
                           />
                         </div>
                       </div>
-
                       {graph === 'sells' && (
-                          <>
+                        <>
                           <div>
-                         <img
-                        className="mt-2 small wrap "
-                        src="https://res.cloudinary.com/pitz/image/upload/v1721372970/Frame_34605_r1ruic.png"
-                        alt=""
-                      />
-                        </div>
-                          </>
-                        )}
+                            <img
+                              className="mt-2 small wrap "
+                              src="https://res.cloudinary.com/pitz/image/upload/v1721372970/Frame_34605_r1ruic.png"
+                              alt=""
+                            />
+                          </div>
+                        </>
+                      )}
                       {graph === 'All' && (
-                          <>
+                        <>
                           <div>
-                         <img
-                        className="mt-2 small wrap "
-                        src="https://res.cloudinary.com/pitz/image/upload/v1723203872/Frame_34605_3_tcvqya.png"
-                        alt=""
-                      />
-                        </div>
-                          </>
+                            <img
+                              className="mt-2 small wrap "
+                              src="https://res.cloudinary.com/pitz/image/upload/v1723203872/Frame_34605_3_tcvqya.png"
+                              alt=""
+                            />
+                          </div>
+                        </>
                       )}
                       {graph === 'buys' && (
-                          <>
+                        <>
                           <div>
-                         <img
-                        className="mt-2 small wrap "
-                        src="https://res.cloudinary.com/pitz/image/upload/v1723203855/Frame_34605_2_y0thdu.png"
-                        alt=""
-                      />
-                        </div>
-                          </>
-                        )}
+                            <img
+                              className="mt-2 small wrap "
+                              src="https://res.cloudinary.com/pitz/image/upload/v1723203855/Frame_34605_2_y0thdu.png"
+                              alt=""
+                            />
+                          </div>
+                        </>
+                      )}
                       <Table />
                       {/* <div className="flex items-center justify-center">
                         <img

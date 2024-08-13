@@ -120,7 +120,7 @@ const Register = () => {
 
   return (
     <div className=" flex  flex-row primary g items-center justify-evenly pb-5">
-      <div className="reg-left gap-10">
+      <div className="reg-left image-none gap-10">
         <img
           style={{
             height: "35rem",

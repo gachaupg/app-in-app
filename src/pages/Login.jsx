@@ -1,19 +1,17 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
+import { CheckBox } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
+import { MDBBtn } from "mdb-react-ui-kit";
 import { useState } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
+import { CiLock } from "react-icons/ci";
+import { FaEyeSlash, FaRegEye } from "react-icons/fa";
+import { MdOutlineMailOutline } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { login } from "../redux/features/authSlice";
-import { MDBBtn } from "mdb-react-ui-kit";
-import { CircularProgress } from "@mui/material";
-import { MdOutlineMailOutline } from "react-icons/md";
-import { CiLock } from "react-icons/ci";
-import { FaEye } from "react-icons/fa";
-import { FaRegEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
-import ReCAPTCHA from "react-google-recaptcha";
-import { CheckBox } from "@mui/icons-material";
 
 const initialState = {
   password: "",
@@ -71,7 +69,7 @@ export default function SignInSide() {
     <div className="main-login g ">
       <div className="log test" style={{ height: "80vh" }}>
         <div className="flex flex-row items-center  justify-evenly ">
-          <div className="mt-10">
+          <div className="mt-10 image-none">
             <img
               style={{
                 height: "33rem",
@@ -85,7 +83,7 @@ export default function SignInSide() {
             </p>
           </div>
           <div
-            className="pt-16 "
+            className=" "
             style={{
               display: "flex",
               flexDirection: "column",

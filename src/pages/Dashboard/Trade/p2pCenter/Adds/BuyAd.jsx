@@ -1,30 +1,28 @@
 /* eslint-disable no-unused-vars */
 import { CheckBox } from "@mui/icons-material";
-import { current } from "@reduxjs/toolkit";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
 import axios from "axios";
-import { Clock, Copy, DollarSign, Link, Plus } from "lucide-react";
+import { DollarSign, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { IoIosArrowDown, IoMdArrowDropdown } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
+import { IoCheckmarkCircleSharp } from "react-icons/io5";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { CircularProgress } from "@mui/material";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import { IoCheckmarkCircleSharp } from "react-icons/io5";
 import { endpoint } from "../../../../../utils/APIRoutes";
 const initialState = {
-  order_type: "sell",
+  order_type: "",
   currency: "USD",
   amount: "",
   commission_rate: "",
   exchange_rate: "0.3",
   payment_method: "1",
   payment_provider: "1",
-
+  account_number: "",
+  account_name: "",
   limit: "10",
   completion_time: "10",
   completion_rate: "0.98",
@@ -38,7 +36,7 @@ const initialState = {
   terms_and_conditions: "",
 };
 
-const Adds1 = () => {
+const Adds = () => {
   const [sell, setSell] = useState(initialState);
   const style = {
     position: "absolute",
@@ -55,7 +53,7 @@ const Adds1 = () => {
   const [activeTab, setActiveTab] = useState("P2P Trading");
   const [activeTab1, setActiveTab1] = useState("Dashboard");
   const [show, setShow] = useState("P2P");
-  const [active,setActive]=useState("buy")
+  const [active, setActive] = useState("buy")
 
   const tabs = [
     {
@@ -91,33 +89,37 @@ const Adds1 = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [payments, setPayments] = useState([]);
-  const [loading1, setLoading1] = useState(true);
-  // console.log("payments", payments);
+  const [provider, setProvider] = useState([]);
+  const [loading1, setLoading1] = useState(false);
+  console.log("payments", payments);
   const navigate = useNavigate();
   const { user } = useSelector((state) => ({ ...state.auth }));
   const [payments1, setPayments1] = useState([]);
 
   console.log("====================================");
-  console.log(payments1);
+  console.log('status',active);
   console.log("====================================");
   useEffect(() => {
     if (payments) {
       setSell({
-        payment_provider: "1",
-        payment_method: "1",
+
         completion_time: "10",
         completion_rate: "0.98",
         exchange_rate: "0.8",
         asset: "TRON",
-
+        limit: sell.limit,
+        commission_rate: sell.commission_rate,
+        auto_reply: sell.auto_reply,
+        terms_and_conditions: sell.terms_and_conditions,
+        amount: sell.amount,
         advertiser_name: user.user,
-        order_type:active==="sell"?"sell":"buy",
+        order_type: active === "sell" ? "sell" : "buy",
         currency: "USD",
       });
     }
   }, [payments]);
 
-  // console.log('payments',payments);
+  console.log('payments', provider);
 
   useEffect(() => {
     fetchData1();
@@ -169,11 +171,42 @@ const Adds1 = () => {
     };
 
     try {
-      const res = await axios.get(`${endpoint}/trading_engine/bank-details/`, {
+      const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/payment-methods/`, {
         headers,
       });
       setLoading1(false);
       setPayments(res.data); // Assuming the response data is what you need to set
+      // console.log("hello", res.data);
+    } catch (error) {
+      console.log(error);
+      setLoading1(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchData2();
+  }, [user.access]);
+  async function fetchData2() {
+    const token = user.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/payment-providers/Bank/`, {
+        headers,
+      });
+      setLoading1(false);
+      setProvider(res.data); // Assuming the response data is what you need to set
       // console.log("hello", res.data);
     } catch (error) {
       console.log(error);
@@ -197,7 +230,7 @@ const Adds1 = () => {
       return;
     }
 
-    if (sell.order_type === "buy") {
+    if (sell.amount) {
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -236,9 +269,9 @@ const Adds1 = () => {
                Auto Reply: ${data.auto_reply || 'N/A'}, 
                Limit: ${data.limit || 'N/A'}`
             );
-            
+
             console.log('====================================');
-            console.log('new',data.amount);
+            console.log('new', data.amount);
             console.log('====================================');
           }
           console.error("Error response:", data);
@@ -264,38 +297,38 @@ const Adds1 = () => {
         </div>
       )}
       <div className="primary  flex wrap small justify-between flex-row ">
-      <div
+        <div
           style={{ width: "18%", color: "#727272", fontSize: "15px" }}
           className="small dash-side flex flex-col gap-6 pt-12"
-         >
+        >
           {tabs.map((tab) => (
-          <Link key={tab.name} to={`/${tab.link}`}>
+            <Link key={tab.name} to={`/${tab.link}`}>
               <div
-              
-              className={`flex w-full flex-row  pl-20 items-center rounded-tr-lg rounded-br-lg gap-4 p-2 `}
-              style={{
-                cursor: "pointer",
-                background: activeTab === tab.name ? "#303038" : "",
-              }}
-              onClick={() => setActiveTab(tab.name)}
-            >
-              <img
-                className={`${tab.name === "Buy Crypto" ? "h-5" : "h-6"}`}
-                src={tab.icon}
-                alt={tab.name}
-              />
-              <div
+
+                className={`flex w-full flex-row  pl-20 items-center rounded-tr-lg rounded-br-lg gap-4 p-2 `}
                 style={{
-                  fontSize: tab.name === "Buy Crypto" ? "15.5px" : "h-6",
+                  cursor: "pointer",
+                  background: activeTab === tab.name ? "#303038" : "",
                 }}
-                className={`flex items-center ${activeTab === tab.name ? "white" :""} justify-between ml-5 w-full`}
+                onClick={() => setActiveTab(tab.name)}
               >
-                {tab.name}
-                {tab.name === "Account" && (
-                  <MdOutlineKeyboardArrowDown className="ml-2" />
-                )}
+                <img
+                  className={`${tab.name === "Buy Crypto" ? "h-5" : "h-6"}`}
+                  src={tab.icon}
+                  alt={tab.name}
+                />
+                <div
+                  style={{
+                    fontSize: tab.name === "Buy Crypto" ? "15.5px" : "h-6",
+                  }}
+                  className={`flex items-center ${activeTab === tab.name ? "white" : ""} justify-between ml-5 w-full`}
+                >
+                  {tab.name}
+                  {tab.name === "Account" && (
+                    <MdOutlineKeyboardArrowDown className="ml-2" />
+                  )}
+                </div>
               </div>
-            </div>
             </Link>
           ))}
         </div>
@@ -305,11 +338,11 @@ const Adds1 = () => {
           className="small p-2 pt-12 flex pr-32 pl-10 flex-col gap-4"
         >
           <p className="white">Post AD</p>
-          <div className={`border ${active==="sell"?"border-red-700":"border-green-700"} w-36 rounded-lg flex flex-row gap-2 p-1`}>
-            <p onClick={()=>setActive("buy")} className={`white ${active==="buy"?'greenbg':""} rounded-lg w-16 text-center flex items-center justify-center`}>
+          <div className={`border ${active === "sell" ? "border-red-700" : "border-green-700"} w-36 rounded-lg flex flex-row gap-2 p-1`}>
+            <p onClick={() => setActive("buy")} className={`white ${active === "buy" ? 'greenbg' : ""} rounded-lg cursor-pointer w-16 text-center flex items-center justify-center`}>
               Buy
             </p>
-            <p onClick={()=>setActive("sell")} className={`${active==="sell"?"bg-red-600 ":""}w-16 text-center rounded-lg p-2 text-white`}>
+            <p onClick={() => setActive("sell")} className={`${active === "sell" ? "bg-red-600 " : ""}w-16 text-center cursor-pointer rounded-lg p-2 text-white`}>
               Sell
             </p>
           </div>
@@ -485,7 +518,7 @@ const Adds1 = () => {
                       onChange={(e) =>
                         setSell({ ...sell, payment_method: e.target.value })
                       }
-                      className="primary p-1 w-full white no-border"
+                      className="primary p-1 cursor-pointer w-full white no-border"
                       name=""
                       id=""
                     >
@@ -493,15 +526,14 @@ const Adds1 = () => {
                         {" "}
                         <Plus color="green" /> Add Method
                       </option>
-                      <option value="bank">
-                        <CheckBox color="gree" /> Bank Transfer
-                      </option>
-                      <option value="mobile">
-                        <CheckBox /> Mobile Money
-                      </option>
-                      <option value="merchant">
-                        <CheckBox /> Merchant
-                      </option>
+
+                      {payments.map((i) => {
+                        return (
+                          <>
+                            <option value={i.name}>{i.name}</option>{" "}
+                          </>
+                        );
+                      })}
                     </select>
                   </p>
                   {/* <IoMdArrowDropdown color="white" /> */}
@@ -527,16 +559,20 @@ const Adds1 = () => {
                           payment_provider: e.target.value,
                         })
                       }
-                      className="primary white  w-full  no-border"
+                      className="primary white cursor-pointer  w-full  no-border"
                       name=""
                       id=""
-                    >
+                    >                            <option value="">Provider</option>
+
                       {" "}
-                      {payments.map((i) => {
+                      {provider.map((i) => {
                         return (
                           <>
-                            <option value="">Provider</option>
-                            <option value={i.name}>{i.name}</option>{" "}
+                            <option value={i.
+                              provider_name
+                            }>{i.
+                              provider_name
+                              }</option>{" "}
                           </>
                         );
                       })}
@@ -565,7 +601,7 @@ const Adds1 = () => {
                       onChange={(e) =>
                         setSell({ ...sell, limit: e.target.value })
                       }
-                      className="primary p-1 w-full white no-border"
+                      className="primary p-1 cursor-pointer w-full white no-border"
                       name=""
                       id=""
                     >
@@ -589,72 +625,30 @@ const Adds1 = () => {
                 <p style={{ fontSize: "14px" }} className="g">
                   Your Account
                 </p>
-                <div className="border p-1 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full secondary ">
-                  <p className="flex w-full p-1 flex-row items-center gap-2">
-                    {/* <img
-                    src="https://res.cloudinary.com/pitz/image/upload/v1721368349/svgexport-54_1_cfztu4.png"
-                    alt=""
-                  /> */}
-                    <select
-                      // onChange={(e) =>
-                      //   setSell({
-                      //     ...sell,
-                      //     payment_provider: e.target.value,
-                      //   })
-                      // }
-                      className="secondary  w-full white  w-full  no-border"
-                      name=""
-                      id=""
-                    >
-                      {" "}
-                      {payments.map((i) => {
-                        return (
-                          <>
-                            <option value={i.account_name}>
-                              {i.account_name}
-                            </option>{" "}
-                          </>
-                        );
-                      })}
-                    </select>
-                  </p>
-                  {/* <IoMdArrowDropdown color="white" /> */}
+                <div className="border p-1 pl-3 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full secondary ">
+                  <input
+                    onChange={(e) =>
+                      setSell({ ...sell, account_name: e.target.value })
+                    }
+                    className="w-full p-1 no-border secondary text-white custom-placeholder"
+                    placeholder="John"
+                    type="text"
+                  />
                 </div>
               </div>
               <div className="flex flex-col w-full gap-1">
                 <p style={{ fontSize: "14px" }} className="g">
                   Account Number
                 </p>
-                <div className="border p-1 pl-2 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full secondary ">
-                  <p className="flex w-full p-1 flex-row items-center gap-2">
-                    <select
-                      // onChange={(e) =>
-                      //   setSell({
-                      //     ...sell,
-                      //     payment_method: e.target.value,
-                      //   })
-                      // }
-                      className="secondary w-full white  w-full  no-border"
-                      name=""
-                      id=""
-                    >                            <option value="">Account number</option>
-
-                      {" "}
-                      {payments.map((i) => {
-                        return (
-                          <>
-                            <option value={i.account_number}>
-                              {i.account_number}
-                            </option>{" "}
-                          </>
-                        );
-                      })}
-                    </select>
-                  </p>
-                  {/* <p style={{
-                    fontSize:"13px"
-                }} className="green flex items-center">USD <IoIosArrowDown />
-                </p> */}
+                <div className="border p-1 pl-3 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full secondary ">
+                  <input
+                    onChange={(e) =>
+                      setSell({ ...sell, account_number: e.target.value })
+                    }
+                    className="w-full p-1 no-border secondary text-white custom-placeholder"
+                    placeholder="536356352"
+                    type="number"
+                  />
                 </div>
               </div>
             </div>
@@ -692,7 +686,7 @@ const Adds1 = () => {
               </button>
               <button
                 onClick={handleSubmit}
-                className={` ${active==="sell"?"bg-red-700":"greenbg"}  p-2 w-full rounded-2xl p-1 white`}
+                className={` ${active === "sell" ? "bg-red-700" : "greenbg"}  p-2 w-full rounded-2xl p-1 white`}
               >
                 {loading1 ? "Submitting..." : "Post Ad"}
               </button>
@@ -704,4 +698,4 @@ const Adds1 = () => {
   );
 };
 
-export default Adds1;
+export default Adds;

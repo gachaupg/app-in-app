@@ -580,7 +580,7 @@ const BuyPage = (props) => {
           </div>
         </Box>
       </Modal>
-      <div style={{ width: "30%" }} className="flex small  flex-col ">
+      <div style={{ width: "50%" }} className="flex  p-2 ml-3 small  flex-col ">
         <p>Chat with Advertiser</p>
         <div className="secondary p-1 w-full border rounded-lg mt-2 flex flex-col border-slate-700">
           <p className="flex flex-row items-center gap-2 text-center items-center justify-center">
