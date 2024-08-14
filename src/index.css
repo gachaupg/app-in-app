@@ -322,7 +322,9 @@ cursor: pointer !important;
   .social-btn1 {
     width: 100% !important;
   }
-  
+  .margin{
+    margin: 0 !important;
+  }
   .image-none{
    display: none !important;
   }

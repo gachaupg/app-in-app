@@ -20,7 +20,7 @@ const initiaalState = {
   completion_rate: "",
 };
 
-const BuyForm = ({ id, buy, setBuy }) => {
+const SellForm = ({ id, buy, setBuy }) => {
   const [show, setShow] = useState("Buy");
   const [final, setFinal] = useState();
   const [payments, setPayments] = useState([]);
@@ -85,12 +85,7 @@ const BuyForm = ({ id, buy, setBuy }) => {
                 }}
                 className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
               >
-                {payments?.advertiser_name?.username
-                  .substring(0, 1)
-                  .toUpperCase() +
-                  payments?.advertiser_name?.username
-                    .substring(1, 2)
-                    .toUpperCase()}
+                {payments?.advertiser_name?.split('-')[1]?.substring(1, 3).toUpperCase()}
               </span>
             </p>
             <div className="flex flex-col  ">
@@ -226,9 +221,7 @@ const BuyForm = ({ id, buy, setBuy }) => {
             <select className="primary no-border w-full  g" name="" id="">
               <option value="">Set my payment method</option>
               <option className="primary g" value="Select the payment method">
-                {payments?.payment_method?.name
-                  ? payments?.payment_method?.name
-                  : "Primer Bank"}
+                {payments?.payment_method_name}
               </option>
             </select>
           </div>
@@ -268,4 +261,4 @@ const BuyForm = ({ id, buy, setBuy }) => {
   );
 };
 
-export default BuyForm;
+export default SellForm;

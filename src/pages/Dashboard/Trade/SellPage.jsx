@@ -3,24 +3,21 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 import { AttachFile } from "@mui/icons-material";
-import { Copy, DollarSign, Dot } from "lucide-react";
-import { IoIosArrowDown } from "react-icons/io";
-import { RiOrderPlayLine } from "react-icons/ri";
-import { IoMdArrowRoundForward } from "react-icons/io";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Button from "@mui/material/Button";
-import { SlLike } from "react-icons/sl";
-import { BsExclamationCircle } from "react-icons/bs";
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { endpoint } from "../../../utils/APIRoutes";
-import axios from "axios";
-import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
 import { CircularProgress, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import axios from "axios";
+import { Copy, DollarSign, Dot } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { BsExclamationCircle } from "react-icons/bs";
+import { IoIosArrowDown, IoMdArrowRoundForward } from "react-icons/io";
 import { IoCheckmarkCircleSharp } from "react-icons/io5";
-import { useLocation } from "react-router-dom"
+import { SlLike } from "react-icons/sl";
+import { useSelector } from "react-redux";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { endpoint } from "../../../utils/APIRoutes";
 
 const style = {
   position: "absolute",
@@ -35,7 +32,7 @@ const style = {
   px: 4,
   pb: 3,
 };
-const SellPage = (props) => {
+const BuyPage = (props) => {
   const [open, setOpen] = React.useState(false);
   const location = useLocation()
   const fromDashboard = location.state?.amount;
@@ -49,39 +46,39 @@ const SellPage = (props) => {
 
   const [show, setShow] = useState("Buy");
   const [payments, setPayments] = useState(null);
-  const [loading1, setLoading1] = useState(false);
+  const [loading1, setLoading1] = useState(true);
 
   const initialState = {
-    order_type: "sell" ||"",
+    order_type: "sell",
     currency: payments?.currency || "",
     amount: payments?.amount || 0,
     commission_rate: payments?.commission_rate || 0,
     exchange_rate: payments?.exchange_rate || 0,
-    payment_method: '1' || "",
-    payment_provider:'1' || "",
+    payment_method: payments?.payment_method || "",
+    payment_provider: payments?.payment_provider || "",
     limit: payments?.limit_duration || 0,
     completion_time: payments?.completion_time || 0,
     completion_rate: payments?.completion_rate || 0,
     asset: payments?.asset || "",
     advertiser_name: payments?.advertiser_name || "",
     auto_reply: payments?.auto_reply || "",
-    terms_and_conditions:payments?.terms_and_conditions || "",
+    terms_and_conditions: payments?.terms_and_conditions || "",
   };
 
   const [buy, setBuy] = useState(initialState);
   console.log("====================================");
-  console.log("buyddd", payments);
+  // console.log("buyddd", payments);
   console.log("====================================");
   useEffect(() => {
     fetchData();
   }, [user.access]);
-  
+
 
   useEffect(() => {
 
     if (payments) {
       setBuy({
-        order_type:"sell",
+        order_type: "sell",
         currency: payments.currency,
         amount: fromDashboard,
         commission_rate: payments.commission_rate,
@@ -89,7 +86,7 @@ const SellPage = (props) => {
         payment_method: payments.payment_method,
         payment_provider: payments.payment_provider,
         limit: 10.00,
-        terms_and_conditions:payments.terms_and_conditions,
+        terms_and_conditions: payments.terms_and_conditions,
         completion_time: payments.completion_time,
         completion_rate: payments.completion_rate,
         asset: payments.asset,
@@ -129,51 +126,47 @@ const SellPage = (props) => {
       );
       setPayments(res.data);
       setLoading1(false);
-      console.log(res);
-
+      console.log(payments);
+      
     } catch (error) {
       console.log(error);
-      console.log('====================================');
-      console.log(error);
-      console.log('====================================');
       setLoading1(false);
     }
   } const [open1, setOpen1] = useState(false);
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
 
+// console.log(buy.order_type);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading1(true);
-   console.log('====================================');
-   console.log(buy);
-   console.log('====================================');
+
     // Assuming user.user.access is available in your component's state or context
     const token = user.access;
-  
+
     if (!token) {
       toast.error("Authentication token is missing. Please log in again.");
       navigate("/login");
       setLoading1(false);
       return;
     }
-  
-    if (buy.order_type === 'sell') {
+
+    if (buy.order_type==='sell') {
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       };
-  
+
       try {
         console.log("Sending request with headers:", buy); // Debugging line
         console.log(
           "Sending request to endpoint:",
-          `https://omayaexchangebackend.onrender.com/trading_engine/p2p/orders/`
+           `${endpoint}/trading_engine/p2p/orders/${id}/match/`
         ); // Debugging line
-  
+
         const response = await fetch(
-          `https://omayaexchangebackend.onrender.com/trading_engine/p2p/orders/`,
+          `${endpoint}/trading_engine/p2p/orders/${id}/match/`,
           {
             method: "POST",
             headers: headers,
@@ -181,9 +174,9 @@ const SellPage = (props) => {
           }
         );
         const data = await response.json();
-  
+
         if (response.ok) {
-          toast.success("Sold  successfully!");
+          toast.success("Bought  successfully!");
           setOpen1(true);
         } else {
           if (data.code === "token_not_valid") {
@@ -211,7 +204,7 @@ const SellPage = (props) => {
     width: 350,
     bgcolor: 'background.black',
     border: 'none',
-    borderRadius:3,
+    borderRadius: 3,
     boxShadow: 24,
     p: 4,
   };
@@ -221,52 +214,57 @@ const SellPage = (props) => {
         style={{
           width: "65%",
         }}
-        className="flex flex-col w-full  gap-6"
+        className="flex flex-col small w-full  gap-6"
       >
-         <Modal
-        open={open1}
-        onClose={handleClose1}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box className="flex flex-col primary items-center" sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            <IoCheckmarkCircleSharp className="green" size={40}/>
-                </Typography>
-                <Typography className="white">
-                  Successfully Published
+        <Modal
+          open={open1}
+          onClose={handleClose1}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box className="flex flex-col primary items-center" sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              <IoCheckmarkCircleSharp className="green" size={40} />
+            </Typography>
+            <Typography className="white">
+              Successfully Published
             </Typography>
             <Typography style={{
-              fontSize:'13px'
+              fontSize: '13px'
             }} className="g">
-                  I will receive {payments?.amount}
-                </Typography>
-                <button onClick={() => {
-                  handleClose1()
-                 
-                }
-                  
-                  
-                } className="w-full mt-3 p-1 white greenbg rounded-2xl">Provide feedback</button>
-        </Box>
-      </Modal>
+              I will receive {payments?.amount}
+            </Typography>
+            <button onClick={() => {
+              handleClose1()
+
+            }
+
+
+            } className="w-full small mt-3 p-1 white greenbg rounded-2xl">Provide feedback</button>
+          </Box>
+        </Modal>
         <p>Advertisers Info</p>
         <div
           //   style={{
           //     width: "100%",
           //   }}
-          className="flex small wrap flex-row justify-start gap-2 items-center justify-center  border border-slate-700 rounded-lg secondary p-3  pr-5 pl-5 items-center  "
+          className="flex small small wrap flex-row justify-start gap-2 items-center justify-center  border border-slate-700 rounded-lg secondary p-3  pr-5 pl-5 items-center  "
         >
           <div className="flex w-96 small wrap  flex-row gap-2 items-center">
             <p className=" bg-green-600 h-14 w-14 rounded-lg flex text-center justify-center items-center p-1 text-white">
-            <span
-  style={{
-    fontSize: "16px",
-  }}
-  className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
->
-  {payments?.advertiser_name?.username.substring(0, 1).toUpperCase() + payments?.advertiser_name.username.substring(1, 2).toUpperCase()}
-</span>
+              <span
+                style={{
+                  fontSize: "16px",
+                }}
+                className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
+              >
+<p>
+  {payments?.advertiser_name?.split('-')[1]?.substring(1, 3).toUpperCase()}
+</p>
+
+
+                {/* {payments?.advertiser_name?.substring(0, 1).toUpperCase() + payments?.advertiser_name.username?.substring(1, 2).toUpperCase()} */}
+              </span>
 
             </p>
             <div className="flex flex-col  ">
@@ -395,7 +393,7 @@ const SellPage = (props) => {
                   src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
                   alt=""
                 />{" "}
-               {fromDashboard-0.5}
+                {fromDashboard - 0.5}
                 <span className="white">USDT</span>
               </p>
             </div>
@@ -422,7 +420,7 @@ const SellPage = (props) => {
                   src="https://res.cloudinary.com/pitz/image/upload/v1721888934/Premier_bank_1_ljsbtx.png"
                   alt=""
                 />{" "}
-                {payments?.payment_method?.name?payments?.payment_method?.name:"Primer Bank"}
+                {payments?.payment_method?.name ? payments?.payment_method?.name : "Primer Bank"}
               </p>
             </div>
             <div
@@ -433,7 +431,7 @@ const SellPage = (props) => {
                 <p className="g">Account Name</p>
                 <div className="flex flex-row gap-2 justify-between  w-full">
                   <p className="border flex items-center w-full greybg border-green-600 rounded-2xl p-1">
-                    <Dot /> <p> {payments?.advertiser_name?.username}</p>
+                    <Dot /> <p> {payments?.account_name}</p>
                   </p>
                   <p className="text-green-600 flex items-center">
                     {" "}
@@ -442,11 +440,11 @@ const SellPage = (props) => {
                 </div>
               </div>
               <div className="w-full">
-                <p className="g">Account Number</p>
+                <p className="g">Account Name</p>
                 <div className="flex flex-row gap-2 justify-between  w-full">
                   <p className="border text-green-600 flex items-center w-full greybg border-green-600 rounded-2xl p-1">
                     <Dot color="green" />{" "}
-                    <p>{payments?.payment_provider}</p>
+                    <p>{payments?.account_name}</p>
                   </p>
                   <p className="text-green-600 flex items-center">
                     {" "}
@@ -490,19 +488,19 @@ const SellPage = (props) => {
               </p>
             </p>
           </div>
-          {/* <p className="mt-1">
+          <p className="mt-1">
             I have an issue with{" "}
             <span onClick={handleOpen} className="span text-red-600">
               {" "}
               Appeal/Complain
             </span>
-          </p> */}
-          <div className="flex mt-7 flex-row small wrap gap-10 justify-between">
+          </p>
+          <div className="flex flex-row small wrap gap-10 justify-between">
             <button className="border w-full border-slate-700  rounded-lg p-2">
               Cancel Transaction
             </button>
-            <button onClick={handleSubmit} className=" w-full border border-green-700 bg-red-700 rounded-lg p-2">
-             {loading1?<CircularProgress/>:"Money sent,notify seller "} 
+            <button onClick={handleSubmit} className=" w-full bg-red-600 rounded-lg p-2">
+              {loading1 ? <CircularProgress /> : "Money sent,notify seller "}
             </button>
           </div>
         </div>
@@ -587,7 +585,7 @@ const SellPage = (props) => {
           </div>
         </Box>
       </Modal>
-      <div style={{ width: "50%" }} className="flex ml-3 small  flex-col ">
+      <div style={{ width: "50%" }} className="flex  p-2 ml-3 small  flex-col ">
         <p>Chat with Advertiser</p>
         <div className="secondary p-1 w-full border rounded-lg mt-2 flex flex-col border-slate-700">
           <p className="flex flex-row items-center gap-2 text-center items-center justify-center">
@@ -602,20 +600,20 @@ const SellPage = (props) => {
             style={{ height: "1px" }}
             className=" w-full mt-2 mb-2 bg-slate-700"
           ></p>
-          <div className="flex flex-col gap-2">
-            <div className="greybg w-64 p-1 rounded-2xl">
+          <div className="flex small wrap flex-col gap-2">
+            <div className="greybg small  w-64 p-1 rounded-2xl">
               Lorem ipsum dolor sit,
             </div>
             <div className="greybg w-64 p-1 rounded-2xl">
               Lorem ipsum dolor sit,
             </div>
-            <div className="bg-green-600 ml-36 float-left w-64 p-1 rounded-2xl">
+            <div className="bg-green-600 small margin ml-36 float-left w-64 p-1 rounded-2xl">
               Lorem ipsum dolor sit,
             </div>
             <div className="greybg w-64 p-1 rounded-2xl">
               Lorem ipsum dolor sit,
             </div>
-            <div className="bg-green-600 ml-36 float-left w-64 p-1 rounded-2xl">
+            <div className="bg-green-600 small margin ml-36 float-left w-64 p-1 rounded-2xl">
               Lorem ipsum dolor sit,
             </div>
             <p
@@ -636,10 +634,10 @@ const SellPage = (props) => {
         <p className="flex flex-row items-center gap-1">
           Advertiser's Terms <BsExclamationCircle color="red" />
         </p>
-       {payments?.terms_and_conditions}
+        {payments?.terms_and_conditions}
       </div>
     </div>
   );
 };
 
-export default SellPage;
+export default BuyPage;

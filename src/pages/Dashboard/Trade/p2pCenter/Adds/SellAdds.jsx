@@ -1,3 +1,4 @@
+
 /* eslint-disable no-unused-vars */
 import { CheckBox } from "@mui/icons-material";
 import Box from "@mui/material/Box";
@@ -53,7 +54,7 @@ const Adds = () => {
   const [activeTab, setActiveTab] = useState("P2P Trading");
   const [activeTab1, setActiveTab1] = useState("Dashboard");
   const [show, setShow] = useState("P2P");
-  const [active, setActive] = useState("buy")
+  const [active, setActive] = useState("sell")
 
   const tabs = [
     {
@@ -386,7 +387,7 @@ const Adds = () => {
               Buy
             </p>
             <p onClick={() => setActive("sell")} className={`${active === "sell" ? "bg-red-600 " : ""}w-16 text-center cursor-pointer rounded-lg p-2 text-white`}>
-              <Link to='/adds' >Sell</Link>
+              Sell
             </p>
           </div>
           <div>
@@ -663,6 +664,7 @@ const Adds = () => {
                 </div>
               </div>
             </div>
+
             <div className=" secondary small wrap  w-full  flex flex-row gap-6 items-center">
               <div className="flex flex-col w-full gap-1">
                 <p style={{ fontSize: "14px" }} className="g">
@@ -724,6 +726,8 @@ const Adds = () => {
                   })}
                 </>
               </div>
+
+             
             </div>
             <button className="bg-green-600 w-48 text-white p-1 rounded-3xl">
               Add payment method

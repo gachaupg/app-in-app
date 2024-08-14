@@ -53,34 +53,47 @@ const Adds = () => {
   const [activeTab, setActiveTab] = useState("P2P Trading");
   const [activeTab1, setActiveTab1] = useState("Dashboard");
   const [show, setShow] = useState("P2P");
-  const [active, setActive] = useState("buy")
+  const [active, setActive] = useState("sell")
 
   const tabs = [
     {
+      link: 'dashboard',
       name: "Dashboard",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721367990/svgexport-54_1_ww7fdx.png",
     },
     {
+      link: 'exchange',
+
       name: "Exchange",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368341/uil_exchange_craxj9.png",
     },
     {
+      link: 'dashboard',
+
       name: "P2P Trading",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721678697/users-profiles-left_1_nypmot.png",
     },
     {
+      link: 'swap',
+
       name: "Swap Crypto",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368339/Group_164002_jqrdb5.png",
     },
     {
+      link: 'buy',
+
       name: "Buy Crypto",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368332/Group_164004_ddibmc.png",
     },
     {
+      link: 'account',
+
       name: "Account",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368328/key-01_njdjyg.png",
     },
     {
+      link: 'settings',
+
       name: "Settings",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368327/settings_mezmwi.png",
     },
@@ -370,7 +383,9 @@ const Adds = () => {
           <p className="white">Post AD</p>
           <div className={`border ${active === "sell" ? "border-red-700" : "border-green-700"} w-36 rounded-lg flex flex-row gap-2 p-1`}>
             <p onClick={() => setActive("buy")} className={`white ${active === "buy" ? 'greenbg' : ""} rounded-lg cursor-pointer w-16 text-center flex items-center justify-center`}>
+              <Link to='/buy-adds'>
               Buy
+              </Link>
             </p>
             <p onClick={() => setActive("sell")} className={`${active === "sell" ? "bg-red-600 " : ""}w-16 text-center cursor-pointer rounded-lg p-2 text-white`}>
               Sell
@@ -656,25 +671,25 @@ const Adds = () => {
                 <p style={{ fontSize: "14px" }} className="g">
                   Your Account
                 </p>
-                <div className="border p-1 pl-3 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full secondary ">
-                      {details.map((i) => {
-                        return (
-                          <>
-                            <p
+                {details.map((i) => {
+                  return (
+                    <>
+                      {i.payment_provider_name === sell.payment_provider_name && (
+                        <>      <div className="border p-1 pl-3 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full secondary ">
 
-                              className="w-full p-1 no-border secondary text-white custom-placeholder"
+                          <p
 
-                            >
-                              {i.payment_provider_name === sell.payment_provider_name && (
-                                <>
-                                  {i.account_name}
-                                </>
-                              )}
-                            </p>
-                          </>
-                        )
-                      })}
-                    </div>
+                            className="w-full p-1 no-border secondary text-white custom-placeholder"
+
+                          >
+                            {i.account_name}
+                          </p>
+                        </div> </>
+                      )}
+                    </>
+                  )
+                })}
+
 
               </div>
 
@@ -683,32 +698,34 @@ const Adds = () => {
                   Account Number
                 </p>
 
-                <div className="border p-1 pl-3 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full secondary ">
+                <>
+                  {details.map((i) => {
+                    return (
+                      <>
 
-                  <>
-                      {details.map((i) => {
-                        return (
+                        {sell.payment_provider}
+
+                        {i.payment_provider_name === sell.payment_provider_name && (
                           <>
-                          {sell.payment_provider}
-                            <p
+                            <div className="border p-1 pl-3 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full secondary ">
 
-                              className="w-full p-1 no-border secondary text-white custom-placeholder"
+                              <p
 
-                            >
-                              {i.payment_provider_name === sell.payment_provider_name && (
-                                <>
-                                  {i.account_number}
-                                </>
-                              )}
-                            </p>
+                                className="w-full p-1 no-border secondary text-white custom-placeholder"
+
+                              >
+                                {i.account_number}
+                              </p>
+                            </div>
+
+
                           </>
-                        )
-                      })}
-                  </>
+                        )}
 
-
-
-                </div>
+                      </>
+                    )
+                  })}
+                </>
               </div>
             </div>
             <button className="bg-green-600 w-48 text-white p-1 rounded-3xl">
