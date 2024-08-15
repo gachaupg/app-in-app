@@ -9,11 +9,13 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import SellForm from "./SellForm";
 import BuyForm from "./BuyForm";
+import { useSelector } from "react-redux";
 
 function Table({ show, payments, isLoading }) {
   const [buy, setBuy] = useState(false);
   const [showTop, setShowTop] = useState("");
   const [id, setId] = useState("");
+  const { user } = useSelector((state) => ({ ...state.auth }));
 
   // State for filters
   const [amount, setAmount] = useState('');
@@ -168,59 +170,59 @@ function Table({ show, payments, isLoading }) {
               ))
               : paginatedPayments.map((row, index) => (
                 <>
-                {row.order_type==='buy'&&(
-                  <>
-                   <tr key={row.id} className="border-bottom" style={{ fontSize: "14px" }}>
-                    <td className="flex flex-col i gap-1">
-                      <div className="flex flex-row items-center gap-1">
-                        <p className=" bg-green-600 h-8 w-8 rounded-lg flex text-center justify-center items-center p-1 text-white">
-                          <span
-                            style={{
-                              fontSize: "14px",
+                  {row.order_type === 'buy' && row?.advertiser_name?.split('-')[0] != user.user.email && (
+                    <>
+                      <tr key={row.id} className="border-bottom" style={{ fontSize: "14px" }}>
+                        <td className="flex flex-col i gap-1">
+                          <div className="flex flex-row items-center gap-1">
+                            <p className=" bg-green-600 h-8 w-8 rounded-lg flex text-center justify-center items-center p-1 text-white">
+                              <span
+                                style={{
+                                  fontSize: "14px",
+                                }}
+                                className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
+                              >
+                                {row?.advertiser_name?.split('-')[1]?.substring(1, 3).toUpperCase()}
+                              </span>
+                            </p>
+                            <p style={{ fontSize: "16px" }} className="flex flex-row items-center gap-1">
+                              {row?.advertiser_name?.split('-')[1]}
+                              <p className="capitalize"> {row.advertiser_name.username}</p>
+                              <img src="https://res.cloudinary.com/pitz/image/upload/v1721730938/Frame_34214_gjn30n.png" alt="" />
+                            </p>
+                          </div>
+                          <p className="flex flex-row gap-1 g">
+                            <span className="green">120</span> Orders
+                            <span className="h-5 bg-slate-600" style={{ width: "1px" }}></span>
+                            <span className="green">98%</span> completion
+                          </p>
+                        </td>
+                        <td>{row?.commission_rate}</td>
+                        <td>
+                          <div className="flex flex-col gap-2">
+                            <p className="white">{row.amount}</p>
+                            <p className=""><span className="g">100-1000</span> USD</p>
+                          </div>
+                        </td>
+                        <td className="green capitalize">
+                          <p>{row.payment_provider_name}</p>
+                          <p className="secondary">{row.bank}</p>
+                        </td>
+                        <td>
+                          <button
+                            onClick={() => {
+                              setBuy((prevBuy) => prevBuy === row.id ? false : row.id);
+                              setId(row.id);
                             }}
-                            className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
+                            className="greenbg w-36 p-2 rounded-lg text-white border-none"
                           >
-                            {row?.advertiser_name?.split('-')[1]?.substring(1, 3).toUpperCase()}
-                          </span>
-                        </p>
-                        <p style={{ fontSize: "16px" }} className="flex flex-row items-center gap-1">
-                          {row?.advertiser_name?.split('-')[1]}
-                          <p className="capitalize"> {row.advertiser_name.username}</p>
-                          <img src="https://res.cloudinary.com/pitz/image/upload/v1721730938/Frame_34214_gjn30n.png" alt="" />
-                        </p>
-                      </div>
-                      <p className="flex flex-row gap-1 g">
-                        <span className="green">120</span> Orders
-                        <span className="h-5 bg-slate-600" style={{ width: "1px" }}></span>
-                        <span className="green">98%</span> completion
-                      </p>
-                    </td>
-                    <td>{row?.commission_rate}</td>
-                    <td>
-                      <div className="flex flex-col gap-2">
-                        <p className="white">{row.amount}</p>
-                        <p className=""><span className="g">100-1000</span> USD</p>
-                      </div>
-                    </td>
-                    <td className="green capitalize">
-                      <p>{row.payment_provider_name}</p>
-                      <p className="secondary">{row.bank}</p>
-                    </td>
-                    <td>
-                      <button
-                        onClick={() => {
-                          setBuy((prevBuy) => prevBuy === row.id ? false : row.id);
-                          setId(row.id);
-                        }}
-                        className="greenbg w-36 p-2 rounded-lg text-white border-none"
-                      >
-                        Buy USDT
-                      </button>
-                    </td>
-                  </tr>
-                  </>
-                )}
-                 
+                            Buy USDT
+                          </button>
+                        </td>
+                      </tr>
+                    </>
+                  )}
+
                   {buy === row.id && (
                     <tr>
                       <td colSpan="5">

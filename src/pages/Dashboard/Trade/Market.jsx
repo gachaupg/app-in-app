@@ -53,7 +53,7 @@ const MarketPage = () => {
   return (
     <div className="flex primary rounded-lg flex-col gap-2 wi-full">
       <div
-        className={`primary small border rounded-lg flex flex-row gap-2 ${
+        className={`primary  border rounded-lg flex flex-row gap-2 ${
           show === "Buy" ? "border-green-600" : "border-red-600"
         } w-36 p-1`}
       >

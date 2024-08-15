@@ -8,11 +8,13 @@ import { TiArrowUnsorted } from "react-icons/ti";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import SellForm from "./SellForm";
+import { useSelector } from "react-redux";
 
 function Table({ show, payments, isLoading }) {
   const [buy, setBuy] = useState(false);
   const [showTop, setShowTop] = useState("");
   const [id, setId] = useState("");
+  const { user } = useSelector((state) => ({ ...state.auth }));
 
   // State for filters
   const [amount, setAmount] = useState('');
@@ -167,7 +169,7 @@ function Table({ show, payments, isLoading }) {
               ))
               : paginatedPayments.map((row, index) => (
                 <>
-                {row.order_type==='sell' &&(
+                {row.order_type==='sell'&& row?.advertiser_name?.split('-')[0] != user.user.email &&(
                   <>
                    <tr key={row.id} className="border-bottom" style={{ fontSize: "14px" }}>
                     <td className="flex flex-col i gap-1">

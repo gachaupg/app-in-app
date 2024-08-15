@@ -19,6 +19,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../utils/APIRoutes";
 
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -47,7 +48,7 @@ const BuyPage = (props) => {
   const [show, setShow] = useState("Buy");
   const [payments, setPayments] = useState(null);
   const [loading1, setLoading1] = useState(false);
-
+  const [status, setStatus] = useState([])
   const initialState = {
     order_type: "buy",
     currency: payments?.currency || "",
@@ -64,6 +65,7 @@ const BuyPage = (props) => {
     auto_reply: payments?.auto_reply || "",
     terms_and_conditions: payments?.terms_and_conditions || "",
   };
+  console.log("hello", status);
 
   const [buy, setBuy] = useState(initialState);
   console.log("====================================");
@@ -132,7 +134,8 @@ const BuyPage = (props) => {
       console.log(error);
       setLoading1(false);
     }
-  } const [open1, setOpen1] = useState(false);
+  }
+  const [open1, setOpen1] = useState(false);
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
 
@@ -171,8 +174,7 @@ const BuyPage = (props) => {
         const data = await response.json();
 
         if (response.ok) {
-          toast.success("Bought  successfully!");
-          setOpen1(true);
+          toast.success("Request sent!");
         } else {
           if (data.code === "token_not_valid") {
             toast.error("Your session has expired. Please log in again.");
@@ -190,6 +192,42 @@ const BuyPage = (props) => {
       }
     }
   };
+
+
+  useEffect(() => {
+    fetchData3();
+  }, [user.access]);
+  async function fetchData3() {
+    const token = user.access;
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/${id}/confirm/`, {
+        headers,
+      });
+      setLoading1(false);
+      setStatus(res.data); // Assuming the response data is what you need to set
+      if (res.data.status === 'matched') {
+        setOpen1(true);
+
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading1(false);
+    }
+  }
+
+
 
   const style = {
     position: 'absolute',
@@ -494,9 +532,15 @@ const BuyPage = (props) => {
             <button className="border w-full border-slate-700  rounded-lg p-2">
               Cancel Transaction
             </button>
-            <button onClick={handleSubmit} className=" w-full greenbg rounded-lg p-2">
-              {loading1 ? <CircularProgress /> : "Money sent,notify seller "}
+            <button
+              onClick={handleSubmit}
+              className={`w-full rounded-lg p-2 ${status.status === 'half-matched' ? 'gback' : 'greenbg'}`}
+              disabled={status.status === 'half-matched'}
+            >
+              {loading1 ? <CircularProgress /> : "Money sent, notify seller"}
             </button>
+
+
           </div>
         </div>
       </div>

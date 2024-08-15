@@ -6,7 +6,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Forgot from "./pages/Forgot";
@@ -36,7 +36,29 @@ import BuyASdss from "./pages/Dashboard/Trade/p2pCenter/Adds/BuyAd";
 import Adds1 from "./pages/Dashboard/Trade/p2pCenter/Adds/BuyAd";
 import MainProfilePage from "./pages/Auth/MainProfilePage";
 import MainMarket from "./pages/MainMaket";
+import axios from "axios";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
 function App() {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const users = JSON.parse(localStorage.getItem("profile"));
@@ -44,14 +66,67 @@ function App() {
     dispatch(setUser(users));
   }, []);
   const { user } = useSelector((state) => ({ ...state.auth }));
-  console.log('====================================');
-  console.log('logged in uss',user);
-  console.log('====================================');
+  const [loading1, setLoading1] = useState(false);
+  const [status, setStatus] = useState([])
+
+
+
+
+
+  useEffect(() => {
+    fetchData3();
+  }, [user?.access]);
+  async function fetchData3() {
+    const token = user.access;
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/4/confirm/`, {
+        headers,
+      });
+      setLoading1(false);
+      setStatus(res.data); // Assuming the response data is what you need to set
+      if (res.data.status === 'half-matched') {
+        setOpen(true);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading1(false);
+    }
+  }
+  console.log('new data',status);
+  
+
 
   return (
     <div className="App">
       <Navbar />
       <ToastContainer />
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Text in a modal
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+          </Typography>
+        </Box>
+      </Modal>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route index path="/" element={<HomePage/>}/>

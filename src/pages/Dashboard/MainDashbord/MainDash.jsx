@@ -16,11 +16,12 @@ import DepositForm from "./DepositForm";
 import Widthdrwal from "./Widthdrwal";
 
 
-import { Button, Select } from "@mui/material";
+import { Button } from "@mui/material";
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
-import BasicArea from "../../../components/chartss/BuyChart";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const style = {
   position: 'absolute',
@@ -114,9 +115,43 @@ const MainDash = () => {
   const [open1, setOpen1] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const [payments, setPayments] = useState([]);
+  const [loading1, setLoading1] = useState(false);
+  console.log("data", payments);
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
+
+  async function fetchData() {
+    const token = user.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await axios.get(
+        `https://omayaexchangebackend.onrender.com/trading_engine/wallets/`,
+        { headers }
+      );
+      setPayments(res.data);
+      setLoading1(false);
+      // console.log(payments);
+
+    } catch (error) {
+      console.log(error);
+      setLoading1(false);
+    }
+  }
+
+
 
 
   useEffect((reason) => {
@@ -431,7 +466,7 @@ const MainDash = () => {
                 <div className="flex flex-row gap-2">
                   <RxAvatar className="text-slate-500" size={40} />
                   <div>
-                    <p style={{ fontSize: "16px" }} className="white">
+                    <p style={{ fontSize: "16px" }} className="white capitalize">
                       Hello, {user?.user?.username}!
                     </p>
                     <p

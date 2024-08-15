@@ -53,43 +53,50 @@ const MainMarket = () => {
 
   const tabs = [
     {
+      link: 'dashboard',
       name: "Dashboard",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721367990/svgexport-54_1_ww7fdx.png",
-      link: "dashboard",
     },
     {
+      link: 'exchange',
+
       name: "Exchange",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368341/uil_exchange_craxj9.png",
-      link: "exchange",
     },
     {
+      link: 'dashboard',
+
       name: "P2P Trading",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721678697/users-profiles-left_1_nypmot.png",
-      link: "dashboard",
     },
     {
+      link: 'swap',
+
       name: "Swap Crypto",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368339/Group_164002_jqrdb5.png",
-      link: "swap",
     },
     {
+      link: 'buy',
+
       name: "Buy Crypto",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368332/Group_164004_ddibmc.png",
-      link: "buy",
     },
     {
+      link: 'account',
+
       name: "Account",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368328/key-01_njdjyg.png",
-      link: "account",
     },
     {
+      link: 'settings',
+
       name: "Settings",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368327/settings_mezmwi.png",
     },
   ];
 
   return (
-    <div className="primary flex wrap small justify-between flex-row gap-10 pr-64 pt-10">
+    <div className="primary flex wrap small justify-between flex-row gap-10 pr-40 pt-10">
       <div
         style={{ width: "18%", color: "#727272", fontSize: "15px" }}
         className="small dash-side flex flex-col gap-6 pt-12"

@@ -204,10 +204,10 @@ function OrdersTable() {
                 ))}
             </tbody>
           ) : payments.length === 0 ? (
-            <tbody  className="flex items-center justify-center">
+            <tbody  className="flex w-full items-center justify-center">
               <tr>
-                <td colSpan="7">
-                  <p className="white">No orders yet</p>
+                <td colSpan="7 w-full">
+                  <p className="white w-full">No orders yet</p>
                 </td>
               </tr>
             </tbody>
