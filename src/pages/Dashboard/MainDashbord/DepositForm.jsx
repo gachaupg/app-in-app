@@ -205,7 +205,7 @@ const DepositForm = () => {
             fontSize: "14px",
           }}
           className=" p-1 pr-2 rounded-2xl w-full flex  flex-row gap-3 justify-between border border-green-700 items-center"
-        >
+         >
           <ul>
             <li className="flex items-center gap-1">
               <Dot size={30} color="green" /> Please send the money from your

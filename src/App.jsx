@@ -41,6 +41,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import Seller from "./pages/Dashboard/Trade/seller/Seller";
+import Notifications from "./pages/Dashboard/notifications/Notifications";
 
 const style = {
   position: 'absolute',
@@ -104,54 +106,36 @@ function App() {
       setLoading1(false);
     }
   }
-  console.log('new data',status);
-  
+  console.log('new data', status);
+
 
 
   return (
     <div className="App">
       <Navbar />
       <ToastContainer />
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box>
-      </Modal>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route index path="/" element={<HomePage/>}/>
-        <Route path="/exchange" element={<MainExchange/>}/>
-        <Route path="/market" element={<MainMarket/>}/>
+        <Route index path="/" element={<HomePage />} />
+        <Route path="/exchange" element={<MainExchange />} />
+        <Route path="/market" element={<MainMarket />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot" element={<Forgot />} />
-        {/* <Route path="/profile" element={<MainProfile />} /> */}
-        <Route path="/dashboard" element={<MainDash/>}/> 
-        <Route path="/kyc" element={<KYC/>}/> 
-        <Route path="/wallet" element={<Wallet/>}/> 
-        <Route path="/blog" element={<Blog/>}/> 
-        <Route path="/orders" element={<Orders/>}/> 
+        <Route path="/dashboard" element={<MainDash />} />
+        <Route path="/kyc" element={<KYC />} />
+        <Route path="/wallet" element={<Wallet />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/orders" element={<Orders />} />
         <Route path="/reset-password" element={<ForgotPasswordButton />} />
-                {/* <Route path="/sell/:id" element={<VerifyPayment />} /> */}
-
         <Route path="/buy/:id" element={<BuyPage />} />
-        {/* <Route path="/sell/:id" element={<VerifyPayment />} /> */}
+        <Route path="/rates/:id" element={<Seller />} />
         <Route path="/sell/:id" element={<SellPage />} />
-
         <Route path="/adds" element={<Adds />} />
-        <Route  path="/account" element={<MainProfilePage />} />
-        <Route  path="/chats" element={<DoughnutChart />} />
-        <Route  path="/buy-adds" element={<Adds1 />} />
+        <Route path="/account" element={<MainProfilePage />} />
+        <Route path="/chats" element={<DoughnutChart />} />
+        <Route path="/buy-adds" element={<Adds1 />} />
+        <Route path="/notifications" element={<Notifications />} />
       </Routes>
       <Footer />
     </div>

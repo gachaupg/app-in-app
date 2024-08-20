@@ -677,7 +677,7 @@ const Navbar = () => {
                         toast.warning("Logged out!", { position: "top-left" });
                         navigate("/");
                       }}
-                      className="lang mt-3 w-32 text-center p-1 secondary text-white border rounded-lg absolute ml-7"
+                      className="lang mt-3 w-32 cursor-pointer text-center p-1 secondary text-white border rounded-lg absolute ml-7"
                     >
                       Log out <LogoutOutlined />
                     </div>

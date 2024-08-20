@@ -5,6 +5,7 @@ import { persistor, store } from './redux/store.js';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter } from 'react-router-dom';
+import { KycProvider } from './utils/context/KycContext.jsx';
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
     .register('./utils/service-worker.jsx')
@@ -19,6 +20,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <PersistGate persistor={persistor} loading={null}>
       <BrowserRouter>
+      <KycProvider>
+    
+  </KycProvider>
         <App />
       </BrowserRouter>
     </PersistGate>

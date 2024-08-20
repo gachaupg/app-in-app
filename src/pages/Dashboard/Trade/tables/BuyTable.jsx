@@ -31,7 +31,7 @@ function Table({ show, payments, isLoading }) {
     return amountMatch && selectFilter && bankMatch;
   });
 
-  const rowsPerPage = 8; // Each page has 8 rows
+  const rowsPerPage = 4; // Each page has 8 rows
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -170,10 +170,14 @@ function Table({ show, payments, isLoading }) {
               ))
               : paginatedPayments.map((row, index) => (
                 <>
-                  {row.order_type === 'buy' && row?.advertiser_name?.split('-')[0] != user.user.email && (
+                  { row?.order_type==='buy'&& (
                     <>
                       <tr key={row.id} className="border-bottom" style={{ fontSize: "14px" }}>
                         <td className="flex flex-col i gap-1">
+                          <p>{row?.advertiser_name?.split('-')[0]}
+                          
+                            {user.user.email}
+                          </p>
                           <div className="flex flex-row items-center gap-1">
                             <p className=" bg-green-600 h-8 w-8 rounded-lg flex text-center justify-center items-center p-1 text-white">
                               <span

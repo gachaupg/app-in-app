@@ -384,7 +384,7 @@ const Adds = () => {
           <div className={`border ${active === "sell" ? "border-red-700" : "border-green-700"} w-36 rounded-lg flex flex-row gap-2 p-1`}>
             <p onClick={() => setActive("buy")} className={`white ${active === "buy" ? 'greenbg' : ""} rounded-lg cursor-pointer w-16 text-center flex items-center justify-center`}>
               <Link to='/buy-adds'>
-              Buy
+                Buy
               </Link>
             </p>
             <p onClick={() => setActive("sell")} className={`${active === "sell" ? "bg-red-600 " : ""}w-16 text-center cursor-pointer rounded-lg p-2 text-white`}>

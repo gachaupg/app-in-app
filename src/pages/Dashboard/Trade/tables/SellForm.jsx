@@ -1,38 +1,143 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
-import { DollarSign } from "lucide-react";
+import { CircularProgress } from "@mui/material";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { SlLike } from "react-icons/sl";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../../utils/APIRoutes";
-import axios from "axios";
 
-const initiaalState = {
-  advertiser: "Omar Ali",
-  commision: "0.6",
-  Available: "1,200 USDT",
-  payment: "Salam Bank",
-  trade: "Buy USDT",
-  completion_rate: "",
-};
 
-const SellForm = ({ id, buy, setBuy }) => {
-  const [show, setShow] = useState("Buy");
+
+const BuyForm = ({ id, buy, setBuy, handleClose }) => {
+  const [show, setShow] = useState("Sell");
   const [final, setFinal] = useState();
   const [payments, setPayments] = useState([]);
   const [loading1, setLoading1] = useState(false);
-  const [amount, setAmount] = useState("");
-  // console.log("buy", payments);
   const { user } = useSelector((state) => ({ ...state.auth }));
   const navigate = useNavigate("");
 
-  const handleClick = () => {
-    setFinal(!final);
+
+  const initialState = {
+    order_type: "sell",
+    currency: payments?.currency || "",
+    amount:"",
+    commission_rate: payments?.commission_rate || 0,
+    exchange_rate: payments?.exchange_rate || 0,
+    payment_method: payments?.payment_method || "",
+    payment_provider: payments?.payment_provider || "",
+    limit: payments?.limit_duration || 0,
+    completion_time: payments?.completion_time || 0,
+    completion_rate: payments?.completion_rate || 0,
+    asset: payments?.asset || "",
+    advertiser_name: payments?.advertiser_name || "",
+    auto_reply: payments?.auto_reply || "",
+    terms_and_conditions: payments?.terms_and_conditions || "",
   };
+
+  const [order, setOrder] = useState(initialState);
+  console.log("====================================");
+  // console.log("buyddd", payments);
+  console.log("====================================");
+  useEffect(() => {
+    fetchData();
+  }, [user.access]);
+
+  // console.log("buy", order.amount);
+
+  useEffect(() => {
+
+    if (payments) {
+      setOrder({
+        order_type: "sell",
+        currency: payments.currency,
+        commission_rate: payments.commission_rate,
+        exchange_rate: payments.exchange_rate,
+        payment_method: payments.payment_method,
+        payment_provider: payments.payment_provider,
+        limit: 10.00,
+        terms_and_conditions: payments.terms_and_conditions,
+        completion_time: payments.completion_time,
+        completion_rate: payments.completion_rate,
+        asset: payments.asset,
+        advertiser_name: payments.advertiser_name,
+        auto_reply: payments.auto_reply,
+      });
+    }
+  }, [payments]);
+
+console.log(order);
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading1(true);
+
+    // Assuming user.user.access is available in your component's state or context
+    const token = user.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+
+    if (order.order_type==='sell') {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+        console.log("Sending request with headers:", order); // Debugging line
+        console.log(
+          "Sending request to endpoint:",
+           `${endpoint}/trading_engine/p2p/orders/${id}/match/`
+        ); // Debugging line
+
+        const response = await fetch(
+          `${endpoint}/trading_engine/p2p/orders/${id}/match/`,
+          {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(order),
+          }
+        );
+        const data = await response.json();
+
+        if (response.ok) {
+          toast.success("Bought  successfully!");
+          navigate(`/sell/${id}`, { state: order.amount});
+          // setOpen1(true);
+        } else {
+          if (data.code === "token_not_valid") {
+            toast.error("Your session has expired. Please log in again.");
+            navigate("/login");
+          } else {
+            toast.error(`Save bank details failed: ${data.message || "Unknown error"}`);
+          }
+          console.error("Error response:", data);
+        }
+      } catch (error) {
+        toast.error(`Error: ${error.message}`);
+        console.error("Error:", error);
+      } finally {
+        setLoading1(false);
+      }
+    }
+  };
+
+
+
+  const handleClick = () => {
+    setFinal(!final)
+  }
+
 
   useEffect(() => {
     fetchData();
@@ -65,19 +170,20 @@ const SellForm = ({ id, buy, setBuy }) => {
       setLoading1(false);
     }
   }
-  const routeState = {
-    amount: amount,
-  };
+  console.log(order.amount);
+  
   return (
-    <div>
-      <div className="secondary w-full flex   flex-row justify-between secondary  border border-slate-700 p-2 rounded-lg ">
+    <div className="flex items-center justify-center ">
+      <div style={{
+        width: '100%',
+
+      }} className="secondary mt-10  flex  gap-10   flex-row justify-between secondary  border border-slate-700 p-2 rounded-lg ">
         <div
-          style={{
-            width: "45%",
-          }}
-          className="flex flex-col p-1 gap-1 items-start "
+
+          className="flex flex-col p-1  items-start "
         >
-          <div className="flex flex-row gap-2 justify-center items-center">
+        
+          <div className="flex flex-row w-full gap-5 justify-spa  items-center">
             <p className=" bg-green-600 h-full w-10 rounded-lg flex text-center justify-center items-center p-1 text-white">
               <span
                 style={{
@@ -145,13 +251,9 @@ const SellForm = ({ id, buy, setBuy }) => {
               </p>
             </div>
             <div className="flex flex-col items-center justify-center gap-1">
-              <p className="white">
-                {" "}
-                {payments.amount !== undefined && payments.amount !== null
-                  ? Number(payments.amount).toFixed(2)
-                  : "0.00"}{" "}
-                USDT
-              </p>
+              <p className="white"> {payments.amount !== undefined && payments.amount !== null
+                ? Number(payments.amount).toFixed(2)
+                : "0.00"} USDT</p>
               <p
                 style={{
                   fontSize: "13px",
@@ -187,13 +289,8 @@ const SellForm = ({ id, buy, setBuy }) => {
           </p>
           <div className="border primary h- border-slate-700 rounded-2xl w-full p-3 flex flex-row justify-between gap-2">
             <div className="flex flex-col gap-3">
-              <p className="g">I want to send</p>
-              <input
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="220 USDT"
-                type="text"
-                className="w-full p-1 primary no-border white place"
-              />
+              <p className="g">I want to {order.amount} send</p>
+              <input required onChange={(e)=>setOrder({...order,amount:e.target.value})} placeholder="220 USD" type="text" className="w-full p-1 primary no-border white place" />
             </div>
             <p className="white flex flex-row items-center gap-1">
               USD <IoIosArrowDown />
@@ -208,8 +305,10 @@ const SellForm = ({ id, buy, setBuy }) => {
                   src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
                   alt=""
                 />{" "}
-                <p>{amount !== "" ? amount - 0.5 : "0.0"}</p>
-                <span className="g ">USD </span>
+                <p>
+                  {order.amount !== "" ? (order.amount - 0.5) : "0.0"}
+                </p>
+                <span className="g ">USDT</span>
               </p>
             </div>
             {/* <p className="white flex flex-row items-center gap-1">
@@ -222,12 +321,13 @@ const SellForm = ({ id, buy, setBuy }) => {
               <option value="">Set my payment method</option>
               <option className="primary g" value="Select the payment method">
                 {payments?.payment_method_name}
+
               </option>
             </select>
           </div>
           <div className=" w-full mt-7 flex flex-row small wrap  gap-24">
             <button
-              // onClick={()=> hand}
+              onClick={() => handleClose()}
               style={{
                 width: "42%",
               }}
@@ -236,24 +336,32 @@ const SellForm = ({ id, buy, setBuy }) => {
               Cancel
             </button>
 
-            <button
+           {loading1?(
+            <CircularProgress/>):(
+              <>
+               <button
+            onClick={handleSubmit}
               style={{
                 width: "45%",
                 fontSize: "15px",
               }}
-              className="p-1 small bg-red-600 white rounded-lg"
+              className="p-1 small white bg-red-600 white rounded-lg"
             >
-              <Link
-                to={`/sell/${payments.id}`}
-                state={routeState} // Ensure this is correctly defined
+              {/* <Link
+                to={`/buy/${payments.id}`}
+                state={routeState}   // Ensure this is correctly defined
+
                 style={{
                   color: "white", // Ensures the text is white
                   textDecoration: "none", // Removes the underline
                 }}
-              >
+              > */}
                 SELL USDT
-              </Link>
+              {/* </Link> */}
             </button>
+              </>
+            
+           )}
           </div>
         </div>
       </div>
@@ -261,4 +369,4 @@ const SellForm = ({ id, buy, setBuy }) => {
   );
 };
 
-export default SellForm;
+export default BuyForm;

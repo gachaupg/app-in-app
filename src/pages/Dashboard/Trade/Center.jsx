@@ -16,6 +16,7 @@ const Center = () => {
   const navigate = useNavigate("");
   const [provider, setProvider] = useState([]);
 
+// console.log(provider);
 
 
 
@@ -290,7 +291,7 @@ console.log(form);
         <>
           <div
             className={`secondary small border border-slate-700 p-2  rounded-lg flex flex-col justify-between `}
-          >
+           >
             <div className="flex flex-row wrap small w-full justify-between items-center p-1">
               <p className="white">Bank</p>
               <div className="border flex items-center  p-1 white border-green-600 rounded-lg">
@@ -332,17 +333,13 @@ console.log(form);
                    <option value="">Provider</option>
 
                 {" "}
-                {provider.map((i) => {
-                  return (
+                {/* {provider.map((i) => {
+                  return ( */}
                     <>
-                      <option value={i.
-                        provider_name
-                      }>{i.
-                        provider_name
-                        }</option>{" "}
+                      <option value='Salam'>Salam</option>{" "}
                     </>
-                  );
-                })}
+                  {/* );
+                })} */}
               </select>
             </p>
             <div className="w-full small wrap flex flex-row items-center justify-between gap-6">

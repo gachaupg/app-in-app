@@ -175,6 +175,7 @@ const BuyPage = (props) => {
 
         if (response.ok) {
           toast.success("Request sent!");
+          fetchData3();
         } else {
           if (data.code === "token_not_valid") {
             toast.error("Your session has expired. Please log in again.");

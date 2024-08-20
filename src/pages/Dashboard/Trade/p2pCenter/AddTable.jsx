@@ -15,6 +15,7 @@ function AddTable() {
   const [loading1, setLoading1] = useState(true);
   const { user } = useSelector((state) => ({ ...state.auth }));
   const navigate = useNavigate();
+console.log();
 
   useEffect(() => {
     fetchData();

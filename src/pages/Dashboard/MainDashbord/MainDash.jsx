@@ -35,34 +35,25 @@ const style = {
 };
 
 const initialState = {
-  name: "",
-  phone: "",
-  dob: "",
-  id: "",
-  idImg: "",
-  profile: "",
-  location: "",
-  email: ""
-
+  document_type: "",
+  document_number: "",
+  document_image: ""
 }
 const MainDash = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [data, setdata] = useState(initialState)
-  // const users = JSON.parse(localStorage.getItem("profile"));
-  // useEffect(() => {
-  //   dispatch(setUser(users));
-  // }, []);
+
   const { user } = useSelector((state) => ({ ...state.auth }));
 
-  useEffect(() => {
-    if (user?.access) {
-      navigate("/dashboard");
-    } else {
-      navigate("/")
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user?.access) {
+  //     navigate("/dashboard");
+  //   } else {
+  //     navigate("/")
+  //   }
+  // }, [user]);
 
   const [activeTab, setActiveTab] = useState("P2P Trading");
   const [Verified, setVerified] = useState(false);
@@ -116,11 +107,55 @@ const MainDash = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [payments, setPayments] = useState([]);
+  const [match, setMatch] = useState([]);
   const [loading1, setLoading1] = useState(false);
-  console.log("data", payments);
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
+  const [kyc, setKyc] = useState([])
+  console.log('data kyc', user);
 
+  // https://omayaexchangebackend.onrender.com/api/kyc/status/
+  useEffect(() => {
+    fetchKyc()
+  }, [user])
+  async function fetchKyc() {
+    const token = user.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await axios.get(
+        `https://omayaexchangebackend.onrender.com/api/kyc/status/`,
+        { headers }
+      );
+      setKyc(res.data);
+      setLoading1(false);
+      if (res.data.is_verified === false) {
+        setOpen(true)
+      } else {
+        setOpen(false)
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading1(false);
+    }
+  }
+
+
+
+  useEffect(() => {
+    fetchData()
+  }, [user?.access])
   async function fetchData() {
     const token = user.access;
 
@@ -143,7 +178,40 @@ const MainDash = () => {
       );
       setPayments(res.data);
       setLoading1(false);
-      // console.log(payments);
+      console.log('payments', res.data);
+
+    } catch (error) {
+      console.log(error);
+      setLoading1(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchData1()
+  }, [user?.access])
+  async function fetchData1() {
+    const token = user.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await axios.get(
+        `https://omayaexchangebackend.onrender.com/trading_engine/trades/matched/`,
+        { headers }
+      );
+      setMatch(res.data);
+      setLoading1(false);
+      console.log('payments', res.data);
 
     } catch (error) {
       console.log(error);
@@ -153,19 +221,6 @@ const MainDash = () => {
 
 
 
-
-  useEffect((reason) => {
-    if (Verified === false) {
-
-      if (reason !== 'backdropClick') {
-        setOpen(true);
-      }
-    } else {
-      setOpen(false);
-    }
-
-
-  }, [])
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
   console.log(countries);
@@ -208,6 +263,14 @@ const MainDash = () => {
       },
     }),
   };
+
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownVisible(!isDropdownVisible);
+  };
+
+
   return (
     <>
       <div>
@@ -232,76 +295,35 @@ const MainDash = () => {
               <div className="p-1">
                 <div className="flex flex-row items-center justify-between p-2 w-full gap-6 wrap small">
                   <div className="flex flex-col items-center w-full gap-7">
-                    <input
-                      onChange={(e) => setdata({ ...data, name: e.target.value })}
+                    <select
+                      onChange={(e) => setdata({ ...data, document_type: e.target.value })}
                       placeholder="Full Name"
                       required
                       type="text"
                       className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
-                    />
+                    >
+                      <option value="">Select the type</option>
+                      <option value="ID">ID</option>
+                      <option value="Passport">Passport</option>
+                    </select>
                     <input
-                      onChange={(e) => setdata({ ...data, phone: e.target.value })}
+                      onChange={(e) => setdata({ ...data, document_number: e.target.value })}
 
-                      placeholder="Phone Number"
-                      required
-                      type="tel"
-                      className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
-                    />
-                    <input
-                      onChange={(e) => setdata({ ...data, dob: e.target.value })}
-
-                      placeholder="Date of birth"
-                      required
-                      type="date"
-                      className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
-                    />
-
-                    <input
-                      onChange={(e) => setdata({ ...data, id: e.target.value })}
-
-                      placeholder="ID / Passport Number"
+                      placeholder="Document Number"
                       required
                       type="number"
                       className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
                     />
-
                     <input
-                      onChange={(e) => setdata({ ...data, location: e.target.value })}
+                      onChange={(e) => setdata({ ...data, document_image: e.target.files[0] })}
 
-                      placeholder="City"
+                      placeholder="Date of birth"
                       required
-                      type="date"
-                      className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
-                    />
-                  </div>
-                  <div className="flex flex-col items-center w-full gap-7">
-                    <input
-                      onChange={(e) => setdata({ ...data, email: e.target.value })}
-
-                      placeholder="Email"
-                      required
-                      type="email"
-                      className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
-                    />
-                    <div className="flex flex-col border border-slate-700 p-2 w-full primary text-white rounded-3xl"
-                    >
-                      <p>Profile image</p>
-                      <input onChange={(e) => setdata({ ...data, profile: e.target.value })}
-                        type="file" />
-                    </div>
-                    <input
-                      placeholder="Location"
-                      required
-                      type="text"
+                      type="file"
                       className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
                     />
 
-                    <div className="flex flex-col border border-slate-700 p-2 w-full primary text-white rounded-3xl"
-                    >
-                      <p>Id image</p>
-                      <input onChange={(e) => setdata({ ...data, idImg: e.target.value })}
-                        type="file" />
-                    </div>
+
 
 
                   </div>
@@ -473,7 +495,7 @@ const MainDash = () => {
                       style={{ fontSize: "12px", color: "#F79330" }}
                       className=" flex flex-row items-center gap-1 "
                     >
-                      Unerified account{" "}
+                     {kyc.is_verified?<p className="green">Verified</p>:'Unerified account'} {" "}
                       <img
                         className="h-4"
                         src="https://res.cloudinary.com/pitz/image/upload/v1721370408/Frame_34216_jnzjpy.png"
@@ -520,11 +542,22 @@ const MainDash = () => {
                       />
                     </Link>
                   </div>
-                  <img
-                    className="h-10"
-                    src="https://res.cloudinary.com/pitz/image/upload/v1721371733/Frame_34833_xr45hu.png"
-                    alt=""
-                  />
+
+                  <div className="relative inline-block">
+                    <Link to='/notifications'
+                      state={match}
+                    >
+                      <p
+                        className="absolute bottom-7 left-6 bg-red-700 h-6 w-6 flex text-white p-2 items-center justify-center rounded-full text-xs cursor-pointer">
+                        {match.length}
+                      </p>
+                      <img
+                        className="h-10"
+                        src="https://res.cloudinary.com/pitz/image/upload/v1721371733/Frame_34833_xr45hu.png"
+                        alt=""
+                      />
+                    </Link>
+                  </div>
                 </div>
               </div>
               {show === "P2P" && (
@@ -541,10 +574,26 @@ const MainDash = () => {
                         <div className="white ml-2">
                           <p className="grey">Balance</p>
                           <p className="flex flex-row">
-                            00.00 USDT{" "}
+                            {
+                              payments.map((balance) => {
+                                return (
+                                  <p key={balance.id}>
+                                    {typeof balance.balance === 'string' ? Math.floor(balance.balance).toFixed(2) : 'N/A'}
+                                  </p>
+                                )
+                              })
+                            }  <span className="ml-1">USDT</span>{" "}
                             <span className="grey flex flex-row">
                               {" "}
-                              <span className="ml-1">≈ </span> 00 USD
+                              <span className="ml-1">≈ </span>  {
+                                payments.map((balance) => {
+                                  return (
+                                    <p key={balance.id}>
+                                      {typeof balance.balance === 'string' ? Math.floor(balance.balance).toFixed(2) : 'N/A'}
+                                    </p>
+                                  )
+                                })
+                              }  <span className="ml-1">USD</span>
                             </span>
                           </p>
                         </div>
