@@ -34,6 +34,9 @@ import Orders from "./pages/p2p/Orders";
 import Register from "./pages/Register";
 import ForgotPasswordButton from "./pages/ResetPassword";
 import { setUser } from "./redux/features/authSlice";
+// import Admin from "./admindashboard/Admin"
+// import Kyc from "./admindashboard/Kyc";
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -63,13 +66,13 @@ function App() {
 
 
 
-useEffect(()=>{
-if (!user) {
-  navigate('login')
-}else{
-  navigate('dashboard')
-}
-},[])
+// useEffect(()=>{
+// if (!user) {
+//   navigate('login')
+// }else{
+//   navigate('')
+// }
+// },[])
 
 useEffect(() => {
   fetchData1()
@@ -113,8 +116,7 @@ async function fetchData1() {
 
   return (
     <div className="App">
-    
-     <Modal
+      <Modal
               className="no-border"
               open={open}
               onClose={handleClose}
@@ -136,10 +138,17 @@ async function fetchData1() {
               </Box> 
            </Modal> 
       <Navbar />
-      <ToastContainer />
+      <ToastContainer /> 
       <Routes>
+      {/* <Route  path="/" element={<Admin />} />
+      <Route  path="/kyc" element={<Kyc />} /> */}
+
+
+
+
         <Route path="/login" element={<Login />} />
         <Route index path="/" element={<HomePage />} />
+
         <Route path="/exchange" element={<MainExchange />} />
         <Route path="/market" element={<MainMarket />} />
         <Route path="/login" element={<Login />} />
@@ -159,9 +168,9 @@ async function fetchData1() {
         <Route path="/chats" element={<DoughnutChart />} />
         <Route path="/buy-adds" element={<Adds1 />} />
         <Route path="/notifications" element={<Notifications />} />
-        <Route path="/buysell/:id" element={<BuySell />} />
+        <Route path="/buysell/:id" element={<BuySell />} />  
       </Routes>
-      <Footer />
+     <Footer />
     </div>
   );
 }
