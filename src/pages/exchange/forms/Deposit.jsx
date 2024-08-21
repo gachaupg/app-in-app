@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../utils/APIRoutes";
 
-import { CheckBox } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import axios from "axios";
 import { BiPaste } from "react-icons/bi";
@@ -237,6 +236,7 @@ const DepositForm = () => {
                 const data = await response.json();
                 if (response.ok) {
                     toast.success("Deposited successfully!");
+                    window.location.reload();
                 } else if (data.code === "token_not_valid") {
                     toast.error("Your session has expired. Please log in again.");
                     navigate("/login");
@@ -323,7 +323,7 @@ const DepositForm = () => {
                     This is only estimated price and its based on current Market Price.  We will fix the price when we receive the funds .</p>
                 <p className="white">Net Amount to Transfer</p>
 
-                <button className="p-1 rounded-2xl gap-2 w--full mt-3 mb-3 greenbg flex flex-row items-center justify-center">
+                <button className="p-1 small rounded-2xl gap-2 w--full mt-3 mb-3 greenbg flex flex-row items-center justify-center">
                     Amount including Total fees
                     <span style={{
                         background: '#0E713E'
@@ -331,19 +331,19 @@ const DepositForm = () => {
                         <DollarSign /> {widthdrwal.amount != null ? `${Number(widthdrwal.amount) + 3}` : 0.0}
                     </span>
                 </button>
-                <button className="p-1 rounded-2xl gap-2 w--full mt-3 border border-slate-700 mt-2 flex flex-row items-center justify-center">
+                <button className="p-1 wrap small rounded-2xl gap-2 w--full mt-3 border border-slate-700 mt-2 flex flex-row items-center justify-center">
 
-                    <p className="flex flex-row items-center gap-2"><span style={{
+                    <p className="flex small flex-row items-center gap-2"><span style={{
                         background: '#35353E'
                     }} className="p-1 rounded-2xl  flex flex-row gap-2 text-white bg-green-300">
                         <Dot />    Commision 1%
                     </span> <span className="green">$ 1</span></p>
-                    <p className="flex flex-row items-center gap-2"><span style={{
+                    <p className="flex small flex-row items-center gap-2"><span style={{
                         background: '#35353E'
                     }} className="p-1 rounded-2xl  flex flex-row gap-2 text-white bg-green-300">
                         <Dot />  Network fee :
                     </span> <span className="green">$ 1</span></p>
-                    <p className="flex flex-row items-center gap-2"><span style={{
+                    <p className="flex small flex-row items-center gap-2"><span style={{
                         background: '#35353E',
                         color: '#F79330'
                     }} className="p-1 rounded-2xl  flex flex-row gap-2 text-white bg-green-300">
@@ -416,10 +416,10 @@ const DepositForm = () => {
                         
                         Please SEND the Funds to the preferred Payment Method below </p>
                 </div>
-                <div className="flex secondary  flex-row justify-between gap-6 w-full items-center">
-                    <div className=" flex flex-col mb-3 w-full">
+                <div className="flex secondary small wrap flex-row justify-between gap-6 w-full items-center">
+                    <div className=" flex  wrap flex-col mb-3 w-full">
                         <p className="grey mb-1"> Payment Method</p>
-                        <div className="primary p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
+                        <div className="primary p-1 small wrap pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
                             <div className="  flex flex-row items-center gap-1 w-full">
                                 <img className="h-6 rounded-full" src="https://res.cloudinary.com/pitz/image/upload/v1721025707/Icon_cr4c7m.png" alt="" />
                                 {/* <select onChange={(e) => setWidthdrwal({ ...widthdrwal, payment_method: e.target.value })} className="p-2 primary no-border w-full" >
@@ -443,9 +443,9 @@ const DepositForm = () => {
                             </div>
                         </div>
                     </div>
-                    <div className=" flex flex-col mb-3 w-full">
+                    <div className=" flex small wrap flex-col mb-3 w-full">
                         <p className="grey mb-1"> Payment provider</p>
-                        <div className="primary p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
+                        <div className="primary small wrap p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
                             <div className="  flex flex-row items-center gap-1 w-full">
                                 <img className="h-6 rounded-full" src="https://res.cloudinary.com/pitz/image/upload/v1721979295/image_7_1_la1uwx.png" alt="" />
                                 <select onChange={(e) => setWidthdrwal({ ...widthdrwal, payment_provider: e.target.value })} className="p-2 primary no-border w-full" >
@@ -464,7 +464,7 @@ const DepositForm = () => {
 
                 </div>
 
-                <div className="flex secondary  flex-row justify-between gap-6 w-full items-center">
+                <div className="flex secondary small wrap  flex-row justify-between gap-6 w-full items-center">
                     <div className=" flex flex-col mb-3 w-full">
                         <p className="grey mb-1"> Account Name</p>
                         <div className=" p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">

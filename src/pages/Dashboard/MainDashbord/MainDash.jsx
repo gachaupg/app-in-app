@@ -5,7 +5,7 @@ import { GoArrowDownLeft } from "react-icons/go";
 import { MdArrowOutward, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { RxAvatar } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Btn from "../../../components/Button";
 import SideDash from "../DashboardTabs/SideDash";
 import Table from "../DashboardTabs/Table";
@@ -152,7 +152,7 @@ const MainDash = () => {
     }
   }
 
-
+  
 
   useEffect(() => {
     fetchData()
@@ -427,11 +427,11 @@ const MainDash = () => {
           className="small dash-side  flex flex-col gap-6 pt-12"
         >
           {tabs.map((tab) => (
-            <Link className="" key={tab.name} to={`/${tab.link}`}>
+            <NavLink activeClassName="active" className="gg" key={tab.name} to={`/${tab.link}`}>
               <div
                 className={`flex w-full flex-row pl-20 items-center rounded-tr-lg rounded-br-lg gap-4 p-2 transition-all duration-300 
           ${activeTab === tab.name ? "bg-[#303038]" : "hover:bg-[#404048]"}
-        `}
+           `}
                 style={{
                   cursor: "pointer",
                 }}
@@ -456,7 +456,7 @@ const MainDash = () => {
                   )}
                 </div>
               </div>
-            </Link>
+            </NavLink>
           ))}
         </div>
 
@@ -470,7 +470,7 @@ const MainDash = () => {
             <Modal
               className="no-border"
               open={open}
-              onClose={handleClose}
+              // onClose={handleClose}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >

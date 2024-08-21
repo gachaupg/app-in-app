@@ -218,7 +218,7 @@ const BuyPage = (props) => {
       });
       setLoading1(false);
       setStatus(res.data); // Assuming the response data is what you need to set
-      if (res.data.status === 'matched') {
+      if (res.data.status === 'half-matched') {
         setOpen1(true);
 
       }
@@ -268,13 +268,18 @@ const BuyPage = (props) => {
             }} className="g">
               I will receive {payments?.amount}
             </Typography>
+            <div className="flex gap-2">
             <button onClick={() => {
-              handleClose1()
-
-            }
-
-
-            } className="w-full small mt-3 p-1 white greenbg rounded-2xl">Provide feedback</button>
+              handleClose1()}  }
+             className="w-full small mt-3 p-1 white greenbg rounded-2xl">
+              Cancel
+              </button>
+              <button onClick={() => {
+              handleClose1()}  }
+             className="w-full small mt-3 p-1 white greenbg rounded-2xl">
+              Provide feedback
+              </button>
+            </div>
           </Box>
         </Modal>
         <p>Advertisers Info</p>

@@ -1,50 +1,39 @@
+
+
 /* eslint-disable no-unused-vars */
-import Navbar from "./components/Navbar";
-import "./App.css";
-import Home from "./pages/landing-page/Home";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Box, Typography } from '@mui/material';
+import Modal from '@mui/material/Modal';
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect, useState } from "react";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Forgot from "./pages/Forgot";
+import "./App.css";
 import Footer from "./components/Footer";
-import "react-toastify/dist/ReactToastify.css";
-import { setUser } from "./redux/features/authSlice";
-import ForgotPasswordButton from "./pages/ResetPassword";
-import Profile from "./components/Profile";
-import MainProfile from "./pages/Auth/MainProfile";
-import Dashboard from "./pages/Dashboard/Dashboard";
+import Navbar from "./components/Navbar";
+import DoughnutChart from "./components/Pichart";
+import MainProfilePage from "./pages/Auth/MainProfilePage";
+import Blog from "./pages/blog/Blogs";
 import KYC from "./pages/Dashboard/DashboardTabs/KYC";
 import Wallet from "./pages/Dashboard/DashboardTabs/Wallet";
-import MainExchange from "./pages/exchange/MainExchange";
-import Market from "./pages/p2p/Market";
-import Blog from "./pages/blog/Blogs";
-import Orders from "./pages/p2p/Orders";
 import MainDash from "./pages/Dashboard/MainDashbord/MainDash";
-import BuyPage from "./pages/Dashboard/Trade/BuyPage";
-import SellPage from "./pages/Dashboard/Trade/SellPage";
-import VerifyPayment from "./pages/Dashboard/Trade/tables/VerifyPayment";
-import Adds from "./pages/Dashboard/Trade/p2pCenter/adds";
-import HomePage from "./pages/landing-page/Home";
-import Test from "./pages/Auth/Test";
-import DoughnutChart from "./components/Pichart";
-import BuyAdds from "./pages/Dashboard/Trade/p2pCenter/BuyAdds";
-import BuyASdss from "./pages/Dashboard/Trade/p2pCenter/Adds/BuyAd";
-import Adds1 from "./pages/Dashboard/Trade/p2pCenter/Adds/BuyAd";
-import MainProfilePage from "./pages/Auth/MainProfilePage";
-import MainMarket from "./pages/MainMaket";
-import axios from "axios";
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import Seller from "./pages/Dashboard/Trade/seller/Seller";
 import Notifications from "./pages/Dashboard/notifications/Notifications";
+import BuyPage from "./pages/Dashboard/Trade/BuyPage";
+import Adds from "./pages/Dashboard/Trade/p2pCenter/adds";
+import Adds1 from "./pages/Dashboard/Trade/p2pCenter/Adds/BuyAd";
 import BuySell from "./pages/Dashboard/Trade/seller/BuySell";
-
+import Seller from "./pages/Dashboard/Trade/seller/Seller";
+import SellPage from "./pages/Dashboard/Trade/SellPage";
+import MainExchange from "./pages/exchange/MainExchange";
+import Forgot from "./pages/Forgot";
+import HomePage from "./pages/landing-page/Home";
+import Login from "./pages/Login";
+import MainMarket from "./pages/MainMaket";
+import Orders from "./pages/p2p/Orders";
+import Register from "./pages/Register";
+import ForgotPasswordButton from "./pages/ResetPassword";
+import { setUser } from "./redux/features/authSlice";
 const style = {
   position: 'absolute',
   top: '50%',
@@ -74,8 +63,13 @@ function App() {
 
 
 
-console.log('main',status);
-
+useEffect(()=>{
+if (!user) {
+  navigate('login')
+}else{
+  navigate('dashboard')
+}
+},[])
 
 useEffect(() => {
   fetchData1()
@@ -119,25 +113,28 @@ async function fetchData1() {
 
   return (
     <div className="App">
-      <Modal
+    
+     <Modal
               className="no-border"
               open={open}
               onClose={handleClose}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              <Box className="primary border no-border mr-20 flex flex-col items-center justify-center g 0" sx={style}>
+             <Box className="primary border no-border mr-20 flex flex-col items-center justify-center g 0" sx={style}>
                 <Typography className="text-red-700" id="modal-modal-title" variant="h6" component="h2">
                   Notification Alert!!
                 </Typography>
                 <p className="g">You have a new Order</p>
                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                  <button  className="p-2 greenbg rounded-lg w-full white mt-3">
+                 <Link to='/notifications' state={status}>
+                 <button  className="p-2 greenbg rounded-lg w-full white mt-3">
                     Check out the order
                   </button>
+                 </Link>
                 </Typography>
-              </Box>
-            </Modal>
+              </Box> 
+           </Modal> 
       <Navbar />
       <ToastContainer />
       <Routes>

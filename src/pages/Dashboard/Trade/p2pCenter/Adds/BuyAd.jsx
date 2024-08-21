@@ -258,7 +258,6 @@ const Adds = () => {
     }
   }
 
-  console.log(sell);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -308,10 +307,6 @@ const Adds = () => {
             toast.error(
               `Error failed: `, data.error
             );
-
-            console.log('====================================');
-            console.log('new', data.amount);
-            console.log('====================================');
           }
           console.error("Error response:", data);
         }
@@ -324,15 +319,19 @@ const Adds = () => {
     }
   };
   async function Dets() {
-    if (details.length === 0) {
-      setOpen1(true)
-    } else {
-      setOpen1(false)
-    }
+    setTimeout(() => {
+      if (details.length === 0) {
+        setOpen1(true);
+      } else {
+        setOpen1(false);
+      }
+    }, 5000); // 5-second delay
   }
+  
   useEffect(() => {
     Dets();
   }, [details]);
+  
 
   console.log(details.length);
 

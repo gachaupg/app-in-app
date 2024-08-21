@@ -467,17 +467,17 @@ const MainExchange = () => {
 
 
               {show === 'Deposit'  &&
-                <div className="flex flex-row items-center gap-5 w-full justify-between">
+                <div className="flex small wrap flex-row flex-wrap items-center gap-5 w-full justify-between">
                   <div>
                     <p className="white">Deposit</p>
-                    <div className="flex flex-row border gap-2 rounded-lg border-green-700 w-32 p-1">
+                    <div className="flex  small wrap flex-row border gap-2 rounded-lg border-green-700 w-32 p-1">
                       <button onClick={() => setCrypto('crypto')} className={`${crypto === 'crypto' ? 'greenbg' : ''} rounded-lg p-1 white`}>Crypto</button>
                       <button onClick={() => setCrypto('forex')} className={`${crypto === 'forex' ? 'greenbg' : ''} rounded-lg p-1  white`}>Forex</button>
                     </div>
                   </div>
                   <div>
                     <p className="white">  Transaction Type</p>
-                    <div className=" w-full p-2 flex flex-row items-center justify-center gap-5 small">
+                    <div className=" w-full small wrap p-2 flex flex-row items-center justify-center gap-5 small">
                       <button onClick={() => setShow("Deposit")} className={`white flex items-center justify-center border border-green-700  w-36 ${show === 'Deposit' ? 'greenbg' : ''} p-1 rounded-3xl`}>
                         <MdArrowOutward color="white" />  Deposit
                       </button>
@@ -585,8 +585,8 @@ const MainExchange = () => {
                         </div>
                       </div>
                       <div className="w-full small wrap flex primary mt-4  rounded-2xl flex-row items-center justify-between gap-2   border-spacing-1 ">
-                        <div className="border border-slate-700 p-2 gap-14 rounded-2xl flex flex-row  justify-between">
-                          <div className="flex flex-row items-center gap-2">
+                        <div className="border small border-slate-700 p-2 gap-14 rounded-2xl flex flex-row  justify-between">
+                          <div className="flex small flex-row items-center gap-2">
                             <img className="h-7" src="https://res.cloudinary.com/pitz/image/upload/v1721374473/87496d50-2408-43e1-ad4c-78b47b448a6a.png_aoj8i3.png" alt="" />
                             <p style={{
                               fontSize: '12px'
@@ -611,7 +611,7 @@ const MainExchange = () => {
                           </div>
 
                         </div>
-                        <div className="border border-slate-700 p-2 gap-14 rounded-2xl flex flex-row  justify-between">
+                        <div className="border small border-slate-700 p-2 gap-14 rounded-2xl flex flex-row  justify-between">
                           <div className="flex flex-row items-center gap-2">
                             <img className="h-6" src="https://res.cloudinary.com/pitz/image/upload/v1724012530/Group_34041_1_usw7t0.png" alt="" />
                             <p style={{
@@ -637,7 +637,7 @@ const MainExchange = () => {
                           </div>
 
                         </div>
-                        <div className="border border-slate-700 p-2 gap-10 rounded-2xl flex flex-row  justify-between">
+                        <div className="border small border-slate-700 p-2 gap-10 rounded-2xl flex flex-row  justify-between">
                           <div className="flex flex-row items-center gap-2">
                             <img className="h-6" src="https://res.cloudinary.com/pitz/image/upload/v1724012474/Group_34041_fil5u6.png" alt="" />
                             <p style={{

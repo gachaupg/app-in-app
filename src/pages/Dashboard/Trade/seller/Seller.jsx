@@ -215,7 +215,7 @@ const BuyPage = (props) => {
             });
             setLoading1(false);
             setStatus(res.data); // Assuming the response data is what you need to set
-            if (res.data.status === 'matched') {
+            if (res.data.status === 'completed') {
                 setOpen1(true);
 
             }
@@ -267,7 +267,7 @@ const [match,setMatch]=useState([]);
           console.log('jjj',res.data.status);
           
           // Assuming the response data is what you need to set
-          if (res.data.status === 'matched') {
+          if (res.data.status === 'completed') {
             setOpen1(true);
     
           }
@@ -454,8 +454,8 @@ const [match,setMatch]=useState([]);
                     <button
                     
                         onClick={handleSubmit}
-                        className={`w-full rounded-lg p-2 ${match.status === 'matched' ? 'gback' : 'yellowfaded'}`}
-                        disabled={match.status === 'matched'}
+                        className={`w-full rounded-lg p-2 ${match.status === 'matched' || match.status==='complete' ? 'gback' : 'yellowfaded'}`}
+                        disabled={match.status === 'matched'|| match.status==='complete'}
                         
                     >
                         {loading1 ? <CircularProgress /> : "Payments received release USDT"}

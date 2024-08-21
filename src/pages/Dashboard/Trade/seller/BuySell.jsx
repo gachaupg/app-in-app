@@ -174,6 +174,8 @@ const BuyPage = (props) => {
 
                 if (response.ok) {
                     toast.success("Request sent!");
+                    fetchData4();
+                    fetchData3();
                 } else {
                     if (data.code === "token_not_valid") {
                         toast.error("Your session has expired. Please log in again.");
@@ -216,7 +218,7 @@ const BuyPage = (props) => {
             });
             setLoading1(false);
             setStatus(res.data); // Assuming the response data is what you need to set
-            if (res.data.status === 'matched') {
+            if (res.data.status === 'completed') {
                 setOpen1(true);
 
             }
@@ -268,7 +270,7 @@ const BuyPage = (props) => {
             console.log('jjj', res.data.status);
 
             // Assuming the response data is what you need to set
-            if (res.data.status === 'matched') {
+            if (res.data.status === 'completed') {
                 setOpen1(true);
 
             }

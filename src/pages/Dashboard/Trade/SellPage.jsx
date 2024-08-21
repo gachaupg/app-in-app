@@ -65,7 +65,7 @@ const BuyPage = (props) => {
     auto_reply: payments?.auto_reply || "",
     terms_and_conditions: payments?.terms_and_conditions || "",
   };
-  console.log("hello", status);
+  console.log("hello", status.status);
 
   const [buy, setBuy] = useState(initialState);
   console.log("====================================");
@@ -174,8 +174,14 @@ const BuyPage = (props) => {
         const data = await response.json();
 
         if (response.ok) {
-          toast.success("Request sent!");
+          toast.success("USDT transferred successfully!");
           fetchData3();
+          if (status.status==='completed') {
+            setOpen1(true);
+            
+          }else{
+            setOpen1(false)
+          }
         } else {
           if (data.code === "token_not_valid") {
             toast.error("Your session has expired. Please log in again.");
@@ -218,7 +224,7 @@ const BuyPage = (props) => {
       });
       setLoading1(false);
       setStatus(res.data); // Assuming the response data is what you need to set
-      if (res.data.status === 'matched') {
+      if (res.data.status === 'completed') {
         setOpen1(true);
 
       }
@@ -245,6 +251,9 @@ console.log('status',status);
   };
   return (
     <div className="white primary flex justify-between  pt-10  wrap small pr-40 pl-40 ">
+      <p className="white">
+        {/* {status.status==='complete'?'hii':'no'} */}
+      </p>
       <div
         style={{
           width: "65%",
