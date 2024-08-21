@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --force",
-    "build": "vite build --force",
+    "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -27,8 +27,7 @@
     "@sumsub/websdk": "^2.0.1",
     "@sumsub/websdk-react": "^2.0.1",
     "axios": "^1.6.7",
-    "bootstrap": "^5.3.3",
-    "bootstrap-icons": "^1.11.3",
+  
     "bowser": "^2.11.0",
     "chart.js": "^4.4.3",
     "date-fns": "^3.6.0",
@@ -41,7 +40,6 @@
     "metro": "^0.80.4",
     "npm": "^10.4.0",
     "react": "^18.2.0",
-    "react-bootstrap": "^2.10.4",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-google-recaptcha": "^3.1.0",
