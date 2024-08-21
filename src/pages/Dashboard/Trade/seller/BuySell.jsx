@@ -2,23 +2,21 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
-import { AttachFile, DocumentScannerOutlined } from "@mui/icons-material";
+import { AttachFile } from "@mui/icons-material";
 import { CircularProgress, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import axios from "axios";
-import { Copy, DollarSign, Dot } from "lucide-react";
+import { DollarSign, Dot } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { BsExclamationCircle } from "react-icons/bs";
-import { IoIosArrowDown, IoMdArrowRoundForward } from "react-icons/io";
+import { IoMdArrowRoundForward } from "react-icons/io";
 import { IoCheckmarkCircleSharp, IoDocumentTextOutline } from "react-icons/io5";
-import { SlLike } from "react-icons/sl";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../../utils/APIRoutes";
-import { RiFilePdfFill } from "react-icons/ri";
 
 
 const style = {
@@ -38,7 +36,7 @@ const BuyPage = (props) => {
     const [open, setOpen] = React.useState(false);
     const location = useLocation()
     const fromDashboard = location.state;
-    
+
     const params = useParams();
     const { id } = params;
     const navigate = useNavigate();
@@ -67,7 +65,7 @@ const BuyPage = (props) => {
     console.log("hello", status);
 
     const [buy, setBuy] = useState(initialState);
-    
+
     useEffect(() => {
         fetchData();
     }, [user?.access]);
@@ -107,10 +105,10 @@ const BuyPage = (props) => {
         const token = user.access;
 
         if (!token) {
-          toast.error("Authentication token is missing. Please log in again.");
-          navigate("/login");
-          setLoading1(false);
-          return;
+            toast.error("Authentication token is missing. Please log in again.");
+            navigate("/login");
+            setLoading1(false);
+            return;
         }
 
         const headers = {
@@ -141,10 +139,10 @@ const BuyPage = (props) => {
         setLoading1(true);
         const token = user.access;
         if (!token) {
-          toast.error("Authentication token is missing. Please log in again.");
-          navigate("/login");
-          setLoading1(false);
-          return;
+            toast.error("Authentication token is missing. Please log in again.");
+            navigate("/login");
+            setLoading1(false);
+            return;
         }
 
         if (buy.order_type === 'buy') {
@@ -157,12 +155,15 @@ const BuyPage = (props) => {
                 console.log("Sending request with headers:", buy); // Debugging line
                 console.log(
                     "Sending request to endpoint:",
-                    `${endpoint}/trading_engine/p2p/trades/${id}/complete/`
+                    `${endpoint}/trading_engine/p2p/trades/${id}/confirm/`,
+
                     // https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/<int:trade_id>/complete/
                 ); // Debugging line
                 // https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/1/confirm/
                 const response = await fetch(
-                    `${endpoint}/trading_engine/p2p/trades/${id}/complete/`,
+                    `${endpoint}/trading_engine/p2p/trades/${id}/confirm/`,
+
+                    // `${endpoint}/trading_engine/p2p/trades/${id}/complete/`,
                     {
                         method: "POST",
                         headers: headers,
@@ -198,10 +199,10 @@ const BuyPage = (props) => {
     async function fetchData3() {
         const token = user.access;
         if (!token) {
-          toast.error("Authentication token is missing. Please log in again.");
-          navigate("/login");
-          setLoading1(false);
-          return;
+            toast.error("Authentication token is missing. Please log in again.");
+            navigate("/login");
+            setLoading1(false);
+            return;
         }
 
         const headers = {
@@ -239,43 +240,43 @@ const BuyPage = (props) => {
             setIsDisabled(true); // Disable the button when seconds reach 0
         }
     }, [seconds]);
-const [match,setMatch]=useState([]);
+    const [match, setMatch] = useState([]);
 
     useEffect(() => {
         fetchData4();
-      }, [user.access]);
-      async function fetchData4() {
+    }, [user.access]);
+    async function fetchData4() {
         const token = user.access;
         if (!token) {
-          toast.error("Authentication token is missing. Please log in again.");
-          navigate("/login");
-          setLoading1(false);
-          return;
+            toast.error("Authentication token is missing. Please log in again.");
+            navigate("/login");
+            setLoading1(false);
+            return;
         }
-    
+
         const headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         };
-    
+
         try {
-          const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/${id}/confirm/`, {
-            headers,
-          });
-          setLoading1(false);
-          setMatch(res.data); 
-          console.log('jjj',res.data.status);
-          
-          // Assuming the response data is what you need to set
-          if (res.data.status === 'matched') {
-            setOpen1(true);
-    
-          }
+            const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/${id}/confirm/`, {
+                headers,
+            });
+            setLoading1(false);
+            setMatch(res.data);
+            console.log('jjj', res.data.status);
+
+            // Assuming the response data is what you need to set
+            if (res.data.status === 'matched') {
+                setOpen1(true);
+
+            }
         } catch (error) {
-          console.log(error);
-          setLoading1(false);
+            console.log(error);
+            setLoading1(false);
         }
-      }
+    }
 
 
 
@@ -452,13 +453,13 @@ const [match,setMatch]=useState([]);
                         {isDisabled ? 'Cant Appeal' : `Appeal in ${seconds} seconds`}
                     </button>
                     <button
-                    
+
                         onClick={handleSubmit}
-                        className={`w-full rounded-lg p-2 ${match.status === 'matched' ? 'gback' : 'yellowfaded'}`}
-                        disabled={match.status === 'matched'}
-                        
+                        className={`w-full rounded-lg p-2 ${match.status === 'matced' ? 'gback' : 'yellowfaded'}`}
+                        disabled={match.status === 'matced'}
+
                     >
-                        {loading1 ? <CircularProgress /> : "Payments received release USDT"}
+                        {loading1 ? <CircularProgress /> : "Money sent notify the buyer"}
                     </button>
                 </div>
             </div>

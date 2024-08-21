@@ -10,10 +10,13 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { LiaExclamationCircleSolid } from "react-icons/lia";
 import { SlQuestion } from "react-icons/sl";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../utils/APIRoutes";
-
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 const style = {
     position: "absolute",
     top: "50%",
@@ -61,8 +64,19 @@ const Widthform = () => {
     const [verify, setVerify] = useState(true);
     const [loading1, setLoading1] = useState(false);
     const [payments1, setPayments1] = useState([]);
-    console.log('data', provider);
 
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -124,20 +138,17 @@ const Widthform = () => {
             setLoading(false);
         }
     };
-
-    console.log('hello', details);
-    const [toastShown, setToastShown] = useState(false);
-
-    useEffect(() => {
-        if (details.length === 0 && !toastShown) {
-            toast.error('Add payments details first in your account page');
-            setToastShown(true);
+    console.log('details', details.length);
+    async function Dets() {
+        if (details.length === 0) {
+            setOpen(true)
+        } else {
+            return
         }
-    }, [details, toastShown]);
-
-    // Rest of your component code...
-
-
+    }
+    useEffect(() => {
+        Dets();
+    }, [details]);
     useEffect(() => {
         fetchData3();
     }, [user.access]);
@@ -160,15 +171,19 @@ const Widthform = () => {
                 headers,
             });
             setLoading1(false);
-            setdetails(res.data); // Assuming the response data is what you need to set
-            console.log("hello", res.data);
+            setdetails(res.data);
+            {
+                details.length === 0?
+                setOpen(true)
+                :setOpen(false);
+
+            }
+            // console.log("hello", res.data);
         } catch (error) {
             console.log(error);
             setLoading1(false);
         }
     }
-
-
     useEffect(() => {
         fetchData1();
     }, [user.access]);
@@ -265,6 +280,23 @@ const Widthform = () => {
 
     return (
         <div className="text-white mt-2">
+            {/* <button onClick={handleOpen}>uuu</button> */}
+            <Modal
+                open={open}
+                // onClose={handleClose}
+                aria-labelledby="child-modal-title"
+                aria-describedby="child-modal-description"
+            >
+                <Box className="primary border border-slate-700 g" sx={{ ...style, width: 500 }}>
+                    <h2 id="child-modal-title">You have no payments Details</h2>
+                    <h2>To proceed add payments details on the profile page</h2>
+                    <Link to='/account'>
+                        <button className="p-1 white mt-2 rounded-2xl greenbg w-full">
+                            Add Payments Details
+                        </button>
+                    </Link>
+                </Box>
+            </Modal>
             <p className="g">Transaction Info</p>
             <div
                 style={{ width: "100%" }}
@@ -433,18 +465,16 @@ const Widthform = () => {
                             <div className="  flex white flex-row items-center gap-1 w-full">
                                 <img className="h-9" src="https://res.cloudinary.com/pitz/image/upload/v1721025707/Icon_cr4c7m.png" alt="" />
 
-                                {/* <select
-                                    onChange={(e) => setWidthdrwal({ ...widthdrwal, payment_method: e.target.value })}
-                                    className="p-2 primary white no-border sel w-full"
-                                >
-                                    <option className="white" value="">Payment method</option>
-                                    {payments.map((i) => (
-                                        <option key={i.provider_method} className="white" value={i.name}>
-                                            {i.name}
-                                        </option>
-                                    ))}
-                                </select> */}
-                                <input type="text"   onChange={(e) => setWidthdrwal({ ...widthdrwal, payment_method: e.target.value })}/>
+                                <select onChange={(e) => setWidthdrwal({ ...widthdrwal, payment_method: e.target.value })} className="p-2 primary no-border w-full" >
+                                    <option value="">Payment Method</option>
+                                    {payments.map((i) => {
+                                        return (
+                                            <>
+                                                <option value={i.name}>{i.name}</option>
+                                            </>
+                                        )
+                                    })}
+                                </select>
 
                             </div>
                         </div>
@@ -454,11 +484,11 @@ const Widthform = () => {
                         <div className="primary p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
                             <div className="  flex flex-row items-center gap-1 w-full">
                                 <img className="h-9" src="https://res.cloudinary.com/pitz/image/upload/v1721979295/image_7_1_la1uwx.png" alt="" />
-                                <select onChange={(e) => 
-                                setWidthdrwal(
-                                    { ...widthdrwal, payment_provider: e.target.value })
-                                    
-                                    } className="p-2 primary no-border w-full" >
+                                <select onChange={(e) =>
+                                    setWidthdrwal(
+                                        { ...widthdrwal, payment_provider: e.target.value })
+
+                                } className="p-2 primary no-border w-full" >
                                     <option value="">Payment provider</option>
                                     {provider.map((i) => {
                                         return (
@@ -483,22 +513,22 @@ const Widthform = () => {
                                 return (
                                     <><div className=" p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
                                         <div className=" border border-green-700 mr-3  p-1 rounded-3xl flex flex-row items-center gap-1 w-full">
-                                            
+
                                             {i.payment_provider_name === widthdrwal.payment_provider && (
-                                                <>     
-                                                 
+                                                <>
+
                                                     <div className=" p-1 pl-3 rounded-3xl  flex flex-row items-center justify-between  w-full secondary ">
 
-                                                    <p
+                                                        <p
 
-                                                        className="w-full p-1 no-border secondary text-white custom-placeholder"
+                                                            className="w-full p-1 no-border secondary text-white custom-placeholder"
 
-                                                    >
-                                                        {i.account_name}
-                                                    </p>
-                                                </div>
-                                                 
-                                                 </>
+                                                        >
+                                                            {i.account_name}
+                                                        </p>
+                                                    </div>
+
+                                                </>
                                             )}
                                         </div>
 
@@ -515,20 +545,21 @@ const Widthform = () => {
                             {
                                 details.map((i) => {
                                     return (
-                                        <> 
-                                        <div className="  primary mr-3  p-1 rounded-3xl flex flex-row  items-center gap-1 w-full">
-                                            {i.payment_provider_name === widthdrwal.payment_provider && (
-                                                <>      
-                                                <div className=" p-1 pl-3  border-slate-700 primary flex flex-row items-center justify-between  w-full  ">
-                                                    <p className="w-full p-1 no-border  text-white custom-placeholder">
-                                                        {i.account_number}
-                                                    </p>
-                                                </div>
-                                                </>
-                                            )}
-                                        </div>
+                                        <>
+                                            <div className="  primary mr-3  p-1 rounded-3xl flex flex-row  items-center gap-1 w-full">
+                                                {i.payment_provider_name === widthdrwal.payment_provider && (
+                                                    <>
+                                                        <div className=" p-1 pl-3  border-slate-700 primary flex flex-row items-center justify-between  w-full  ">
+                                                            <p className="w-full p-1 no-border  text-white custom-placeholder">
+                                                                {i.account_number}
+                                                            </p>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
                                         </>
-                                    )})}
+                                    )
+                                })}
                         </div>
                     </div>
 

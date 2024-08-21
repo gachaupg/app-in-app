@@ -160,11 +160,11 @@ const BuyPage = (props) => {
         console.log("Sending request with headers:", buy); // Debugging line
         console.log(
           "Sending request to endpoint:",
-          `${endpoint}/trading_engine/p2p/trades/${id}/confirm/`
+          `${endpoint}/trading_engine/p2p/trades/${id}/complete/`
         ); // Debugging line
         // https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/1/confirm/
         const response = await fetch(
-          `${endpoint}/trading_engine/p2p/trades/${id}/confirm/`,
+          `${endpoint}/trading_engine/p2p/trades/${id}/complete/`,
           {
             method: "POST",
             headers: headers,
@@ -181,7 +181,7 @@ const BuyPage = (props) => {
             toast.error("Your session has expired. Please log in again.");
             navigate("/login");
           } else {
-            toast.error(`Save bank details failed: ${data.message || "Unknown error"}`);
+            toast.error(`Sell Request failed: ${data.error || "Unknown error"}`);
           }
           console.error("Error response:", data);
         }
@@ -228,6 +228,7 @@ const BuyPage = (props) => {
     }
   }
 
+console.log('status',status);
 
 
   const style = {
@@ -285,7 +286,7 @@ const BuyPage = (props) => {
           className="flex small small wrap flex-row justify-start gap-2 items-center justify-center  border border-slate-700 rounded-lg secondary p-3  pr-5 pl-5 items-center  "
         >
           <div className="flex w-96 small wrap  flex-row gap-2 items-center">
-            <p className=" bg-green-600 h-14 w-14 rounded-lg flex text-center justify-center items-center p-1 text-white">
+            <p className=" greenbgh-14 w-14 rounded-lg flex text-center justify-center items-center p-1 text-white">
               <span
                 style={{
                   fontSize: "16px",
@@ -535,10 +536,10 @@ const BuyPage = (props) => {
             </button>
             <button
               onClick={handleSubmit}
-              className={`w-full rounded-lg p-2 ${status.status === 'half-matched' ? 'gback' : 'bg-red-700'}`}
-              disabled={status.status === 'half-matched'}
+              className={`w-full  rounded-lg p-2 ${status.status === 'matched' ? 'gback' : 'bg-red-700'}`}
+              disabled={status.status === 'matched'}
             >
-              {loading1 ? <CircularProgress /> : "Money sent, notify seller"}
+              {loading1 ? <CircularProgress /> : "Payment received notify the buyer"}
             </button>
 
 

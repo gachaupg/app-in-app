@@ -208,6 +208,9 @@ cursor: pointer !important;
 .input-text{
   /* width: 20.5rem; */
 }
+.yellowfaded{
+  background-color: #F79330 !important;
+}
 .styled-table {
   width: 100%;
   border-collapse: collapse;

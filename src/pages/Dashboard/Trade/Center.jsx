@@ -29,11 +29,9 @@ const Center = () => {
 
   const [form, setForm] = useState(initialState);
   const [loading, setLoading] = useState(false);
-console.log(form);
 
   const [payments, setPayments] = useState([]);
   const [loading1, setLoading1] = useState(true);
-  // console.log('payments',payments);
 
   useEffect(() => {
     fetchData();
@@ -65,6 +63,38 @@ console.log(form);
       setLoading1(false);
     }
   }
+  const [details, setdetails] = useState([]);  
+  console.log('payments',details);
+
+  useEffect(() => {
+    fetchData3();
+}, [user.access]);
+async function fetchData3() {
+    const token = user.access;
+    if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+    }
+
+    const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+    };
+
+    try {
+        const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/user-payment-details/`, {
+            headers,
+        });
+        setLoading1(false);
+        setdetails(res.data); // Assuming the response data is what you need to set
+        console.log("hello", res.data);
+    } catch (error) {
+        console.log(error);
+        setLoading1(false);
+    }
+}
 
   // Add token to the dependency array
 
@@ -291,7 +321,7 @@ console.log(form);
         <>
           <div
             className={`secondary small border border-slate-700 p-2  rounded-lg flex flex-col justify-between `}
-           >
+          >
             <div className="flex flex-row wrap small w-full justify-between items-center p-1">
               <p className="white">Bank</p>
               <div className="border flex items-center  p-1 white border-green-600 rounded-lg">
@@ -394,23 +424,23 @@ console.log(form);
               }}
               className="w-full bg-slate-700 mt-2 mb-2"
             ></p>
-            {payments.length === 0 ? (
+            {details.length === 0 ? (
               <p className="white">No payment methods Added</p>
             ) : (
               <>
-                {payments.map((payment) => {
+                {details.map((payment) => {
                   return (
                     <>
                       <div className="flex small wrap flex-row w-full gap-7 p-3 items-center justify-between">
                         <div className="flex flex-col gap-2">
-                          <p className="white">Mobile Money</p>
+                          <p className="white">{payment.payment_method_name}</p>
                           <p className="flex flex-row small wrap white items-center gap-2">
                             <img
                               className="rounded-full"
                               src="https://res.cloudinary.com/pitz/image/upload/v1721980076/image_1_dfpk3p.png"
                               alt=""
                             />{" "}
-                            {payment.name}
+                            {payment.payment_provider_name}
                           </p>
                         </div>
                         <Trash2Icon color="green" />

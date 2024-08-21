@@ -16,12 +16,13 @@ import DepositForm from "./DepositForm";
 import Widthdrwal from "./Widthdrwal";
 
 
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import axios from "axios";
 import { toast } from "react-toastify";
+import { endpoint } from "../../../utils/APIRoutes";
 
 const style = {
   position: 'absolute',
@@ -185,7 +186,8 @@ const MainDash = () => {
       setLoading1(false);
     }
   }
-
+//  console.log('beauty',match);
+ 
   useEffect(() => {
     fetchData1()
   }, [user?.access])
@@ -195,6 +197,7 @@ const MainDash = () => {
     if (!token) {
       toast.error("Authentication token is missing. Please log in again.");
       navigate("/login");
+      
       setLoading1(false);
       return;
     }
@@ -211,19 +214,76 @@ const MainDash = () => {
       );
       setMatch(res.data);
       setLoading1(false);
-      console.log('payments', res.data);
-
+      console.log('paymentssss', res.data);
+     
     } catch (error) {
       console.log(error);
       setLoading1(false);
     }
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading1(true);
+
+    const token = user.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+
+    if (data.document_type) {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const formData = new FormData();
+      formData.append('network', data.document_type);
+      formData.append('wallet_type', data.document_number);
+      if (data.document_image) {
+        formData.append('document', data.document_image);
+      }
+
+      try {
+        const response = await fetch(
+          `${endpoint}/trading_engine/api/kyc/submit`,
+          {
+            method: "POST",
+            headers: headers,
+            body: formData, // Use FormData instead of JSON
+          }
+        );
+
+        const data = await response.json();
+        if (response.ok) {
+          toast.success("Verified successfully!");
+          fetchData()
+          setOpen1(false)
+          setOpen(false)
+        } else if (data.code === "token_not_valid") {
+          toast.error("Your session has expired. Please log in again.");
+          navigate("/login");
+        } else {
+          toast.error(`Verification failed Try again: ${data.error || data}`);
+        }
+      } catch (error) {
+        toast.error(`Error: ${error.error}`);
+        console.error("Error:", error);
+      } finally {
+        setLoading1(false);
+      }
+    } else {
+      toast.error("Invalid code");
+      setLoading1(false);
+    }
+  };
 
 
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
-  console.log(countries);
 
   useEffect(() => {
     fetch(
@@ -275,7 +335,6 @@ const MainDash = () => {
     <>
       <div>
         <div>
-
           <Modal
             className="rounded-lg border-slate-700"
             open={open1}
@@ -286,7 +345,7 @@ const MainDash = () => {
             {/* <h2 className="text-slate-400  mb-3">KYC Verification</h2> */}
 
             <Box
-              sx={{ ...style, width: "68%" }}
+              sx={{ ...style, width: "38%" }}
               className="rounded-lg small primary white border-slate-700"
             >
               <h2 className="text-center mb-4" id="child-modal-title">
@@ -294,13 +353,13 @@ const MainDash = () => {
               </h2>
               <div className="p-1">
                 <div className="flex flex-row items-center justify-between p-2 w-full gap-6 wrap small">
-                  <div className="flex flex-col items-center w-full gap-7">
+                  <div className="flex flex-col items-center no-border w-full gap-7">
                     <select
                       onChange={(e) => setdata({ ...data, document_type: e.target.value })}
                       placeholder="Full Name"
                       required
                       type="text"
-                      className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
+                      className="flex border border-slate-700  p-2 w-full primary text-white rounded-3xl"
                     >
                       <option value="">Select the type</option>
                       <option value="ID">ID</option>
@@ -312,35 +371,41 @@ const MainDash = () => {
                       placeholder="Document Number"
                       required
                       type="number"
-                      className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
+                      className="flex border border-slate-700  p-2 w-full primary text-white rounded-3xl"
                     />
                     <input
-                      onChange={(e) => setdata({ ...data, document_image: e.target.files[0] })}
+                      onChange={(e) => {
+                        setdata({ ...data, document_image: e.target.files[0] });
+                        toast.success('document picked successfully')
+                      }
+                      }
 
                       placeholder="Date of birth"
                       required
                       type="file"
-                      className="flex border border-slate-700 p-2 w-full primary text-white rounded-3xl"
+                      className="flex border border-slate-700  p-2 w-full primary text-white rounded-3xl"
                     />
-
-
-
-
                   </div>
                 </div>
                 <div className="flex flex-row items-center mt-10 justify-between p-2 w-full gap-6 wrap small">
                   <Button
                     className="white txt border p-1 border-slate"
-                    onClick={handleClose}
+                    onClick={handleClose1}
                   >
                     Close
                   </Button>
-                  <Button
-                    className="white txt1 border p-1 border-slate"
-                    onClick={handleClose}
-                  >
-                    Submit
-                  </Button>
+                 {
+                  loading1?
+                  <div className="flex items-center justify-center">
+                    <CircularProgress/>
+                  </div>
+                  : <Button
+                  onClick={handleSubmit}
+                  className="white txt1 border p-1 border-slate"
+                >
+                  Submit
+                </Button>
+                 }
                 </div>
               </div>
             </Box>
@@ -495,7 +560,7 @@ const MainDash = () => {
                       style={{ fontSize: "12px", color: "#F79330" }}
                       className=" flex flex-row items-center gap-1 "
                     >
-                     {kyc.is_verified?<p className="green">Verified</p>:'Unerified account'} {" "}
+                      {kyc.is_verified ? <p className="green">Verified</p> : 'Unerified account'} {" "}
                       <img
                         className="h-4"
                         src="https://res.cloudinary.com/pitz/image/upload/v1721370408/Frame_34216_jnzjpy.png"
@@ -739,10 +804,26 @@ const MainDash = () => {
                       <div className="white ml-2">
                         <p className="grey">Balance</p>
                         <p className="flex flex-row">
-                          00.00 USDT{" "}
+                        {
+                              payments.map((balance) => {
+                                return (
+                                  <p key={balance.id}>
+                                    {typeof balance.balance === 'string' ? Math.floor(balance.balance).toFixed(2) : 'N/A'}
+                                  </p>
+                                )
+                              })
+                            }  USDT{" "}
                           <span className="grey flex flex-row">
                             {" "}
-                            <span className="ml-1">≈ </span> 00.00 USD
+                            <span className="ml-1">≈ </span> {
+                              payments.map((balance) => {
+                                return (
+                                  <p key={balance.id}>
+                                    {typeof balance.balance === 'string' ? Math.floor(balance.balance).toFixed(2) : 'N/A'}
+                                  </p>
+                                )
+                              })
+                            }  USD
                           </span>
                         </p>
                       </div>
@@ -768,7 +849,16 @@ const MainDash = () => {
                         </div>
                       </div>
                     </div>
-                    <Widthdrwal />
+                    {
+                              payments.map((balance) => {
+                                return (
+                                 <>
+                                  <Widthdrwal payments={typeof balance.balance === 'string' ? Math.floor(balance.balance).toFixed(2) : 'N/A'} />
+                                 </>
+                                )
+                              })
+                            } 
+                   
                   </div>
                 </>
               )}
@@ -780,10 +870,26 @@ const MainDash = () => {
                       <div className="white ml-2">
                         <p className="grey">Balance</p>
                         <p className="flex flex-row">
-                          00.00 USDT{" "}
+                        {
+                              payments.map((balance) => {
+                                return (
+                                  <p key={balance.id}>
+                                    {typeof balance.balance === 'string' ? Math.floor(balance.balance).toFixed(2) : 'N/A'}
+                                  </p>
+                                )
+                              })
+                            }  USDT{" "}
                           <span className="grey flex flex-row">
                             {" "}
-                            <span className="ml-1">≈ </span> 00.00 USD
+                            <span className="ml-1">≈ </span> {
+                              payments.map((balance) => {
+                                return (
+                                  <p key={balance.id}>
+                                    {typeof balance.balance === 'string' ? Math.floor(balance.balance).toFixed(2) : 'N/A'}
+                                  </p>
+                                )
+                              })
+                            }  USD
                           </span>
                         </p>
                       </div>

@@ -1,7 +1,7 @@
-import { Link, useLocation } from "react-router-dom";
-import { RxAvatar } from "react-icons/rx";
-import ProfileTab from "../../Auth/ProfileTab";
 import { Divider } from "@mui/joy";
+import { RxAvatar } from "react-icons/rx";
+import { Link, useLocation } from "react-router-dom";
+import ProfileTab from "../../Auth/ProfileTab";
 
 const Notifications = () => {
     const location = useLocation()
@@ -15,37 +15,42 @@ const Notifications = () => {
             <div className="flex flex-row small wrap gap-6 justify-between  small wrap">
                 <div className="small w-full flex flex-col secondary rounded-lg p-2 border border-slate-700 ">
 
-                    {fromDashboard.map((i) => {
-                        return (
-                            <>
-                            <div key={i.id} className="g flex small wrap w-full justify-between gap-2">
-                                <div className="g flex  gap-2">
-                                    <RxAvatar size={34} />
-                                    <div>
-                                        <p>{i.buyer}</p>
-                                        <p>{i.amount} USD</p>
+                    {
+                        fromDashboard.length===0? <p className="text-white">No Notifications</p>:
+                        <>
+                        {fromDashboard.map((i) => {
+                            return (
+                                <>
+                                    <div key={i.id} className="g flex small wrap w-full justify-between gap-2">
+                                        <div className="g flex  gap-2">
+                                            <RxAvatar size={34} />
+                                            <div>
+                                                <p>{i.buyer}</p>
+                                                <p>{i.amount} USD</p>
+                                            </div>
+                                        </div><div>
+                                            <p className="g">Order Id {i.buy_order || i.sell_order}</p>
+                                        </div>
+                                        <div>
+    
+                                            <Link to={`/rates/${i.buy_order || i.sell_order}`}
+                                                state={i}
+                                            >
+                                                <button className="flex white p-1 greenbg rounded-lg">
+                                                    View Order
+                                                </button>
+                                            </Link>
+                                        </div>
+    
                                     </div>
-                                </div><div>
-                                    <p className="g">Order Id {i.buy_order || i.sell_order}</p>
-                                </div>
-                                <div>
-
-                                    <Link to={`/rates/${i.buy_order || i.sell_order}`}
-                                        state={i}
-                                    >
-                                        <button className="flex white p-1 greenbg rounded-lg">
-                                            View Order
-                                        </button>
-                                    </Link>
-                                </div>
-                                
-                            </div>
-                      <div className="mt-1 mb-1">
-                      <Divider className='mt-1 mb-1'/>
-                      </div>
-                        </>    
-                        )
-                    })}
+                                    <div className="mt-1 mb-1">
+                                        <Divider className='mt-1 mb-1' />
+                                    </div>
+                                </>
+                            )
+                        })}
+                        </>
+                    }
                 </div>
                 <div style={
                     {

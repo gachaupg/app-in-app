@@ -194,7 +194,7 @@ const Navbar = () => {
       navigate("/rates");
     }
   };
-
+ 
   // setShow1(!show1);
   const [activeTab, setActiveTab] = useState("P2P Trading");
   const [activeTab1, setActiveTab1] = useState("Dashboard");
@@ -228,6 +228,12 @@ const Navbar = () => {
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721368327/settings_mezmwi.png",
     },
   ];
+
+  const [newShow,setNew]=useState(false);
+  const HandNew=()=>{
+   setNew(!newShow);
+  }
+
   return (
     <div className="navbar flex flex-row justify-between pl-24 pr-16 ">
       <div className="lo">
@@ -305,7 +311,7 @@ const Navbar = () => {
               Deposit
             </button>
             <div
-              onClick={handleShow1}
+              onClick={HandNew}
               className="relative flex flex-row items-center"
               ref={profileRef}
             >
@@ -323,31 +329,52 @@ const Navbar = () => {
                 alt=""
               />
             </div>
-            {ProPro && (
+            {newShow && (
               <div className="lang mt-3 p-2 lang  w-64 border-slate-700  primary border rounded-lg absolute top-12  ">
                 <div className="flex flex-col items-center justify-center gap-3">
-                  <div onClick={handleShow1}>
+                  <div onClick={HandNew}>
                     <Cancel className="items-left float-left ml-44" />
                   </div>
-                  <Link  className="w-full" to="/account">
-                    <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
+                  <Link onClick={()=>{
+                    navigate('/account')
+                    HandNew();
+
+                    }}  className="w-full" to="/account">
+                    <div onClick={()=>{
+                    navigate('/account')
+                    HandNew();
+
+                    }}  className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                       <AccountCircle />
                       <button>Profile</button>
                     </div>
                   </Link>
-                  <Link  className="w-full" to="/account">
+                  <Link onClick={()=>{
+                    navigate('/account')
+                    HandNew();
+
+                    }}  className="w-full" to="/account">
                     <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                       <Wallet />
                       <button>Wallet</button>
                     </div>
                   </Link>
-                  <Link  className="w-full" to="/account">
+                  <Link onClick={()=>{
+                    navigate('/account')
+                    HandNew();
+
+                    }}  className="w-full" to="/account">
                     <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                       <Verified />
                       <button>KYC</button>
                     </div>
                   </Link>
                   <Link
+                  onClick={()=>{
+                    navigate('/account')
+                    HandNew();
+
+                    }} 
                     to='/acount'
                     
                     className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg"
@@ -355,9 +382,13 @@ const Navbar = () => {
                     <PrivacyTip />
                     <button>Privacy and Security</button>
                   </Link>
-                <div>
+                <div className="w-full">
                
-                <Link to="/account"
+                <Link onClick={()=>{
+                    navigate('/account')
+                    HandNew();
+
+                    }}  to="/account"
                    
                    className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg"
                  >
@@ -371,6 +402,8 @@ const Navbar = () => {
                       toast.warning("Logged out!", { position: "top-right" });
                       navigate("/");
                       handleShow();
+                      HandNew()
+
                     }}
                     className="flex justify-between w-full p-1 cursor-pointer gap-3 border-slate-700  border rounded-lg"
                   >
@@ -380,6 +413,7 @@ const Navbar = () => {
                         dispatch(setLogout(null));
                         toast.warning("Logged out!", { position: "top-left" });
                         navigate("/");
+                        HandNew()
                       }}
                     >
                       Logout

@@ -224,7 +224,6 @@ const MainExchange = () => {
 
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
-  console.log(countries);
 
   useEffect(() => {
     fetch(

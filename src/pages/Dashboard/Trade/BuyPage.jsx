@@ -174,14 +174,14 @@ const BuyPage = (props) => {
         const data = await response.json();
 
         if (response.ok) {
-          toast.success("Request sent!");
+          toast.success("Buy Request sent!");
           fetchData3();
         } else {
           if (data.code === "token_not_valid") {
             toast.error("Your session has expired. Please log in again.");
             navigate("/login");
           } else {
-            toast.error(`Save bank details failed: ${data.message || "Unknown error"}`);
+            toast.error(`Buy Request failed: ${data.error || "Unknown error"}`);
           }
           console.error("Error response:", data);
         }
@@ -474,11 +474,11 @@ const BuyPage = (props) => {
                 </div>
               </div>
               <div className="w-full">
-                <p className="g">Account Name</p>
+                <p className="g">Account Number</p>
                 <div className="flex flex-row gap-2 justify-between  w-full">
                   <p className="border text-green-600 flex items-center w-full greybg border-green-600 rounded-2xl p-1">
                     <Dot color="green" />{" "}
-                    <p>{payments?.account_name}</p>
+                    <p>{payments?.account_number}</p>
                   </p>
                   <p className="text-green-600 flex items-center">
                     {" "}
@@ -490,7 +490,7 @@ const BuyPage = (props) => {
                 <p className="g">Transaction Id</p>
                 <div className="flex flex-row gap-2 justify-between  w-full">
                   <p className="border  text-green-6 flex items-center w-full greybg border-green-600 rounded-2xl p-1">
-                    <Dot /> <p>132452345234</p>
+                    <Dot /> <p>{payments?.id}</p>
                   </p>
                   <p className="text-green-600 flex items-center">
                     {" "}

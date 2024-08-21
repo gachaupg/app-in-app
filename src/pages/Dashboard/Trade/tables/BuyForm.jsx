@@ -119,9 +119,9 @@ console.log(order);
             toast.error("Your session has expired. Please log in again.");
             navigate("/login");
           } else {
-            toast.error(`Save bank details failed: ${data.message || "Unknown error"}`);
+            toast.error(`Buy USDT failed: ${data.error || "Unknown error"}`);
           }
-          console.error("Error response:", data);
+          console.error("Error response:", data.error);
         }
       } catch (error) {
         toast.error(`Error: ${error.message}`);
@@ -184,12 +184,12 @@ console.log(order);
         >
         
           <div className="flex flex-row w-full gap-5 justify-spa  items-center">
-            <p className=" bg-green-600 h-full w-10 rounded-lg flex text-center justify-center items-center p-1 text-white">
+            <p className=" greenbg h-full w-10 rounded-lg flex text-center justify-center items-center p-1 text-white">
               <span
                 style={{
                   fontSize: "16px",
                 }}
-                className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
+                className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 greenbg rounded-lg"
               >
                 {payments?.advertiser_name?.split('-')[1]?.substring(1, 3).toUpperCase()}
               </span>
@@ -345,7 +345,7 @@ console.log(order);
                 width: "45%",
                 fontSize: "15px",
               }}
-              className="p-1 small bg-green-600 white rounded-lg"
+              className="p-1 small greenbg white rounded-lg"
             >
               {/* <Link
                 to={`/buy/${payments.id}`}

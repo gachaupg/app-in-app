@@ -119,7 +119,7 @@ console.log(order);
             toast.error("Your session has expired. Please log in again.");
             navigate("/login");
           } else {
-            toast.error(`Save bank details failed: ${data.message || "Unknown error"}`);
+            toast.error(`Sell USDT failed: ${data.error || "Unknown error"}`);
           }
           console.error("Error response:", data);
         }

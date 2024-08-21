@@ -43,6 +43,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Seller from "./pages/Dashboard/Trade/seller/Seller";
 import Notifications from "./pages/Dashboard/notifications/Notifications";
+import BuySell from "./pages/Dashboard/Trade/seller/BuySell";
 
 const style = {
   position: 'absolute',
@@ -73,45 +74,70 @@ function App() {
 
 
 
+console.log('main',status);
 
 
-  useEffect(() => {
-    fetchData3();
-  }, [user?.access]);
-  async function fetchData3() {
-    const token = user.access;
-    if (!token) {
-      toast.error("Authentication token is missing. Please log in again.");
-      navigate("/login");
-      setLoading1(false);
-      return;
-    }
+useEffect(() => {
+  fetchData1()
+}, [user?.access])
+async function fetchData1() {
+  const token = user.access;
 
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    };
-
-    try {
-      const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/4/confirm/`, {
-        headers,
-      });
-      setLoading1(false);
-      setStatus(res.data); // Assuming the response data is what you need to set
-      if (res.data.status === 'half-matched') {
-        setOpen(true);
-      }
-    } catch (error) {
-      console.log(error);
-      setLoading1(false);
-    }
+  if (!token) {
+    toast.error("Authentication token is missing. Please log in again.");
+    navigate("/login");
+    setLoading1(false);
+    return;
   }
-  console.log('new data', status);
+
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+
+  try {
+    const res = await axios.get(
+      `https://omayaexchangebackend.onrender.com/trading_engine/trades/matched/`,
+      { headers }
+    );
+    setStatus(res.data);
+    setLoading1(false);
+    console.log('paymentssss', res.data);
+    if (res.data.length===0) {
+      setOpen(false)
+     }else{
+      setOpen(true)
+     }
+  } catch (error) {
+    console.log(error);
+    setLoading1(false);
+  }
+}
+
 
 
 
   return (
     <div className="App">
+      <Modal
+              className="no-border"
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box className="primary border no-border mr-20 flex flex-col items-center justify-center g 0" sx={style}>
+                <Typography className="text-red-700" id="modal-modal-title" variant="h6" component="h2">
+                  Notification Alert!!
+                </Typography>
+                <p className="g">You have a new Order</p>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  <button  className="p-2 greenbg rounded-lg w-full white mt-3">
+                    Check out the order
+                  </button>
+                </Typography>
+              </Box>
+            </Modal>
       <Navbar />
       <ToastContainer />
       <Routes>
@@ -136,6 +162,7 @@ function App() {
         <Route path="/chats" element={<DoughnutChart />} />
         <Route path="/buy-adds" element={<Adds1 />} />
         <Route path="/notifications" element={<Notifications />} />
+        <Route path="/buysell/:id" element={<BuySell />} />
       </Routes>
       <Footer />
     </div>

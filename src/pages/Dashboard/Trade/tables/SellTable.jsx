@@ -104,14 +104,14 @@ function Table({ show, payments, isLoading }) {
                   <h2 className="secondary border border-green-700 rounded-lg p-3 items-center justify-center">
                     <p className="white flex items-center gap-1">
                       <Checkbox
-                        className="border-2 check border-green-600 bg-green-600 text-white"
+                        className="border-2 check border-green-600 greenbg text-white"
                         {...label}
                       />
                       Show only Merchant ads
                     </p>
                     <p className="white flex items-center gap-1">
                       <Checkbox
-                        className="border-2 check border-green-600 bg-green-600 text-white"
+                        className="border-2 check border-green-600 greenbg text-white"
                         {...label}
                       />
                       Show only Merchant Business ads
@@ -129,7 +129,7 @@ function Table({ show, payments, isLoading }) {
             </div>
 
             <button
-              className="bg-green-600 rounded-lg text-center h-12 flex items-center justify-center w-32 text-white"
+              className="greenbg rounded-lg text-center h-12 flex items-center justify-center w-32 text-white"
               onClick={() => {
                 setAmount('');
                 setPaymentTypeFilter('');
@@ -174,7 +174,7 @@ function Table({ show, payments, isLoading }) {
                    <tr key={row.id} className="border-bottom" style={{ fontSize: "14px" }}>
                     <td className="flex flex-col i gap-1">
                       <div className="flex flex-row items-center gap-1">
-                        <p className=" bg-green-600 h-8 w-8 rounded-lg flex text-center justify-center items-center p-1 text-white">
+                        <p className=" greenbg h-8 w-8 rounded-lg flex text-center justify-center items-center p-1 text-white">
                           <span
                             style={{
                               fontSize: "14px",

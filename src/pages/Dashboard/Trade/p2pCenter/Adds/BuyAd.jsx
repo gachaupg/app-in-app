@@ -99,6 +99,7 @@ const Adds = () => {
     },
   ];
   const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [payments, setPayments] = useState([]);
@@ -305,12 +306,7 @@ const Adds = () => {
             navigate("/login");
           } else {
             toast.error(
-              `Save bank details failed: 
-               Amount: ${data.amount || 'N/A'}, 
-               Commission Rate: ${data.commission_rate || 'N/A'}, 
-               Terms and Conditions: ${data.terms_and_conditions || 'N/A'}, 
-               Auto Reply: ${data.auto_reply || 'N/A'}, 
-               Limit: ${data.limit || 'N/A'}`
+              `Error failed: `, data.error
             );
 
             console.log('====================================');
@@ -327,6 +323,19 @@ const Adds = () => {
       }
     }
   };
+  async function Dets() {
+    if (details.length === 0) {
+      setOpen1(true)
+    } else {
+      setOpen1(false)
+    }
+  }
+  useEffect(() => {
+    Dets();
+  }, [details]);
+
+  console.log(details.length);
+
 
   return (
     <>
@@ -340,6 +349,22 @@ const Adds = () => {
         </div>
       )}
       <div className="primary  flex wrap small justify-between flex-row ">
+        <Modal
+          open={open1}
+          // onClose={handleClose}
+          aria-labelledby="child-modal-title"
+          aria-describedby="child-modal-description"
+        >
+          <Box className="primary border border-slate-700 g" sx={{ ...style, width: 500 }}>
+            <h2 id="child-modal-title">You have no payments Details</h2>
+            <h2>To proceed add payments details on the profile page</h2>
+            <Link to='/account'>
+              <button className="p-1 white mt-2 rounded-2xl greenbg w-full">
+                Add Payments Details
+              </button>
+            </Link>
+          </Box>
+        </Modal>
         <div
           style={{ width: "18%", color: "#727272", fontSize: "15px" }}
           className="small dash-side flex flex-col gap-6 pt-12"
@@ -505,7 +530,14 @@ const Adds = () => {
                       alt=""
                     />
                     <p className="white flex items-center">
-                      <DollarSign className="green" /> 20.00{" "}
+                      <DollarSign className="green" /> <input
+                        onChange={(e) =>
+                          setSell({ ...sell, amount: e.target.value })
+                        }
+                        className="w-full no-border primary text-white custom-placeholder"
+                        placeholder="10 USDT"
+                        type="number"
+                      />
                     </p>
                     <p className="g"></p>
                   </p>
@@ -530,7 +562,14 @@ const Adds = () => {
                       alt=""
                     />
                     <p className="white flex items-center">
-                      <DollarSign className="green" /> 200.00{" "}
+                      <DollarSign className="green" /> <input
+                        onChange={(e) =>
+                          setSell({ ...sell, amount: e.target.value })
+                        }
+                        className="w-full no-border primary text-white custom-placeholder"
+                        placeholder="1000 USDT"
+                        type="number"
+                      />
                     </p>
                     <p className="g"></p>
                   </p>
@@ -605,7 +644,8 @@ const Adds = () => {
                       className="primary white cursor-pointer  w-full  no-border"
                       name=""
                       id=""
-                    >                            <option value="">Provider</option>
+                    >
+                      <option value="">Provider</option>
 
                       {" "}
                       {provider.map((i) => {
@@ -732,27 +772,27 @@ const Adds = () => {
           <p className="g">Terms & Auto reply</p>
           <div className="border flex flex-col  border-slate-700 p-4 rounded-lg secondary">
             <p className="g">Terms (Optional)</p>
-            <div className="border flex flex-col w-full  h-32  border-slate-700 p-2 rounded-2xl primary">
-              <input
+            <div className="border flex flex-col w-full   h-32  border-slate-700 p-2 rounded-2xl primary">
+              <textarea
                 onChange={(e) =>
                   setSell({ ...sell, terms_and_conditions: e.target.value })
                 }
                 placeholder="Write your Comments "
-                className="primary white no-border h-32"
+                className="primary white no-border h-32 resize-none"
                 type="text"
               />
             </div>
             <p className="g mt-4">Auto Reply (Optional)</p>
-            <div className="border flex flex-col w-full  h-32  border-slate-700 p-2 rounded-2xl primary">
-              <input
+            <div className="border flex flex-col w-full h-32 border-slate-700 p-2 rounded-2xl primary">
+              <textarea
                 onChange={(e) =>
                   setSell({ ...sell, auto_reply: e.target.value })
                 }
-                placeholder="Write your Comments "
-                className="primary text-white no-border h-32"
-                type="text"
+                placeholder="Write your Comments"
+                className="primary text-white no-border h-32 resize-none"
               />
             </div>
+
             <div className=" w-full gap-6 flex items-center mt-3">
               <button className="border p-2 border-green-600 rounded-2xl w-full p-1 g">
                 Cancel

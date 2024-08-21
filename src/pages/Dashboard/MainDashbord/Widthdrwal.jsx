@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import emailjs from "@emailjs/browser";
 import { CircularProgress } from "@mui/material";
@@ -37,7 +38,7 @@ const initialState = {
   receiver_wallet: "",
 };
 
-const DepositForm = () => {
+const DepositForm = ({payments}) => {
   const [widthdrwal, setWidthdrwal] = useState(initialState);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -367,6 +368,7 @@ const DepositForm = () => {
                   className="w-full no-border secondary"
                   type="number"
                   placeholder="100"
+                  value={widthdrwal.amount}
                   name=""
                   id=""
                   onChange={(e) =>
@@ -374,21 +376,23 @@ const DepositForm = () => {
                   }
                 />
               </div>
-              <p className="flex flex-row items-center">
+              <p onClick={()=>{
+                setWidthdrwal({...widthdrwal,amount:payments})
+              }} className="flex cursor-pointer flex-row items-center">
                 <span className="text-green-600">Max</span> USDT{" "}
                 <IoMdArrowDropdown color="white" />
               </p>
             </div>
             {widthTap === "Binance" ||
               widthTap === "gate" ||
-              (widthdrwal.amount > 1000 && (
+              (widthdrwal.amount > 10000 && (
                 <p
                   style={{
                     fontSize: "14px",
                     color: "red",
                   }}
                 >
-                  Amount more then 10 000 USDT can only be withdrawn via USDT
+                  Amount more than 10 000 USDT can only be withdrawn via USDT
                   Wallet Address method
                 </p>
               ))}
