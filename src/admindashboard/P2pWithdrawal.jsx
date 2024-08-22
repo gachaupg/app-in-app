@@ -1,12 +1,10 @@
 import React from 'react';
-import { Link,NavLink } from 'react-router-dom';
-
+import './Admin.css'; 
 import { FaHome, FaUserShield, FaUsers, FaUsersCog, FaWallet, FaCashRegister, FaExclamationCircle, FaLifeRing } from 'react-icons/fa';
 
+import { Link ,NavLink} from 'react-router-dom';
 
-import './Admin.css';
-
-const Kyc = () => {
+const P2pWithdrawal = () => {
   return (
     <div className="container  p-0 m-0">
       <div className="flex flex-col md:flex-row">
@@ -17,20 +15,20 @@ const Kyc = () => {
   <Link to="/admin" className="block mb-4 px-3 py-2 rounded  hover:bg-green-600">
     <FaHome className="inline-block mr-2" /> Dashboard
   </Link>
+  <Link to="/kyc" className="block mb-4 px-3 py-2 rounded hover:bg-green-600">
+    <FaUserShield className="inline-block mr-2" /> KYC
+  </Link>
+  <Link to="/p2pdeposit" className="block mb-4 px-3 py-2 rounded hover:bg-green-600">
+    <FaUsers className="inline-block mr-2" /> P2P Deposit Approval
+  </Link>
   <NavLink 
-  to="/kyc" 
+  to="/p2pwithdraw" 
   className={({ isActive }) => 
     `block mb-4 px-3 py-2 rounded ${isActive ? 'bg-green-700' : ''} hover:bg-green-600`
   }
 >
-<FaUserShield className="inline-block mr-2" /> KYC
+<FaUsersCog className="inline-block mr-2" /> P2P Withdrawal Approval
 </NavLink>
-  <Link to="/p2pdeposit" className="block mb-4 px-3 py-2 rounded hover:bg-green-600">
-    <FaUsers className="inline-block mr-2" /> P2P Deposit Approval
-  </Link>
-  <Link to="/p2pwithdraw" className="block mb-4 px-3 py-2 rounded hover:bg-green-600">
-    <FaUsersCog className="inline-block mr-2" /> P2P Withdrawal Approval
-  </Link>
   <Link to="/exchangedeposit" className="block mb-4 px-3 py-2 rounded hover:bg-green-600">
     <FaWallet className="inline-block mr-2" /> Exchange Deposit
   </Link>
@@ -54,18 +52,11 @@ const Kyc = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
   <div className="bg-white shadow-md rounded-lg p-4  border-green-400 border-[0.5px]">
-    <h5 className="  mb-2">Total Users</h5>
-    <p>12 Verified Users</p>
+    <h5 className="  mb-2">Total Withdrawals</h5>
+    <p>12 Withdrawals</p>
   </div>
   
-  <div className="bg-white shadow-md rounded-lg p-4  border-green-400 border-[0.5px]">
-    <h5 className="mb-2">Verified Users</h5>
-    <p>9 Verified Users</p>
-  </div>
-  <div className="bg-white shadow-md rounded-lg p-4  border-green-400 border-[0.5px]">
-    <h5 className="  mb-2">Not Verified </h5>
-    <p>5 Not Verified Users</p>
-  </div>
+ 
 </div>
 
          
@@ -133,4 +124,4 @@ const Kyc = () => {
   );
 };
 
-export default Kyc;
+export default P2pWithdrawal;

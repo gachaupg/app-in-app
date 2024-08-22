@@ -4,11 +4,14 @@ body {
 
   }
   
-  .sidebar {
-    height: 100vh;
-    background-color: #078832!important;
+  .side {
+    
     padding-top: 20px;
+   
+    background-size: cover;
+    display: block;
   }
+  
   
   .sidebar a {
     color: #fff;
@@ -35,15 +38,6 @@ body {
   }
   .table-cell-spacing {
     padding: 0.75rem;
-  }
-  .btn-approve {
-    background-color: #28a745;
-    color: #fff;
-  }
-  
-  .btn-reject {
-    background-color: #dc3545;
-    color: #fff;
   }
   
   .topbar {
@@ -75,12 +69,12 @@ body {
     margin-right: 10px;
   }
   
-  .custom-sidebar {
+  /* .custom-sidebar {
     background-color: #078832;
-  }
-   .card-body h5{
-   font-size: 25px !important;
-   font-weight: 600;
+  } */
+   h5{
+   font-size: 20px !important;
+   font-weight: 700!important;
    color: black !important;;
 
 
@@ -96,7 +90,7 @@ body {
     border: solid 0.5px #bcf59b;
   }
   h2{
-    font-size: 40px;
-    color: #078832;
-    font-weight: 700;
+    font-size: 30px!important;
+    color: #078832!important;
+    font-weight: 700!important;
   }
