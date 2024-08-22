@@ -37,9 +37,14 @@ import BuyCrypto from './pages/Invisibles/buyCrypto/BuyCrypto';
 import Settings from './pages/Invisibles/Settings/Settings';
 import MainProfilePage from './pages/Invisibles/Auth/MainProfilePage';
 import MainExchange from './pages/Invisibles/exchange/MainExchange';
-
-// import Admin from "./admindashboard/Admin"
-// import Kyc from "./admindashboard/Kyc";
+//Admin
+import Admin from "./admindashboard/Admin"
+import Kyc from "./admindashboard/Kyc";
+import P2pDeposit from "./admindashboard/P2pDeposit";
+import P2pWithdrawal from "./admindashboard/P2pWithdrawal";
+import Appeal from "./admindashboard/Appeal";
+import ExchangeDeposit from "./admindashboard/ExchangeDeposit";
+import ExchangeWithdrawal from "./admindashboard/ExchangeWithdrawal";
 
 const style = {
   position: 'absolute',
@@ -144,10 +149,15 @@ async function fetchData1() {
       <Navbar />
       <ToastContainer /> 
       <Routes>
-      {/* <Route  path="/admin" element={<Admin />} />
-      <Route  path="/kyc" element={<Kyc />} /> */}
-
-
+     
+  //admin
+      <Route  path="/admin" element={<Admin />} />
+      <Route  path="/kyc" element={<Kyc />} />
+      <Route  path="/p2pdeposit" element={<P2pDeposit/>} />
+      <Route  path="/p2pwithdraw" element={<P2pWithdrawal/>} />
+      <Route  path="/exchangewithdraw" element={<ExchangeWithdrawal/>} />
+      <Route  path="/exchangedeposit" element={<ExchangeDeposit/>} />
+      <Route  path="/appeal" element={<Appeal/>} />
 
 
        <Route path="/login" element={<Login />} />
