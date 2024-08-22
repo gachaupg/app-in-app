@@ -15,8 +15,8 @@ const MainProfilePage = () => {
   return (
 
 <div style={{
-        width:'80%'
-    }} className='primary mt-14  flex flex-row gap-3'>
+        width:'82%'
+    }} className='primary mt-14 pl-6 pr-20  flex flex-row gap-3'>
   
     
   

@@ -528,7 +528,7 @@ async function Transactions() {
             <>
               <div
                 style={{ width: "83%" }}
-                className="small p-2 pt-12 flex pr-36 pl-24 flex-col gap-4"
+                className="small p-2 pt-10 flex pr-36 pl-24 flex-col gap-4"
               >
 
                 <div className="">

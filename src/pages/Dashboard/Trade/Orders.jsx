@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
 import { Message } from "@mui/icons-material";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import OrdersTable from "./tables/OrdersTable";
 
@@ -38,7 +38,7 @@ const Orders = () => {
     let filtered = data;
 
     if (filters.type) {
-      filtered = filtered.filter((order) => order.type === filters.type);
+      filtered = filtered.filter((order) => order.order_type === filters.type);
     }
 
     if (filters.status) {
@@ -68,129 +68,7 @@ const Orders = () => {
 
   return (
     <div className="flex rounded-lg small flex-col gap-2 pr-20 w-full">
-      <div className="primary small wrap small-gap rounded-lg flex flex-row justify-between">
-        <div className="flex wrap gap-3 small border rounded-lg p-2 border-green-600">
-          <button
-            onClick={() => handleButtonClick("All Orders")}
-            style={{
-              fontSize: "14px",
-              background: activeButton === "All Orders" ? "#1D8751" : "",
-            }}
-            className="w-24 text-white small p-2 rounded-lg"
-          >
-            All Orders
-          </button>
-          <button
-            onClick={() => handleButtonClick("Completed")}
-            style={{
-              fontSize: "14px",
-              background: activeButton === "Completed" ? "#1D8751" : "",
-            }}
-            className="text-white p-1 small text-slate-300 rounded-lg"
-          >
-            Completed
-          </button>
-          <button
-            onClick={() => handleButtonClick("Processing")}
-            style={{
-              fontSize: "14px",
-              background: activeButton === "Processing" ? "#1D8751" : "",
-            }}
-            className="text-white p-1 text-slate-300 small rounded-lg"
-          >
-            Processing <span style={{ color: "#F79330" }}>(2)</span>
-          </button>
-          <button
-            onClick={() => handleButtonClick("Canceled")}
-            style={{
-              fontSize: "14px",
-              background: activeButton === "Canceled" ? "#1D8751" : "",
-            }}
-            className="text-white p-1 text-slate-300 small rounded-lg"
-          >
-            Canceled
-          </button>
-        </div>
-        <button className="border small text-center justify-center small-gap flex items-center gap-1 pl-2 pr-2 p-1 rounded-3xl border-green-600 primary h-9 text-green-600">
-          <Message style={{ color: "#F79330" }} fontSize="14px" /> Unread
-          Messages(s)
-        </button>
-      </div>
-
-      <div
-        style={{ fontSize: "12px" }}
-        className="flex flex-row small wrap small-gap just justify-between gap-6 mt-4 mb-4 items-center justify-between"
-      >
-        <button
-          className="border small-gap small border-slate-600 rounded-2xl flex items-center justify-between gap-16 p-1 pl-2 pr-2 secondary h-10 white"
-        >
-          <select className="secondary no-border w-40" name="" id="">
-            <option value="">
-              <div className="flex g items-center gap-1">
-                <img
-                  className="h-4"
-                  src="https://res.cloudinary.com/pitz/image/upload/v1721628835/TRC20_j1e6si.png"
-                  alt=""
-                />
-                Tether
-              </div>
-              USDT
-            </option>
-          </select>
-        </button>
-        <button
-          className="border small-gap small border-slate-600 g rounded-2xl w-56 flex items-center justify-between gap-16 p-1 pl-2 pr-2 secondary h-10 white"
-        >
-          <select className="secondary no-border w-40" name="" id="">
-            <option value="">
-              <div className="flex items-center g gap-1">
-                <img
-                  className="h-4"
-                  src="https://res.cloudinary.com/pitz/image/upload/v1721924291/coins-rotate_2_kaxme7.png"
-                  alt=""
-                />
-                Type
-              </div>
-            </option>
-            <option value="">Buy</option>
-            <option value="">Sell</option>
-          </select>
-        </button>
-        <button
-          className="border small-gap small w-56 border-slate-600 rounded-2xl flex items-center justify-between gap-16 p-1 pl-2 pr-2 secondary h-10 white"
-        >
-          <select className="secondary no-border w-40" name="" id="">
-            <option value="">
-              <div className="flex items-center g gap-1">
-                <img
-                  className="h-4"
-                  src="https://res.cloudinary.com/pitz/image/upload/v1721924291/coins-rotate_2_kaxme7.png"
-                  alt=""
-                />
-                Status
-              </div>
-            </option>
-            <option value="">Pending</option>
-            <option value="">Complete</option>
-          </select>
-        </button>
-        <button
-          onClick={() => handleFilterChange("date", "2024-08-01")}
-          className="border w-56 small small-gap border-slate-600 rounded-2xl flex items-center justify-between gap-16 p-1 pl-2 pr-2 secondary h-10 white"
-        >
-          <div className="flex g items-center gap-1">
-            <img
-              className="h-4"
-              src="https://res.cloudinary.com/pitz/image/upload/v1721924277/calendar-03_didl6t.png"
-              alt=""
-            />
-            Date
-          </div>
-          <p className="flex flex-row items-center">
-            <IoIosArrowDown />
-          </p>
-        </button>
-      </div>
+      
 
       {filteredData.length === 0 ? (
         <div className="flex items-center justify-center w-full">
