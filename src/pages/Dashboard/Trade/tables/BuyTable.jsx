@@ -49,36 +49,39 @@ function Table({ show, payments, isLoading }) {
       {/* Filter UI */}
       <div style={{ overflowX: "auto" }}>
         <div className="flex mt-3 wrap mb-2 small flex-row gap-2 w-full justify-between p-1">
-          <div style={{ width: "100%" }} className="w-full wrap small flex wrap small gap-16 flex-row p-1">
-            <div className="secondary small w-56 flex h-12 border border-slate-700 p-2 rounded-lg">
+          <div style={{ width: "100%" }} className="w-full wrap small flex wrap small gap-12 flex-row p-1">
+            <div className="secondary small w-56 g flex h-9 border border-slate-700 p-2 rounded-lg">
               <input
-                className="secondary w-32 text-white focus"
+                className="secondary w-32 g focus"
                 type="text"
                 placeholder="Enter amount"
                 onChange={(e) => setAmount(e.target.value)}
                 value={amount}
               />
-              <p style={{ width: "1px" }} className="g bg-slate-600 flex items-center h-full">
-                <span className="pl-1 g">USDT</span>
+              <p  style={{ width: "1px" }} className="g bg-slate-600 text-sm flex items-center h-full">
+                <span style={{fontSize:'12px'}} className="pl-1  g">USDT</span>
               </p>
             </div>
 
-            <div className="secondary small w-56 flex h-12 border border-slate-700 p-2 rounded-lg">
+            <div className="secondary small w-64 flex h-9 border border-slate-700 p-2 rounded-lg">
               <select
-                className="secondary no-border w-full text-white"
+               
+                className="secondary g no-border w-full "
                 onChange={(e) => setBankFilter(e.target.value)}
                 value={bankFilter}
               >
-                <option value="">Select Payment Type</option>
+                <option style={{
+                  fontSize:'12px'
+                }} value="">Select Payment Type</option>
                 <option value="Bank">Bank Payment</option>
                 <option value="Mobile">Mobile money</option>
                 <option value="Merchant">Merchant</option>
               </select>
             </div>
 
-            <div className="secondary small w-56 flex h-12 border border-slate-700 p-2 rounded-lg">
+            <div className="secondary small w-56 flex h-9 border border-slate-700 p-2 rounded-lg">
               <select
-                className="secondary no-border w-full text-white"
+                className="secondary no-border w-full g"
                 onChange={(e) => setPaymentTypeFilter(e.target.value)}
                 value={paymentTypeFilter}
               >
@@ -89,7 +92,7 @@ function Table({ show, payments, isLoading }) {
                 <option value="EVC">EVC Bank</option>
               </select>
             </div>
-            <div className="flex-col w-20 p-2 relative">
+            <div className="flex-col w-20  relative">
               <div
                 onClick={() => setShowTop(showTop === "items" ? "" : "items")}
                 className="flex items-center"
@@ -130,7 +133,7 @@ function Table({ show, payments, isLoading }) {
             </div>
 
             <button
-              className="bg-green-600 rounded-lg text-center h-12 flex items-center justify-center w-32 text-white"
+              className="bg-green-600 rounded-lg text-center h-9 flex items-center justify-center w-32 text-white"
               onClick={() => {
                 setAmount('');
                 setPaymentTypeFilter('');
@@ -146,8 +149,12 @@ function Table({ show, payments, isLoading }) {
 
 
 
-        {/* Table */}
-        <table className="styled-table rounded-2xl border border-gray-700" style={{ minWidth: "600px", borderCollapse: "separate", borderSpacing: "0" }}>
+        <div style={{ width: "100%", overflowX: "auto" }} className="Table">
+      <div style={{ overflowX: "auto" }}>
+        <table
+          className="styled-table rounded-2xl border secondary"
+          style={{ minWidth: "600px" }}
+        >
           <thead style={{ background: "#35353E", borderTopLeftRadius: "12px", borderTopRightRadius: "12px", overflow: "hidden" }} className="greybg">
             <tr className="p-3">
               <th><div style={{ color: "#788099" }} className="flex items-center g p-3">Advertiser <TiArrowUnsorted /></div></th>
@@ -204,8 +211,8 @@ function Table({ show, payments, isLoading }) {
                         <td>{row?.commission_rate}</td>
                         <td>
                           <div className="flex flex-col gap-2">
-                            <p className="white">{row.amount}</p>
-                            <p className=""><span className="g">100-1000</span> USD</p>
+                            <p className="white">{ Number(row.amount).toFixed(2)}</p>
+                            <p className=""><span className="g">{ Number(row.min_order_amount).toFixed(2)}-{ Number(row.max_order_amount).toFixed(2)}</span> USD</p>
                           </div>
                         </td>
                         <td className="green capitalize">
@@ -217,6 +224,7 @@ function Table({ show, payments, isLoading }) {
                             onClick={() => {
                               setBuy((prevBuy) => prevBuy === row.id ? false : row.id);
                               setId(row.id);
+
                             }}
                             className="greenbg w-36 p-2 rounded-lg text-white border-none"
                           >
@@ -230,7 +238,7 @@ function Table({ show, payments, isLoading }) {
                   {buy === row.id && (
                     <tr>
                       <td colSpan="5">
-                        <BuyForm id={id} buy={buy} />
+                        <BuyForm id={id} buy={buy} setBuy={setBuy} setId={setId}/>
                       </td>
                     </tr>
                   )}
@@ -239,7 +247,8 @@ function Table({ show, payments, isLoading }) {
             }
           </tbody>
         </table>
-
+        </div>
+        </div>
         {/* Pagination */}
         <div className="mt-6 flex gap-5 items-center justify-center g p-2">
           <button

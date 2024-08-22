@@ -98,13 +98,13 @@ const MainMarket = () => {
   return (
     <div className="primary flex wrap small justify-between flex-row gap-10 pr-40 pt-10">
       <div
-        style={{ width: "18%", color: "#727272", fontSize: "15px" }}
+        style={{ width: "25%", color: "#727272", fontSize: "15px" }}
         className="small dash-side flex flex-col gap-6 pt-12"
       >
         {tabs.map((tab) => (
           <Link key={tab.name} to={`/${tab.link}`}>
             <div
-              className={`flex w-full flex-row pl-20 items-center rounded-tr-lg rounded-br-lg gap-4 p-2 ${
+              className={`flex w-56 flex-row pl-14 items-center rounded-tr-lg rounded-br-lg gap-4 p-2 ${
                 activeTab === tab.name ? "bg-[#303038]" : ""
               }`}
               style={{ cursor: "pointer" }}

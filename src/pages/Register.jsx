@@ -1,21 +1,19 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from "react";
-import { BsEye, BsFillPeopleFill, BsType } from "react-icons/bs";
-import { BiSolidInstitution } from "react-icons/bi";
-import { AiOutlineUser } from "react-icons/ai";
-import { FaLock, FaRegEyeSlash } from "react-icons/fa";
-import { MdOutlineMailOutline, MdOutlineLocalPhone } from "react-icons/md";
-import { RiArrowLeftCircleFill, RiArrowRightCircleFill } from "react-icons/ri";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import { register } from "../redux/features/authSlice";
-import CountrySelect from "../components/Countries";
 import { Call } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import { Dot } from "lucide-react";
 import { MDBBtn } from "mdb-react-ui-kit";
+import { useEffect, useState } from "react";
+import { AiOutlineUser } from "react-icons/ai";
+import { BiSolidInstitution } from "react-icons/bi";
+import { BsEye, BsFillPeopleFill } from "react-icons/bs";
+import { FaLock, FaRegEyeSlash } from "react-icons/fa";
+import { MdOutlineMailOutline } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { register } from "../redux/features/authSlice";
 
 const Register = () => {
   const initialState = {
@@ -119,19 +117,20 @@ const Register = () => {
   };
 
   return (
-    <div className=" flex  flex-row primary g items-center justify-evenly pb-5">
-      <div className="reg-left image-none gap-10">
+    <div className=" primary flex p-4 g justify-around w-full small wrap">
+      <div className="image-none ">
         <img
+        className="mt-5"
           style={{
-            height: "35rem",
+            height: "27rem",
             objectFit: "fill",
-            marginBottom: "7rem",
+            marginBottom: "5rem",
           }}
           src="https://res.cloudinary.com/pitz/image/upload/v1723127986/Frame_34357_uyqvfq.png"
           alt=""
         />
       </div>
-      <div className="mt-16 reg-right">
+      <div className="p-4 ">
         <p>Please Register with correct information</p>
         <h6>Account Type*</h6>
         <div className="account-type mb-10">
@@ -161,7 +160,7 @@ const Register = () => {
           </button>
         </div>
         {type === "Individual" && (
-          <form onSubmit={handleSubmit} className="form">
+          <form onSubmit={handleSubmit} className="">
             <div className="name-email flex flex-col md:flex-row gap-4">
               <div className="name max-w-screen-md">
                 <label htmlFor="">User Name*</label>
@@ -178,7 +177,7 @@ const Register = () => {
                     onChange={(e) =>
                       setUser({ ...user, username: e.target.value })
                     }
-                    placeholder="User Name"
+                    placeholder="Full Name"
                   />
                 </div>
               </div>
@@ -201,43 +200,6 @@ const Register = () => {
                 </div>
               </div>
             </div>
-            {/* <div className="name-email mt-3 flex flex-col md:flex-row gap-14">
-              <div className="name max-w-screen-md">
-                <label htmlFor="">Email*</label>
-                <div className="input-group">
-                  <MdOutlineMailOutline color="green" className="input-icon" />
-                  <input
-                    style={{
-                      border: user.email
-                        ? "1px solid rgba(255, 255, 255, 0.5)"
-                        : "1px solid red",
-                    }}
-                    type="email"
-                    onChange={(e) =>
-                      setUser({ ...user, email: e.target.value })
-                    }
-                    placeholder="Email"
-                  />
-                </div>
-              </div>
-              <div className="name">
-                <label htmlFor="">Registration*</label>
-                <div className="input-group">
-                  <input
-                    style={{
-                      border: user.registration
-                        ? "1px solid rgba(255, 255, 255, 0.5)"
-                        : "1px solid red",
-                    }}
-                    type="text"
-                    onChange={(e) =>
-                      setUser({ ...user, registration: e.target.value })
-                    }
-                    placeholder="Country of registration"
-                  />
-                </div>
-              </div>
-            </div> */}
             <div className="name-email flex mt-5 flex-col md:flex-row gap-4">
               <div className="name-email flex flex-col md:flex-row gap-14">
                 <div className="name max-w-screen-md">

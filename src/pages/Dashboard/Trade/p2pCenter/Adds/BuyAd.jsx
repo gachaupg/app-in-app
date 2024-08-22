@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { CheckBox } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
@@ -8,15 +9,17 @@ import { DollarSign, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoCheckmarkCircleSharp } from "react-icons/io5";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../../../utils/APIRoutes";
+import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 const initialState = {
   order_type: "",
   currency: "USD",
   amount: "",
+  min_order_amount:'',
+  max_order_amount:'',
   commission_rate: "",
   exchange_rate: "0.3",
   payment_method_name: "1",
@@ -38,6 +41,8 @@ const initialState = {
 
 const Adds = () => {
   const [sell, setSell] = useState(initialState);
+  console.log('hell datao', sell);
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -272,13 +277,17 @@ const Adds = () => {
       setLoading1(false);
       return;
     }
-
+    if (details.length === 0) {
+      setOpen1(true)
+  } else {
+      setOpen1(false)
+  }
     if (sell.amount) {
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       };
-
+     
       try {
         console.log("Sending request with headers:", headers); // Debugging line
         console.log(
@@ -318,19 +327,19 @@ const Adds = () => {
       }
     }
   };
-  async function Dets() {
-    setTimeout(() => {
-      if (details.length === 0) {
-        setOpen1(true);
-      } else {
-        setOpen1(false);
-      }
-    }, 5000); // 5-second delay
-  }
+  // async function Dets() {
+  //   setTimeout(() => {
+  //     if (details.length === 0) {
+  //       setOpen1(true);
+  //     } else {
+  //       setOpen1(false);
+  //     }
+  //   }, 5000); // 5-second delay
+  // }
   
-  useEffect(() => {
-    Dets();
-  }, [details]);
+  // useEffect(() => {
+  //   Dets();
+  // }, [details]);
   
 
   console.log(details.length);
@@ -429,8 +438,7 @@ const Adds = () => {
                 </Typography>
                 <button
                   onClick={() => {
-                    handleClose();
-                    window.location.reload();
+                   navigate('/dashboard')
                   }}
                   className="w-full mt-3 p-1 white greenbg rounded-2xl"
                 >
@@ -531,7 +539,7 @@ const Adds = () => {
                     <p className="white flex items-center">
                       <DollarSign className="green" /> <input
                         onChange={(e) =>
-                          setSell({ ...sell, amount: e.target.value })
+                          setSell({ ...sell, min_order_amount: e.target.value })
                         }
                         className="w-full no-border primary text-white custom-placeholder"
                         placeholder="10 USDT"
@@ -563,7 +571,7 @@ const Adds = () => {
                     <p className="white flex items-center">
                       <DollarSign className="green" /> <input
                         onChange={(e) =>
-                          setSell({ ...sell, amount: e.target.value })
+                          setSell({ ...sell, max_order_amount: e.target.value })
                         }
                         className="w-full no-border primary text-white custom-placeholder"
                         placeholder="1000 USDT"
@@ -764,7 +772,7 @@ const Adds = () => {
                 </>
               </div>
             </div>
-            <button className="bg-green-600 w-48 text-white p-1 rounded-3xl">
+            <button className="greenbg w-48 text-white p-1 rounded-3xl">
               Add payment method
             </button>
           </div>
@@ -796,12 +804,15 @@ const Adds = () => {
               <button className="border p-2 border-green-600 rounded-2xl w-full p-1 g">
                 Cancel
               </button>
+              {loading1 ? <div>
+                <CircularProgress/>
+              </div> :
               <button
                 onClick={handleSubmit}
                 className={` ${active === "sell" ? "bg-red-700" : "greenbg"}  p-2 w-full rounded-2xl p-1 white`}
               >
-                {loading1 ? "Submitting..." : "Post Ad"}
-              </button>
+               Post Ad
+              </button>}
             </div>
           </div>
         </div>

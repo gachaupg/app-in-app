@@ -3,17 +3,18 @@ import { Key, Settings, Wallet2 } from "lucide-react";
 import { useState } from "react";
 import Test from "./Test";
 import ProfileTab from "./ProfileTab";
-import KYC from "../Dashboard/DashboardTabs/KYC";
-import Profile from "../../components/Profile";
+import KYC from "../../Dashboard/DashboardTabs/KYC";
+import Profile from "../../../components/Profile";
 import Privacy from "./Privacy";
-import Wallet from "../Dashboard/DashboardTabs/Wallet";
+import Wallet from "../../Dashboard/DashboardTabs/Wallet";
 import Referal from "./Referal";
-import SideDash from "../../components/SideDash";
+import SideDash from "../../../components/SideDash";
 
 const MainProfilePage = () => {
   const [active, setActive] = useState("settings");
   return (
-
+    <div className="flex primary flex-row gap-10">
+<SideDash/>
 <div style={{
         width:'80%'
     }} className='primary mt-14  flex flex-row gap-3'>
@@ -112,7 +113,8 @@ const MainProfilePage = () => {
       {/* <ProfileDetail/> */}
       {/* <ProfileTab/> */}
     </div>
-      </div>
+    </div>
+    </div>
   );
 };
 

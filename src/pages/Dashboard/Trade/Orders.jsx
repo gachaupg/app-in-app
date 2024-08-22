@@ -67,7 +67,7 @@ const Orders = () => {
   };
 
   return (
-    <div className="flex rounded-lg flex-col gap-2 pr-32 w-full">
+    <div className="flex rounded-lg small flex-col gap-2 pr-20 w-full">
       <div className="primary small wrap small-gap rounded-lg flex flex-row justify-between">
         <div className="flex wrap gap-3 small border rounded-lg p-2 border-green-600">
           <button
@@ -111,7 +111,7 @@ const Orders = () => {
             Canceled
           </button>
         </div>
-        <button className="border small-gap flex items-center gap-1 pl-2 pr-2 p-1 rounded-3xl border-green-600 primary h-9 text-green-600">
+        <button className="border small text-center justify-center small-gap flex items-center gap-1 pl-2 pr-2 p-1 rounded-3xl border-green-600 primary h-9 text-green-600">
           <Message style={{ color: "#F79330" }} fontSize="14px" /> Unread
           Messages(s)
         </button>
@@ -119,7 +119,7 @@ const Orders = () => {
 
       <div
         style={{ fontSize: "12px" }}
-        className="flex flex-row small wrap small-gap g mt-4 mb-4 items-center justify-between"
+        className="flex flex-row small wrap small-gap just justify-between gap-6 mt-4 mb-4 items-center justify-between"
       >
         <button
           className="border small-gap small border-slate-600 rounded-2xl flex items-center justify-between gap-16 p-1 pl-2 pr-2 secondary h-10 white"

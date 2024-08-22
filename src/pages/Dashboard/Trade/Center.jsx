@@ -243,18 +243,20 @@ async function fetchData3() {
       <div
         className={`primary small  wrap  p-2  flex flex-row justify-between `}
       >
-        <div className={`primary small wrap   p-2  flex flex-row gap-10 `}>
+        <div style={{
+          width:'74%'
+        }} className={`primary small wrap   p-2  flex flex-row gap-5 `}>
           <button
             onClick={() => setShow("Payments")}
             style={{ fontSize: "13px" }}
-            className={`h-10 w-36 ${show === "Payments" && "bg-green-600"} text-white rounded-3xl`}
+            className={`h-10 small w-40 ${show === "Payments" && "bg-green-600"} text-white rounded-3xl`}
           >
             Payment Methods
           </button>
           <button
             onClick={() => setShow("Feedback")}
             style={{ fontSize: "13px" }}
-            className={`h-10 w-36 ${show === "Feedback" && "bg-green-600"} text-white rounded-3xl`}
+            className={`h-10 w-36 small ${show === "Feedback" && "bg-green-600"} text-white rounded-3xl`}
           >
             Feedback <span className="g">(8)</span>
           </button>
@@ -262,14 +264,14 @@ async function fetchData3() {
             onClick={() => setShow("Settings")}
 
             style={{ fontSize: "13px" }}
-            className={`h-10 w-36 ${show === "Settings" && "bg-green-600"} text-white rounded-3xl`}
+            className={`h-10 small w-36 ${show === "Settings" && "bg-green-600"} text-white rounded-3xl`}
           >
             Ad Settings
           </button>
           <button
             onClick={() => setShow("myAds")}
             style={{ fontSize: "13px" }}
-            className={`h-10 w-36 ${show === "myAds" && "bg-green-600"} text-white rounded-3xl`}
+            className={`h-10 small w-36 ${show === "myAds" && "bg-green-600"} text-white rounded-3xl`}
 
           >
             My Ads{" "}
@@ -279,17 +281,17 @@ async function fetchData3() {
               }}
               className="g"
             >
-              (14)
+              (0)
             </span>
           </button>
           <button
             style={{ fontSize: "13px" }}
-            className="p-2 h-10 border w-36 border-green-600 text-green-600 rounded-3xl"
+            className="p-2 h-10 small border w-36 border-green-600 text-green-600 rounded-3xl"
           >
             <Link to="/adds">+ Pos New Ad</Link>
           </button>
         </div>
-        <div className="flex flex-col w-40 gap-1">
+        <div className="flex flex-col  gap-1">
           <div className="flex flex-row items-center gap-2">
             <img
               src="https://res.cloudinary.com/pitz/image/upload/v1721930070/Rectangle_115_bwo3u8.png"

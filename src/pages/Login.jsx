@@ -66,13 +66,13 @@ export default function SignInSide() {
   };
 
   return (
-    <div className="main-login g ">
-      <div className="log test" style={{ height: "80vh" }}>
-        <div className="flex flex-row items-center  justify-evenly ">
-          <div className="mt-10 image-none">
+    <div className="primary g pt-6 ">
+      <div className="">
+        <div className="flex flex-row jus justify-around ">
+          <div className=" image-none">
             <img
               style={{
-                height: "33rem",
+                height: "28rem",
                 objectFit: "fill",
               }}
               src="https://res.cloudinary.com/pitz/image/upload/v1723127986/Frame_34357_uyqvfq.png"
@@ -83,7 +83,7 @@ export default function SignInSide() {
             </p>
           </div>
           <div
-            className=" "
+            className="  "
             style={{
               display: "flex",
               flexDirection: "column",

@@ -14,6 +14,7 @@ function OrdersTable() {
   const [itemsPerPage] = useState(5);
   const { user } = useSelector((state) => ({ ...state.auth }));
   const navigate = useNavigate();
+console.log(payments);
 
   useEffect(() => {
     fetchData();
@@ -36,14 +37,14 @@ function OrdersTable() {
 
     try {
       const res = await axios.get(
-        `${endpoint}/trading_engine/p2p/all-orders/`,
+        `https://omayaexchangebackend.onrender.com/trading_engine/p2p/all-orders/`,
         { headers }
       );
       setLoading1(false);
       const data = res.data.filter(
         (data) => data.advertiser_name.id === user.user.id
       );
-      setPayments(data);
+      setPayments(res.data);
     } catch (error) {
       console.log(error);
       setLoading1(false);

@@ -3,7 +3,7 @@ import React from 'react'
 import { BsQrCode } from 'react-icons/bs'
 import { CiLight } from 'react-icons/ci'
 import { FaRegCopy } from 'react-icons/fa'
-import ProfileCard from '../Dashboard/DashboardTabs/ProfileCard'
+import ProfileCard from '../../Dashboard/DashboardTabs/ProfileCard'
 import { useSelector } from 'react-redux'
 
 const Test = () => {

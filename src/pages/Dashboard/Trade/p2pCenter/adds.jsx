@@ -13,10 +13,13 @@ import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../../utils/APIRoutes";
+import { CircularProgress } from "@mui/material";
 const initialState = {
   order_type: "",
   currency: "USD",
   amount: "",
+  min_order_amount:'',
+  man_order_amount:'',
   commission_rate: "",
   exchange_rate: "0.3",
   payment_method_name: "1",
@@ -130,7 +133,6 @@ const Adds = () => {
     }
   }, [payments]);
 
-  console.log('hello', details);
 
 
   useEffect(() => {
@@ -156,7 +158,7 @@ const Adds = () => {
       });
       setLoading1(false);
       setdetails(res.data); // Assuming the response data is what you need to set
-      console.log("hello", res.data);
+      // console.log("hello", res.data);
     } catch (error) {
       console.log(error);
       setLoading1(false);
@@ -188,7 +190,7 @@ const Adds = () => {
       });
       setLoading1(false);
       setPayments1(res.data); // Assuming the response data is what you need to set
-      console.log("hello", res.data);
+      // console.log("hello", res.data);
     } catch (error) {
       console.log(error);
       setLoading1(false);
@@ -257,11 +259,12 @@ const Adds = () => {
     }
   }
 
-  // console.log(sell);
+  console.log(sell);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading1(true);
+    console.log('hell datao', sell);
 
     // Assuming user.user.access is available in your component's state or context
     const token = user.access;
@@ -272,7 +275,11 @@ const Adds = () => {
       setLoading1(false);
       return;
     }
-
+    if (details.length === 0) {
+      setOpen1(true)
+  } else {
+      setOpen1(false)
+  }
     if (sell.amount) {
       const headers = {
         "Content-Type": "application/json",
@@ -305,7 +312,7 @@ const Adds = () => {
             navigate("/login");
           } else {
             toast.error(
-              `Save Details failed:`,data.error
+              `Post sell add:`,data.error
             );
 
             console.log('====================================');
@@ -324,16 +331,16 @@ const Adds = () => {
   };
   const [open1, setOpen1] = useState(false);
 
-  async function Dets() {
-    if (details.length === 0) {
-        setOpen1(true)
-    } else {
-        setOpen1(false)
-    }
-}
-useEffect(() => {
-    Dets();
-}, [details]);
+//   async function Dets() {
+    // if (details.length === 0) {
+    //     setOpen1(true)
+    // } else {
+    //     setOpen1(false)
+    // }
+// }
+// useEffect(() => {
+//     Dets();
+// }, [details]);
   return (
     <>
       {activeTab1 === "Market" && (
@@ -429,8 +436,7 @@ useEffect(() => {
                 </Typography>
                 <button
                   onClick={() => {
-                    handleClose();
-                    window.location.reload();
+                    navigate('/dashboard')
                   }}
                   className="w-full mt-3 p-1 white greenbg rounded-2xl"
                 >
@@ -531,7 +537,7 @@ useEffect(() => {
                      <p className="white flex items-center">
                       <DollarSign className="green" /> <input
                         onChange={(e) =>
-                          setSell({ ...sell, amount: e.target.value })
+                          setSell({ ...sell, min_order_amount: e.target.value })
                         }
                         className="w-full no-border primary text-white custom-placeholder"
                         placeholder="20 USDT"
@@ -563,7 +569,7 @@ useEffect(() => {
                      <p className="white flex items-center">
                       <DollarSign className="green" /> <input
                         onChange={(e) =>
-                          setSell({ ...sell, amount: e.target.value })
+                          setSell({ ...sell, max_order_amount: e.target.value })
                         }
                         className="w-full no-border primary text-white custom-placeholder"
                         placeholder="1000 USDT"
@@ -796,12 +802,15 @@ useEffect(() => {
               <button className="border p-2 border-green-600 rounded-2xl w-full p-1 g">
                 Cancel
               </button>
-              <button
+             {loading1 ? <div className="flex w-full items-center">
+              <CircularProgress/>
+             </div>:
+      <button
                 onClick={handleSubmit}
                 className={` ${active === "sell" ? "bg-red-700" : "greenbg"}  p-2 w-full rounded-2xl p-1 white`}
               >
-                {loading1 ? "Submitting..." : "Post Ad"}
-              </button>
+               Post Ad
+              </button>}
             </div>
           </div>
         </div>

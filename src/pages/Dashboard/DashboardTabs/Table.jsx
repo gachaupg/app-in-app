@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
 import { endpoint } from "../../../utils/APIRoutes";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 function OrdersTable() {
   const [payments, setPayments] = useState([]);
@@ -50,7 +51,7 @@ function OrdersTable() {
       const data = res.data.filter(
         (data) => data.advertiser_name.id === user.user.id
       );
-      setPayments(data);
+      setPayments(res.data);
     } catch (error) {
       console.log(error);
       setLoading1(false);
@@ -281,7 +282,8 @@ function OrdersTable() {
           disabled={currentPage === 1}
           className="pagination-btn mx-2 white"
         >
-          Previous
+          <IoIosArrowBack />
+
         </button>
         {Array.from({ length: totalPages }, (_, index) => (
           <button
@@ -299,7 +301,8 @@ function OrdersTable() {
           disabled={currentPage === totalPages}
           className="pagination-btn mx-2 g"
         >
-          Next
+          <IoIosArrowForward/>
+
         </button>
       </div>
     </div>

@@ -15,7 +15,7 @@ function AddTable() {
   const [loading1, setLoading1] = useState(true);
   const { user } = useSelector((state) => ({ ...state.auth }));
   const navigate = useNavigate();
-console.log();
+console.log(payments);
 
   useEffect(() => {
     fetchData();
@@ -42,8 +42,8 @@ console.log();
         { headers }
       );
       setLoading1(false);
-      const data = res.data.filter((data) => data.advertiser_name.id === user.user.id);
-      setPayments(data);
+      const data = res.data.filter((data) => data.advertiser_name.id?.split('-')[1] === user.user.username);
+      setPayments(res.data);
     } catch (error) {
       console.log(error);
       setLoading1(false);
@@ -90,7 +90,7 @@ console.log();
         {loading1 ? (
           <table className="styled-table rounded-2xl border secondary" style={{ minWidth: "600px", border: "2px solid #e0e0e0", borderRadius: "12px", overflow: "hidden" }}>
           
-            <tbody className="primary">
+            <tbody className="secondary">
               {[...Array(5)].map((_, index) => (
                 <tr key={index} className="border-bottom" style={{ fontSize: "14px" }}>
                   <td><Skeleton className="g" width={100} /></td>
@@ -117,7 +117,7 @@ console.log();
                   <tr>
                     <th style={{ color: "#788099", borderTopLeftRadius: "12px" }} className="grey">Asset</th>
                         <th>
-                        <th style={{ color: "#788099" }} className="flex items-center grey">Add ID</th>
+                        <th style={{ color: "#788099" }} className="flex items-center w-20 grey">Add ID</th>
 
                         </th>
                         <th>
@@ -141,7 +141,7 @@ console.log();
 
                         </th>
                         <th>
-                        <th style={{ color: "#788099" }} className="flex items-center grey">Last Updated</th>
+                        <th style={{ color: "#788099" }} className="flex items-center w-32 grey">Last Updated</th>
 
                         </th>
                         <th>
@@ -152,10 +152,7 @@ console.log();
                         <th style={{ color: "#788099", borderTopRightRadius: "12px" }}>Action</th>
 
                         </th>
-                        <th>
-                        <th className="proimary w-20" style={{ borderTopRightRadius: "12px" }}></th>
-
-                        </th>
+                       
                   </tr>
                 </thead>
                 <tbody className="primary">
@@ -165,19 +162,19 @@ console.log();
                         <img className="h-6" src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png" alt="" />
                         {row.asset}
                       </td>
-                      <td className="grey pl-5">{row.id}</td>
+                      <td className="grey pl-12">{row.id}</td>
                       <td className="g pl-5">{row.order_type}</td>
                       <td className="g pr-4">{row.limit ? row.limit : "00.00"}</td>
                       <td className="grey">{row.amount != null ? Number(row.amount).toFixed(2) : "0.00"}</td>
                       <td className="grey pl-8">{row.commission_rate}</td>
                       <td className="flex flex-row items-center gap-2">
                         <img className="h-5 rounded-full" src="https://res.cloudinary.com/pitz/image/upload/v1721925032/492x0w_1_rw99fe.png" alt="" />
-                        {row.payment_provider.provider_name} Saalam bank
+                        {row?.payment_provider_name} 
                       </td>
                       <td className="grey pl-7">{new Date(row.created_on).toLocaleDateString()}</td>
                       <td className="text-green-700">{row.status}</td>
-                      <td style={{ position: "relative" }}>
-                        <p className="p-1 h-7 w-7 rounded-lg bg-green-600 flex items-center justify-center">
+                      <td className="pl-6" style={{ position: "relative" }}>
+                          <p className="p-1 h-7 w-7  rounded-lg greenbg flex items-center justify-center">
                           <MoreVert onClick={() => toggleDropdown(row.id)} />
                         </p>
                         {activeDropdown === row.id && (
@@ -199,12 +196,7 @@ console.log();
                           </div>
                         )}
                       </td>
-                      <td>
-                      <Checkbox
-                        className="border-2 check border-green-600 bg-green-600 text-white"
-                        {...label}
-                      />
-                      </td>
+                      
                     </tr>
                   ))}
                 </tbody>

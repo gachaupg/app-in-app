@@ -235,8 +235,12 @@ cursor: pointer !important;
 .shadow-yellow-inset2 {
   box-shadow: inset 0 0 10px 2px rgba(234, 8, 38, 0.5);
 }
+
 .focus {
   border: none; /* initial border */
+}
+.privacy{
+  width: 100vh !important;
 }
 
 .focus:focus {
@@ -324,7 +328,7 @@ cursor: pointer !important;
 }
 
 
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: 1000px) {
   .sideDash {
     width: 200px; /* Adjust width on smaller screens */
   }
@@ -399,6 +403,12 @@ cursor: pointer !important;
   padding-left: 7px !important;
   width: 100% !important;
   padding-right: 3px;
+}
+.foo{
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center;
+  justify-content: center;
 }
 .dashTop{
   flex-wrap: wrap !important;
@@ -607,10 +617,11 @@ cursor: pointer !important;
   padding-left: 30px; /* Adjust the padding to make room for the icon */
   background-color: #1f1f27;
   border-radius: 1.2rem;
-  height: 2.5rem;
+  height: 2rem;
   border: 0.5px solid rgb(57, 59, 57);
-  width: 100% !important;
+  width: 90% !important;
 }
+
 /* .select{
   width: 100% !important; 
 } */

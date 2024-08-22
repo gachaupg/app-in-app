@@ -306,14 +306,14 @@ const DepositForm = ({payments}) => {
               setWidthdrwal({...widthdrwal,wallet_type:'USDT'})
             }}
             style={{
-              fontSize: "13px",
+              fontSize: "12px",
             }}
-            className={` small flex flex-row items-center gap-1 p-1 ${
+            className={` small flex flex-row items-center  p-1 ${
               widthTap === "USDT" && "border-green-600 border mainGrey"
             } rounded-lg`}
           >
             <img
-              className="h-5"
+              className="h-4"
               src="https://res.cloudinary.com/pitz/image/upload/v1721628835/TRC20_j1e6si.png"
               alt=""
             />

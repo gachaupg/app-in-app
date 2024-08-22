@@ -13,7 +13,7 @@ import { endpoint } from "../../../../utils/APIRoutes";
 
 
 
-const BuyForm = ({ id, buy, setBuy, handleClose }) => {
+const BuyForm = ({ id, buy, setBuy, handleClose ,setId }) => {
   const [show, setShow] = useState("Sell");
   const [final, setFinal] = useState();
   const [payments, setPayments] = useState([]);
@@ -327,7 +327,10 @@ console.log(order);
           </div>
           <div className=" w-full mt-7 flex flex-row small wrap  gap-24">
             <button
-              onClick={() => handleClose()}
+             onClick={() => {
+              setBuy((prevBuy) => prevBuy === id ? false : id);
+              setId(id);
+            }}
               style={{
                 width: "42%",
               }}

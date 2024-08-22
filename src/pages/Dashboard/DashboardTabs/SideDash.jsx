@@ -1,25 +1,80 @@
 /* eslint-disable no-unused-vars */
+import axios from "axios";
 import { ArrowDown } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const SideDash = () => {
+  const { user } = useSelector((state) => ({ ...state.auth }));
+  const navigate = useNavigate();
+
+  const [payments, setPayments] = useState([]);
+  const [match, setMatch] = useState([]);
+  const [loading1, setLoading1] = useState(false);
+  useEffect(() => {
+    fetchData()
+  }, [user?.access])
+  async function fetchData() {
+    const token = user.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await axios.get(
+        `https://omayaexchangebackend.onrender.com/trading_engine/wallets/`,
+        { headers }
+      );
+      setPayments(res.data);
+      setLoading1(false);
+      console.log('payments', res.data);
+
+    } catch (error) {
+      console.log(error);
+      setLoading1(false);
+    }
+  }
+
+
+
+
   return (
     <div className="w-full flex flex-col gap-4 small wrap ">
       <div className="border border-gray-700 w-full secondary small wrap  rounded-2xl p-2  mt-1  justify-center items-center  flex flex-col justify-between">
-      <div className="relative w-64 h-64 flex items-center justify-center">
-  <img
-    className="w-full h-full"
-    src="https://res.cloudinary.com/pitz/image/upload/v1721369888/Group_34205_w3htkn.png"
-    alt=""
-  />
-  <div className="absolute flex flex-col items-center">
-    <p className="white text-center">00.00 USD</p>
-    <p style={{ fontSize: "12px" }} className="grey text-center">
-      Transactions
-    </p>
-  </div>
-</div>
+        <div className="relative w-64 h-64 flex items-center justify-center">
+          <img
+            className="w-48 h-48"
+            src="https://res.cloudinary.com/pitz/image/upload/v1721369888/Group_34205_w3htkn.png"
+            alt=""
+          />
+          <div className="absolute flex flex-col items-center">
+            <p className="white flex gap-1 text-center">  {
+              payments.map((balance) => {
+                return (
+                  <p key={balance.id}>
+                    {typeof balance.balance === 'string' ? Math.floor(balance.balance).toFixed(2) : 'N/A'}
+                  </p>
+                )
+              })
+            } USD</p>
+            <p style={{ fontSize: "12px" }} className="grey text-center">
+              Transactions
+            </p>
+          </div>
+        </div>
 
         <div className="w-full flex flex-col gap-4">
           <div className="w-full flex flex-row items-center justify-between  p-1">

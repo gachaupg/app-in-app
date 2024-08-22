@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --force",
-    "build": "vite build",
+    "build": "vite build --force",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -27,7 +27,6 @@
     "@sumsub/websdk": "^2.0.1",
     "@sumsub/websdk-react": "^2.0.1",
     "axios": "^1.6.7",
-  
     "bowser": "^2.11.0",
     "chart.js": "^4.4.3",
     "date-fns": "^3.6.0",

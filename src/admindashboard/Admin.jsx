@@ -1,18 +1,65 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './Admin.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { endpoint } from '../utils/APIRoutes';
+import { RxAvatar } from 'react-icons/rx';
 
 const Admin = () => {
+  const navigate = useNavigate();
+
+
+  const { user } = useSelector((state) => ({ ...state.auth }));
+  const [payments, setPayments] = useState([]);
+  const [match, setMatch] = useState([]);
+  const [loading1, setLoading1] = useState(false);
+
+  useEffect(() => {
+    fetchData()
+  }, [user?.access])
+  async function fetchData() {
+    const token = user.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await axios.get(
+        `${endpoint}/api/users/`,
+        { headers }
+      );
+      setPayments(res.data);
+      setLoading1(false);
+      console.log('payments', res.data);
+
+    } catch (error) {
+      console.log(error);
+      setLoading1(false);
+    }
+  }
+
+
   return (
     <div className="container-fluid">
       <div className="row">
         <nav className="col-md-3 col-lg-2 d-md-block  sidebar custom-sidebar">
           <div className="position-sticky">
             <h4 className="text-white text-center mb-4 ">Omaya Admin</h4>
-          <a href="/admin" className="active"><i className="bi bi-house-door"></i> Dashboard</a>
-         <a href="/kyc"><i className="bi bi-person-badge"></i> KYC</a>
+            <a href="/admin" className="active"><i className="bi bi-house-door"></i> Dashboard</a>
+            <a href="/kyc"><i className="bi bi-person-badge"></i> KYC</a>
             <a href="#"><i className="bi bi-wallet2"></i> Exchange Deposit</a>
             <a href="#"><i className="bi bi-cash"></i> Exchange Withdrawal</a>
             <a href="#"><i className="bi bi-people"></i> P2P Deposit Approval</a>
@@ -32,7 +79,7 @@ const Admin = () => {
               <div className="card mb-4 shadow-sm">
                 <div className="card-body">
                   <h5 className="card-title">Total Users</h5>
-                  <p className="card-text">9 Users</p>
+                  <p className="card-text">{payments.length} Users</p>
                 </div>
               </div>
             </div>
@@ -93,17 +140,25 @@ const Admin = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                <td className="table-cell-spacing"><img src="profile-pic-url" alt="Profile" width="30" /></td>
-                  <td className="table-cell-spacing">denns124534@gmail.com</td>
-                  <td className="table-cell-spacing">Dennis</td>
-                  <td className="table-cell-spacing">Buyer</td>
-                  <td className="table-cell-spacing">KSH0</td>
-                  <td className="table-cell-spacing">
-                    <button className="btn btn-success btn-sm mr-5  ">Approve</button>
-                    <button className="btn btn-danger btn-sm">Reject</button>
-                  </td>
-                </tr>
+                {
+                  payments.map((user) => {
+                    return (
+                      <>
+                        <tr key={user.id}>
+                          <td className="table-cell-spacing"><RxAvatar size={34} className='g '/></td>
+                          <td className="table-cell-spacing">{user.email}</td>
+                          <td className="table-cell-spacing">{user.username}</td>
+                          <td className="table-cell-spacing">Buyer</td>
+                          <td className="table-cell-spacing">KSH0</td>
+                          <td className="table-cell-spacing">
+                            <button className="btn btn-success btn-sm mr-5  ">Approve</button>
+                            <button className="btn btn-danger btn-sm">Reject</button>
+                          </td>
+                        </tr>
+                      </>
+                    )
+                  })
+                }
                 {/* More rows */}
               </tbody>
             </table>

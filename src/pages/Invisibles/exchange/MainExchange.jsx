@@ -15,15 +15,14 @@ import { TiArrowUnsorted } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useKyc } from "../../utils/context/KycContext";
-import SideDash from "../Dashboard/DashboardTabs/SideDash";
-import Center from "../Dashboard/Trade/Center";
-import Orders from "../Dashboard/Trade/Orders";
-import Market from "../p2p/Market";
+import MainProfilePage from "../../Auth/MainProfilePage";
+import SideDash from "../../Dashboard/DashboardTabs/SideDash";
+import Center from "../../Dashboard/Trade/Center";
+import Orders from "../../Dashboard/Trade/Orders";
+import Market from "../../p2p/Market";
 import Deposit from "./forms/Deposit";
-import Widthform from "./forms/Width";
 import ForexWidth from "./forms/ForexWidth";
-import MainProfilePage from "../Auth/MainProfilePage";
+import Widthform from "./forms/Width";
 
 const style = {
   position: 'absolute',
@@ -273,9 +272,9 @@ const MainExchange = () => {
   const [crypto, setCrypto] = useState('crypto');
 
   return (
-    <>
-      <div>
-        <div>
+    <div className="primary flex">
+      <div className="flex">
+        <div className="flex">
 
           <Modal
             className="rounded-lg border-slate-700"
@@ -348,7 +347,7 @@ const MainExchange = () => {
           </Modal>
         </div>
       </div>
-      {/* {activeTab1 === "Market" && (
+       {activeTab1 === "Market" && (
         <div className="w-full">
           <img
             className="h-28 object-cover w-full"
@@ -356,8 +355,7 @@ const MainExchange = () => {
             alt=""
           />
         </div>
-      )} */}
-      {/* <div
+      )}<div
           style={{ width: "18%", color: "#727272", fontSize: "15px" }}
           className="small dash-side  flex flex-col gap-6 pt-12"
         >
@@ -393,14 +391,13 @@ const MainExchange = () => {
               </div>
             </Link>
           ))}
-        </div> */}
+        </div> 
 
 
       <div
         style={{ width: "83%" }}
-        className="small p-2 pt-12 flex pr-36 pl-24 flex-col gap-4"
+        className="small p-2 flex pr-36 pl-24 flex-col gap-4"
       >
-
         <div className="">
           <Modal
             className="no-border"
@@ -910,7 +907,7 @@ const MainExchange = () => {
           </>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

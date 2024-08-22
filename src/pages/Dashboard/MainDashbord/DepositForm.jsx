@@ -228,7 +228,9 @@ const DepositForm = () => {
             <label htmlFor="file-upload" className="cursor-pointer">
               <button
                 className="bg-slate-100 p-1 w-12 flex justify-center items-center text-center rounded-lg"
-                onClick={() => document.getElementById("file-upload").click()}
+                onClick={() => {
+                  document.getElementById("file-upload").click();
+                }}
               >
                 <FiUpload className="text-yellow-700" />
               </button>
@@ -238,7 +240,13 @@ const DepositForm = () => {
               type="file"
               className="hidden"
               
-              onChange={(e) => setWidthdrwal({ ...widthdrwal, document: e.target.files[0] })}
+              onChange={(e) =>
+                 {
+                  setWidthdrwal({ ...widthdrwal, document: e.target.files[0] });
+                 toast.success('Document picked successfully');
+                 }
+
+                }
             />
           </div>
           <p style={{ fontSize: "14px", color: "#788099" }}>

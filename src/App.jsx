@@ -13,7 +13,6 @@ import "./App.css";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import DoughnutChart from "./components/Pichart";
-import MainProfilePage from "./pages/Auth/MainProfilePage";
 import Blog from "./pages/blog/Blogs";
 import KYC from "./pages/Dashboard/DashboardTabs/KYC";
 import Wallet from "./pages/Dashboard/DashboardTabs/Wallet";
@@ -25,7 +24,6 @@ import Adds1 from "./pages/Dashboard/Trade/p2pCenter/Adds/BuyAd";
 import BuySell from "./pages/Dashboard/Trade/seller/BuySell";
 import Seller from "./pages/Dashboard/Trade/seller/Seller";
 import SellPage from "./pages/Dashboard/Trade/SellPage";
-import MainExchange from "./pages/exchange/MainExchange";
 import Forgot from "./pages/Forgot";
 import HomePage from "./pages/landing-page/Home";
 import Login from "./pages/Login";
@@ -34,6 +32,12 @@ import Orders from "./pages/p2p/Orders";
 import Register from "./pages/Register";
 import ForgotPasswordButton from "./pages/ResetPassword";
 import { setUser } from "./redux/features/authSlice";
+import Swap from './pages/Invisibles/Swap/Swap';
+import BuyCrypto from './pages/Invisibles/buyCrypto/BuyCrypto';
+import Settings from './pages/Invisibles/Settings/Settings';
+import MainProfilePage from './pages/Invisibles/Auth/MainProfilePage';
+import MainExchange from './pages/Invisibles/exchange/MainExchange';
+
 // import Admin from "./admindashboard/Admin"
 // import Kyc from "./admindashboard/Kyc";
 
@@ -66,13 +70,13 @@ function App() {
 
 
 
-// useEffect(()=>{
-// if (!user) {
-//   navigate('login')
-// }else{
-//   navigate('')
-// }
-// },[])
+useEffect(()=>{
+if (!user) {
+  navigate('login')
+}else{
+  navigate('dashboard')
+}
+},[])
 
 useEffect(() => {
   fetchData1()
@@ -140,16 +144,19 @@ async function fetchData1() {
       <Navbar />
       <ToastContainer /> 
       <Routes>
-      {/* <Route  path="/" element={<Admin />} />
+      {/* <Route  path="/admin" element={<Admin />} />
       <Route  path="/kyc" element={<Kyc />} /> */}
 
 
 
 
-        <Route path="/login" element={<Login />} />
+       <Route path="/login" element={<Login />} />
         <Route index path="/" element={<HomePage />} />
 
         <Route path="/exchange" element={<MainExchange />} />
+        <Route path="/swap" element={<Swap />} />
+        <Route path="/buy" element={<BuyCrypto />} />
+        <Route path="/settings" element={<Settings />} />
         <Route path="/market" element={<MainMarket />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -168,7 +175,7 @@ async function fetchData1() {
         <Route path="/chats" element={<DoughnutChart />} />
         <Route path="/buy-adds" element={<Adds1 />} />
         <Route path="/notifications" element={<Notifications />} />
-        <Route path="/buysell/:id" element={<BuySell />} />  
+        <Route path="/buysell/:id" element={<BuySell />} /> 
       </Routes>
      <Footer />
     </div>

@@ -411,7 +411,6 @@ const Navbar = () => {
                     <button
                       onClick={() => {
                         dispatch(setLogout(null));
-                        toast.warning("Logged out!", { position: "top-left" });
                         navigate("/");
                         HandNew()
                       }}
