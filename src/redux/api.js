@@ -18,6 +18,7 @@ export const googleSignIn = (result) => API.post("/users/google-signin", result)
 
 export const signIn = (formData) => API.post("/users/signin", formData);
 export const signUp = (formData) => API.post("/users/signup", formData);
+export const getDeposits=()=>API.get('/trading_engine/wallets/');
 export const createWidthdrawal = (formData) => API.post("/trading_engine/p2p-withdraw/", formData);
 export const createMpesa = (formData) => API.post("/mpesa/stkPush", formData);
 export const createInvoice = (formData) => API.post("/invoice", formData);

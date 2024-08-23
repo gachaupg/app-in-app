@@ -22,31 +22,24 @@ const P2pDeposit = () => {
   
   async function fetchData() {
     const token = user?.access;
-  
     if (!token) {
       toast.error("Authentication token is missing. Please log in again.");
       navigate("/login");
       return;
     }
-  
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     };
-  
     try {
       const res = await axios.get(
         `https://omayaexchangebackend.onrender.com/trading_engine/all-transactions/`,
         { headers }
       );
-  
-      // Filter transactions by "withdrawal"
-      const filteredData = 
+            const filteredData = 
       res.data.transactions.filter(transaction => transaction.transaction_type === "deposit");
   
-      setMatch(filteredData);
-      console.log('Filtered Transactions:', filteredData);
-  
+      setMatch(filteredData);  
     } catch (error) {
       console.error(error);
       toast.error('Failed to fetch transactions. Please try again.');
@@ -55,7 +48,6 @@ const P2pDeposit = () => {
   
   const handleSubmit = async (transactionId) => {
     setLoadingStates(prevState => ({ ...prevState, [transactionId]: true }));
-
     try {
       const token = user?.access;
 

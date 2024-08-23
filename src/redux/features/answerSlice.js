@@ -52,9 +52,9 @@ export const likeTour = createAsyncThunk(
 );
 export const getTours = createAsyncThunk(
   "tour/getTours",
-  async (page, { rejectWithValue }) => {
+  async ( { rejectWithValue }) => {
     try {
-      const response = await api.getTours(page);
+      const response = await api.getDeposits();
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -204,7 +204,7 @@ export const getRelatedTours = createAsyncThunk(
       },
       [getTours.fulfilled]: (state, action) => {
         state.loading = false;
-        state.tours = action.payload.data;
+        state.projects = action.payload.data;
         
       },
       [getTours.rejected]: (state, action) => {
