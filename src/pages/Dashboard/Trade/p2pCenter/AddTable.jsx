@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { TiArrowUnsorted } from "react-icons/ti";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import { Checkbox, CircularProgress, Skeleton } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
-import { endpoint } from "../../../../utils/APIRoutes";
+import { Skeleton } from "@mui/material";
 import axios from "axios";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { endpoint } from "../../../../utils/APIRoutes";
 
 function AddTable() {
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -38,7 +36,7 @@ console.log(payments);
 
     try {
       const res = await axios.get(
-        `${endpoint}/trading_engine/p2p/all-orders/`,
+        `https://omayaexchangebackend.onrender.com/trading_engine/p2p/all-orders/?my_orders=true/`,
         { headers }
       );
       setLoading1(false);

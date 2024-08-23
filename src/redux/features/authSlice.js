@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 const api= 'https://omayaexchangebackend.onrender.com/api/'
 
@@ -13,8 +13,8 @@ export const login = createAsyncThunk(
       console.log(response.data);
       return response.data;
     } catch (err) {
-      console.log(err.message);
-      toast.error('Error Try Again!!')
+      console.log(err.response.data.error);
+      toast.error(err.response.data.error);
     }
   }
 );
@@ -34,7 +34,7 @@ export const register = createAsyncThunk(
       console.log(err.message);
       console.log( "Error Try Again later!!",err);
       console.log('====================================');
-      toast.error('Error Try Again!!')
+      toast.error(err.response.data.error);
     }
   }
 );

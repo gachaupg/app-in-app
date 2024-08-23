@@ -97,6 +97,7 @@ export default function SignInSide() {
               onSubmit={handleSubmit}
               style={{ marginTop: "1rem" }}
             >
+              <p>Email *</p>
               <div className="flex border mb-5 border-slate-700  pl-2 rounded-3xl items-center h-12 flex-row  gap-1 w-full secondary small">
                 <MdOutlineMailOutline
                   size={28}
@@ -115,6 +116,7 @@ export default function SignInSide() {
                   onChange={handleInputChange}
                 />
               </div>
+              <p>Password *</p>
               {errors.email && <p className="text-red-500">{errors.email}</p>}
               <div className="flex pr-2 border mb-5 border-slate-700  pl-2 border-slate-200 rounded-3xl items-center h-12 flex-row  gap-1 w-full secondary small">
                 <CiLock size={28} className="text-green-600" color="green" />
@@ -148,7 +150,7 @@ export default function SignInSide() {
                 </label>
 
                 <div>
-                  <Link className="green" to="/reset-password">
+                  <Link className="green pr-1" to="/reset-password">
                     Forgot password?
                   </Link>
                 </div>
@@ -184,7 +186,7 @@ export default function SignInSide() {
                 to="/register"
               >
                 <p className="text-center">
-                  Don't have an account? <span className="green">Sign Up</span> 
+                  Don't have an account? <span className="green cursor-pointer">Sign Up</span> 
                 </p>
               </Link>
             </form>

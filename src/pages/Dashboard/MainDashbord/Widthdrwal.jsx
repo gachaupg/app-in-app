@@ -38,7 +38,7 @@ const initialState = {
   receiver_wallet: "",
 };
 
-const DepositForm = ({payments}) => {
+const DepositForm = ({payments,setShow}) => {
   const [widthdrwal, setWidthdrwal] = useState(initialState);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -150,14 +150,12 @@ const DepositForm = ({payments}) => {
         const data = await response.json();
         if (response.ok) {
           toast.success("Withdrawal successful!");
-          console.log("====================================");
-          console.log(widthdrwal);
-          console.log("====================================");
+          setShow('P2P');
         } else if (data.code === "token_not_valid") {
           toast.error("Your session has expired. Please log in again.");
           navigate("/login"); // Redirect to login page or handle re-authentication
         } else {
-          toast.error(`Withdrawal failed: ${data || data}`);
+          toast.error(`Withdrawal failed:${data.error} `);
           console.log(data);
           console.log("====================================");
           console.log(widthdrwal);

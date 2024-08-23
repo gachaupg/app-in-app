@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../utils/APIRoutes";
 
-function OrdersTable() {
+function ExchangeTable() {
   const [payments, setPayments] = useState([]);
   const [loading1, setLoading1] = useState(true);
   const { user } = useSelector((state) => ({ ...state.auth }));
@@ -40,11 +40,16 @@ function OrdersTable() {
     };
 
     try {
-      const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/p2p/deposit/`,
-        { headers }
-      );
-      setPayments(res.data);
+        const res = await axios.get(
+            `https://omayaexchangebackend.onrender.com/trading_engine/all-transactions/`,
+            { headers }
+          );
+      
+          // Filter transactions by "withdrawal"
+          const filteredData = 
+          res.data.transactions.filter(transaction => transaction.user_email === user.user.email);
+      
+      setPayments(filteredData);
       setLoading1(false);
       console.log('payments', res.data);
 
@@ -225,27 +230,25 @@ function OrdersTable() {
                     {row.asset}
                   </td>
                   <td
-                    className={`${row.order_type === "sell"
-                        ? "text-red-700"
-                        : "text-green-700"
+                    className={`g
                       } ml-4 pl-6`}
                   >
-                    {row.id}
+                    {row.transaction_id}
                   </td>
                   <td
-                    className={`${row.order_type === "sell"
-                        ? "text-red-700"
-                        : "text-green-700"
+                    className={`${row.transaction_type === "deposit"
+                        ? "text-green-700"
+                        : "text-red-700"
                       }`}
                   >
-                    {row.order_type === "sell" ? "P2P Sell" : "P2P Buy"}
+                    {row.transaction_type === "deposit" ? "Deposit" : "Withdrawal"}
                   </td>
                   <td className="grey">
                     <span
-                      className={`${row.type === "P2P Buy" ? "green" : "text-red-600"
+                      className={`${row.transaction_type === "deposit" ? "green" : "text-red-600"
                         }`}
                     >
-                      {row.type === "P2P Buy" ? "+" : "-"} {Number(row.amount).toFixed(2)}
+                      {row.transaction_type === "deposit" ? "+" : "-"} {Number(row.amount).toFixed(2)}
                     </span>{" "}
                     USD
                   </td>
@@ -301,4 +304,4 @@ function OrdersTable() {
   );
 }
 
-export default OrdersTable;
+export default ExchangeTable;

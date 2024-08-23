@@ -232,7 +232,7 @@ const Register = () => {
                         ? "1px solid rgba(255, 255, 255, 0.5)"
                         : "1px solid red",
                     }}
-                    className="w-full select select bg-slate-700 p-2 rounded-2xl"
+                    className="w-full select select secondary p-2 rounded-2xl"
                     name="registration type"
                     value={user.user_type}
                     onChange={(e) =>

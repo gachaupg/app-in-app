@@ -149,8 +149,7 @@ async function fetchData1() {
       <Navbar />
       <ToastContainer /> 
       <Routes>
-     
-  //admin
+
       <Route  path="/admin" element={<Admin />} />
       <Route  path="/kyc" element={<Kyc />} />
       <Route  path="/p2pdeposit" element={<P2pDeposit/>} />

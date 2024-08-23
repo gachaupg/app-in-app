@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Key, Settings, Wallet2 } from "lucide-react";
 import { useState } from "react";
-import Test from "./Test";
+import Test from "./ProfileSetings";
 import ProfileTab from "./ProfileTab";
 import KYC from "../Dashboard/DashboardTabs/KYC";
 import Profile from "../../components/Profile";

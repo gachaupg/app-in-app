@@ -49,7 +49,17 @@ const SideDash = () => {
   }
 
 
+  function formatBalance(balance) {
+    let num = parseFloat(balance);
 
+    if (num >= 1e9) {
+      return (num / 1e9).toFixed(2) + 'B';
+    } else if (num >= 1e6) {
+      return (num / 1e6).toFixed(2) + 'M';
+    } else {
+      return num.toFixed(2);
+    }
+  }
 
   return (
     <div className="w-full flex flex-col gap-4 small wrap ">
@@ -65,7 +75,9 @@ const SideDash = () => {
               payments.map((balance) => {
                 return (
                   <p key={balance.id}>
-                    {typeof balance.balance === 'string' ? Math.floor(balance.balance).toFixed(2) : 'N/A'}
+                    <p key={balance.id}>
+                      {typeof balance.balance === 'string' ? formatBalance(balance.balance) : 'N/A'}
+                    </p>
                   </p>
                 )
               })

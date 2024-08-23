@@ -24,6 +24,7 @@ import Deposit from "./forms/Deposit";
 import Widthform from "./forms/Width";
 import ForexWidth from "./forms/ForexWidth";
 import MainProfilePage from "../Auth/MainProfilePage";
+import ExchangeTable from "../Dashboard/DashboardTabs/Exchange";
 
 const style = {
   position: 'absolute',
@@ -719,7 +720,7 @@ const MainExchange = () => {
                         </div>
                       </>
                     )}
-                    <Table />
+                    <ExchangeTable />
                     {/* <div className="flex items-center justify-center">
                         <img
                           style={{

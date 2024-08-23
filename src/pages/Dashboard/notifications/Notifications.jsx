@@ -21,7 +21,9 @@ const Notifications = () => {
     const formatTimestamp = (timestamp) => format(new Date(timestamp), 'yyyy-MM-dd HH:mm:ss');
 
     return (
-        <div className="primary size w-full pr-48 pl-48">
+        <div style={{
+            fontSize:'12px'
+        }} className="primary size w-full pr-48 pl-48">
             <p className="g">Notifications center</p>
             <div className="flex flex-row small wrap gap-6 justify-between small wrap">
                 <div className="small w-full flex flex-col secondary rounded-lg p-2 border border-slate-700">

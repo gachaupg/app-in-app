@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
-import Skeleton from "react-loading-skeleton";
-import { TiArrowUnsorted } from "react-icons/ti";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
-import axios from "axios";
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 import { Message } from "@mui/icons-material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
-import { endpoint } from "../../../../utils/APIRoutes";
+import { TiArrowUnsorted } from "react-icons/ti";
+import Skeleton from "react-loading-skeleton";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function OrdersTable() {
   const [payments, setPayments] = useState([]);
@@ -39,7 +40,8 @@ console.log(payments);
 
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/p2p/all-orders/`,
+        `https://omayaexchangebackend.onrender.com/trading_engine/p2p/all-orders/?my_orders=true/`,
+        // `https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/`,
         { headers }
       );
       setLoading1(false);
@@ -52,20 +54,36 @@ console.log(payments);
       setLoading1(false);
     }
   }
-
+  console.log('payments',payments);
+  
+  const [order_type, setOrder_type] = useState('');
+  const [paymentTypeFilter, setPaymentTypeFilter] = useState('');
+  const [bankFilter, setBankFilter] = useState('');
+  const filteredData = payments.filter(payment => {
+    const amountMatch = !order_type || payment.order_type.toString().includes(order_type);
+    const selectFilter = !paymentTypeFilter || payment.status.toString().includes(paymentTypeFilter);
+    const bankMatch = !bankFilter || payment.asset.toString().includes(bankFilter);
+    return amountMatch && selectFilter && bankMatch;
+  });
   // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = payments.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(payments.length / itemsPerPage);
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
   const [activeButton, setActiveButton] = useState("All Orders");
-
+  const handleButtonClick = (buttonName) => {
+    setActiveButton(buttonName);
+    // Fetch data based on the button clicked
+    const fetchedData = fetchData(buttonName); // Replace this with your data fetching logic
+    setOrdersData(fetchedData);
+    applyFilters(fetchedData, filters);
+  };
   return (
-    <div className="flex rounded-lg small flex-col gap-2 pr-20 w-full">
+    <div className="flex rounded-lg small flex-col gap-2  w-full">
 
     <div className="primary small wrap small-gap rounded-lg flex flex-row justify-between">
         <div className="flex wrap gap-3 small border rounded-lg p-2 border-green-600">
@@ -123,8 +141,9 @@ console.log(payments);
         <button
           className="border small-gap small border-slate-600 rounded-2xl flex items-center justify-between gap-16 p-1 pl-2 pr-2 secondary h-10 white"
         >
-          <select className="secondary no-border w-40" name="" id="">
-            <option value="">
+          <select onChange={(e)=>setBankFilter(e.target.value)} className="secondary no-border w-full p-1" name="" id="">
+            <option value="">Filter by Network</option>
+            <option value="TRC20">
               <div className="flex g items-center gap-1">
                 <img
                   className="h-4"
@@ -140,7 +159,7 @@ console.log(payments);
         <button
           className="border small-gap small border-slate-600 g rounded-2xl w-56 flex items-center justify-between gap-16 p-1 pl-2 pr-2 secondary h-10 white"
         >
-          <select className="secondary no-border w-40" name="" id="">
+          <select onChange={(e)=> setOrder_type(e.target.value)} className="secondary no-border w-full p-1" name="" id="">
             <option value="">
               <div className="flex items-center g gap-1">
                 <img
@@ -151,14 +170,14 @@ console.log(payments);
                 Type
               </div>
             </option>
-            <option value="">Buy</option>
-            <option value="">Sell</option>
+            <option value="buy">Buy</option>
+            <option value="sell">Sell</option>
           </select>
         </button>
         <button
           className="border small-gap small w-56 border-slate-600 rounded-2xl flex items-center justify-between gap-16 p-1 pl-2 pr-2 secondary h-10 white"
         >
-          <select className="secondary no-border w-40" name="" id="">
+          <select onChange={(e)=> setPaymentTypeFilter(e.target.value)} className="secondary no-border p-1 w-full" name="" id="">
             <option value="">
               <div className="flex items-center g gap-1">
                 <img
@@ -169,8 +188,9 @@ console.log(payments);
                 Status
               </div>
             </option>
-            <option value="">Pending</option>
-            <option value="">Complete</option>
+            <option value="pending">Pending</option>
+            <option value="complete">Complete</option>
+            <option value="processing">Complete</option>
           </select>
         </button>
         <button
@@ -190,6 +210,12 @@ console.log(payments);
           </p>
         </button>
       </div>
+      {activeButton==='Completed' && <div className="g text-center">No orders</div>}
+      {activeButton==='Canceled' && <div className="g text-center">No orders</div>}
+      {activeButton==='processing' && <div className="g text-center">No orders</div>}
+      {activeButton==='All Orders' && (
+
+      
     <div style={{ width: "100%", overflowX: "auto" }} className="Table">
       <div style={{ overflowX: "auto" }}>
         <table
@@ -303,7 +329,7 @@ console.log(payments);
                   </tr>
                 ))}
             </tbody>
-          ) : payments.length === 0 ? (
+          ) : filteredData.length === 0 ? (
             <tbody className="flex items-center justify-center">
               <tr>
                 <td colSpan="7 w-full">
@@ -380,6 +406,7 @@ console.log(payments);
         </div>
       </div>
     </div>
+    )}
     </div>
   );
 }

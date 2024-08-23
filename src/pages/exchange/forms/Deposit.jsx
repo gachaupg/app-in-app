@@ -241,7 +241,7 @@ const DepositForm = () => {
                     toast.error("Your session has expired. Please log in again.");
                     navigate("/login");
                 } else {
-                    toast.error(`Deposit failed. Please try again: ${data.detail || data.message || data}`);
+                    toast.error(`Deposit failed. Please try again: ${data.error}`);
                 }
             } catch (error) {
                 toast.error(`Error: ${error.message}`);

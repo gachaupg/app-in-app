@@ -123,7 +123,7 @@ const Widthform = () => {
                     toast.error("Your session has expired. Please log in again.");
                     navigate("/login");
                 } else {
-                    toast.error(`Deposit failed. Please try again: ${data.detail || data.message || data}`);
+                    toast.error(`Deposit failed. Please try again: ${data.error}`);
                 }
             } catch (error) {
                 toast.error(`Error: ${error.message}`);
@@ -171,9 +171,9 @@ const Widthform = () => {
             setLoading1(false);
             setdetails(res.data);
             {
-                details.length === 0?
-                setOpen(true)
-                :setOpen(false);
+                details.length === 0 ?
+                    setOpen(true)
+                    : setOpen(false);
 
             }
             // console.log("hello", res.data);
@@ -511,9 +511,9 @@ const Widthform = () => {
                                 return (
                                     <><div className=" p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
 
-                                            {i.payment_provider_name === widthdrwal.payment_provider && (
-                                                <>
-                                        <div className=" border border-green-700 mr-3  p-1 rounded-3xl flex flex-row items-center gap-1 w-full">
+                                        {i.payment_provider_name === widthdrwal.payment_provider && (
+                                            <>
+                                                <div className=" border border-green-700 mr-3  p-1 rounded-3xl flex flex-row items-center gap-1 w-full">
 
                                                     <div className=" p-1 pl-3 rounded-3xl  flex flex-row items-center justify-between  w-full secondary ">
 
@@ -525,10 +525,10 @@ const Widthform = () => {
                                                             {i.account_name}
                                                         </p>
                                                     </div>
-  </div>
-                                                </>
-                                            )}
-                                      
+                                                </div>
+                                            </>
+                                        )}
+
 
                                     </div>
                                     </>
@@ -539,10 +539,10 @@ const Widthform = () => {
                     </div>
                     <div className=" flex flex-col mb-3 w-full">
                         <p className="grey mb-1"> Account Number</p>
-                            {
-                                details.map((i) => {
-                                    return (
-                                        <> 
+                        {
+                            details.map((i) => {
+                                return (
+                                    <>
                                         <div className=" p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
 
                                             <div className="  primary mr-3  p-1 rounded-3xl flex flex-row  items-center gap-1 w-full">
@@ -556,11 +556,11 @@ const Widthform = () => {
                                                     </>
                                                 )}
                                             </div>
-                                            </div>
-                                        </>
-                                    )
-                                })}
-                        
+                                        </div>
+                                    </>
+                                )
+                            })}
+
                     </div>
 
                 </div>

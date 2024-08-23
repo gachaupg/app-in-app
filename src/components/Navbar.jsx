@@ -26,6 +26,7 @@ import List from "@mui/material/List";
 import { styled, useTheme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import axios from "axios";
 import { Wallet } from "lucide-react";
 import { MdKeyboardArrowRight, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { RxAvatar } from "react-icons/rx";
@@ -76,7 +77,7 @@ const Navbar = () => {
     if (
       (dropdownRef.current && !dropdownRef.current.contains(event.target)) ||
       (profileRef.current && !profileRef.current.contains(event.target)) ||
-      (langRef.current && !langRef.current.contains(event.target))||
+      (langRef.current && !langRef.current.contains(event.target)) ||
       (sideDashRef.current && !sideDashRef.current.contains(event.target))
     ) {
       setSideDash(false);
@@ -106,15 +107,49 @@ const Navbar = () => {
     setProPro(false);
     setShow1(false);
   };
-  //const [showLog, setShowLog] = React.useState(false);
-  //const dispatch = useDispatch();
-  //const navigate = useNavigate();
 
-  // const handleShowLog = () => {
-  //   setShowLog(!showLog);
-  // };
+  const [match, setMatch] = useState([]);
+  const [loading1, setLoading1] = useState(false);
+  const [transactions, setTransactions] = useState([])
+  //  https://omayaexchangebackend.onrender.com/trading_engine/all-transactions/
+  console.log(match);
 
- 
+
+  useEffect(() => {
+    fetchData()
+  }, [user?.access])
+  async function fetchData() {
+    const token = user.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await axios.get(
+        ` https://omayaexchangebackend.onrender.com/api/users/`,
+        { headers }
+      );
+      setMatch(res.data);
+      setLoading1(false);
+      console.log('payments', res.data);
+
+    } catch (error) {
+      console.log(error);
+      setLoading1(false);
+    }
+  }
+
+
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -194,7 +229,7 @@ const Navbar = () => {
       navigate("/rates");
     }
   };
- 
+
   // setShow1(!show1);
   const [activeTab, setActiveTab] = useState("P2P Trading");
   const [activeTab1, setActiveTab1] = useState("Dashboard");
@@ -229,9 +264,9 @@ const Navbar = () => {
     },
   ];
 
-  const [newShow,setNew]=useState(false);
-  const HandNew=()=>{
-   setNew(!newShow);
+  const [newShow, setNew] = useState(false);
+  const HandNew = () => {
+    setNew(!newShow);
   }
 
   return (
@@ -290,6 +325,26 @@ const Navbar = () => {
         {/* {user ? ( */}
         {user ? (
           <>
+            <Link to='/admin'>
+              {
+                match.map((i) => {
+                  return (
+                    <>
+                      {
+                        i.id === user?.user?.id && (
+                          <>
+                            {i.is_superuser===true ? 
+                            <button className="p-1 h-9 border border-slate-700 w-24 rounded-lg ">Admin</button> : ''
+                            }                  
+                            </>
+                        )
+                      }
+                    </>
+                  )
+                })
+              }
+
+            </Link>
             <button
               style={{
                 background: "#1D8751",
@@ -298,7 +353,7 @@ const Navbar = () => {
               onClick={() => {
                 setShow(false);
                 handleShowSide();
-                
+
               }}
               ref={sideDashRef}
               className=" rounded-lg p-1 w-24 h-8 flex flex-row items-center gap-1"
@@ -315,7 +370,7 @@ const Navbar = () => {
               className="relative flex flex-row items-center"
               ref={profileRef}
             >
-              <RxAvatar className="g cursor-pointer" size={40}/>
+              <RxAvatar className="g cursor-pointer" size={40} />
               {/* <img
                 width={30}
                 height={30}
@@ -335,67 +390,67 @@ const Navbar = () => {
                   <div onClick={HandNew}>
                     <Cancel className="items-left float-left ml-44" />
                   </div>
-                  <Link onClick={()=>{
+                  <Link onClick={() => {
                     navigate('/account')
                     HandNew();
 
-                    }}  className="w-full" to="/account">
-                    <div onClick={()=>{
-                    navigate('/account')
-                    HandNew();
+                  }} className="w-full" to="/account">
+                    <div onClick={() => {
+                      navigate('/account')
+                      HandNew();
 
-                    }}  className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
+                    }} className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                       <AccountCircle />
                       <button>Profile</button>
                     </div>
                   </Link>
-                  <Link onClick={()=>{
+                  <Link onClick={() => {
                     navigate('/account')
                     HandNew();
 
-                    }}  className="w-full" to="/account">
+                  }} className="w-full" to="/account">
                     <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                       <Wallet />
                       <button>Wallet</button>
                     </div>
                   </Link>
-                  <Link onClick={()=>{
+                  <Link onClick={() => {
                     navigate('/account')
                     HandNew();
 
-                    }}  className="w-full" to="/account">
+                  }} className="w-full" to="/account">
                     <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                       <Verified />
                       <button>KYC</button>
                     </div>
                   </Link>
                   <Link
-                  onClick={()=>{
-                    navigate('/account')
-                    HandNew();
+                    onClick={() => {
+                      navigate('/account')
+                      HandNew();
 
-                    }} 
+                    }}
                     to='/acount'
-                    
+
                     className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg"
                   >
                     <PrivacyTip />
                     <button>Privacy and Security</button>
                   </Link>
-                <div className="w-full">
-               
-                <Link onClick={()=>{
-                    navigate('/account')
-                    HandNew();
+                  <div className="w-full">
 
-                    }}  to="/account"
-                   
-                   className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg"
-                 >
-                   <RefreshRounded />
-                   <button>Referral</button>
-                 </Link >
-                </div>
+                    <Link onClick={() => {
+                      navigate('/account')
+                      HandNew();
+
+                    }} to="/account"
+
+                      className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg"
+                    >
+                      <RefreshRounded />
+                      <button>Referral</button>
+                    </Link >
+                  </div>
                   <div
                     onClick={() => {
                       dispatch(setLogout(null));
@@ -445,7 +500,7 @@ const Navbar = () => {
         </>
         {/* )} */}
 
-        <div className="image-nav relative cursor-pointer " onClick={showLang}  ref={langRef}>
+        <div className="image-nav relative cursor-pointer " onClick={showLang} ref={langRef}>
           <img
             style={{ width: "2rem", height: "2rem", borderRadius: "50%" }}
             src="https://media.istockphoto.com/id/1217765834/photo/flag-of-united-kingdom-blowing-in-the-wind.jpg?s=2048x2048&w=is&k=20&c=W2rAsO5-YNL2o-9i8aqKr6QW3Mqi_lnxmSNPSJxVPaw="
@@ -481,52 +536,52 @@ const Navbar = () => {
                   <div className="cursor-pointer">
                     <p className="white cursor-pointer mr-5">Exchange</p>
                     <p style={{
-                      fontSize:'12px'
+                      fontSize: '12px'
                     }} className="g cursor-pointer">
                       Trade cryptocurrencies on the exchange with advanced tools
                       and features for optimal transactions{" "}
                     </p>
                   </div>
-                  <MdKeyboardArrowRight size={30}/>
+                  <MdKeyboardArrowRight size={30} />
                 </Link>
                 <Link onClick={handleShowSide} to="/dashboard" className="flex hover cursor-pointer flex-row  items-center  gap-10 w-full">
                   <img src="https://res.cloudinary.com/pitz/image/upload/v1723104921/users-profiles-left_2_bunnsy.png" alt="" />
                   <div>
                     <p className="white cursor-pointer mr-5">P2P</p>
                     <p style={{
-                      fontSize:'12px'
+                      fontSize: '12px'
                     }} className="g cursor-pointer">
                       Trade cryptocurrencies on the exchange with advanced tools
                       and features for optimal transactions{" "}
                     </p>
                   </div>
-                  <MdKeyboardArrowRight size={30}/>
+                  <MdKeyboardArrowRight size={30} />
                 </Link>
                 <Link onClick={handleShowSide} to="/dashboard" className="flex hover cursor-pointer flex-row  items-center  gap-10 w-full">
                   <img src="https://res.cloudinary.com/pitz/image/upload/v1723104988/Group_164002_1_oovexn.png" alt="" />
                   <div>
                     <p className="white cursor-pointer mr-5">Swap</p>
                     <p style={{
-                      fontSize:'12px'
+                      fontSize: '12px'
                     }} className="g cursor-pointer">
                       Trade cryptocurrencies on the exchange with advanced tools
                       and features for optimal transactions{" "}
                     </p>
                   </div>
-                  <MdKeyboardArrowRight size={30}/>
+                  <MdKeyboardArrowRight size={30} />
                 </Link>
                 <Link onClick={handleShowSide} to="/dashboard" className="flex flex-row hover cursor-pointer items-center  gap-10 w-full">
                   <img src="https://res.cloudinary.com/pitz/image/upload/v1723105029/Group_164004_1_urbeen.png" alt="" />
                   <div>
                     <p className="white mr-5 cursor-pointer">Buy</p>
                     <p style={{
-                      fontSize:'12px'
+                      fontSize: '12px'
                     }} className="g cursor-pointer">
                       Trade cryptocurrencies on the exchange with advanced tools
                       and features for optimal transactions{" "}
                     </p>
                   </div>
-                  <MdKeyboardArrowRight size={30}/>
+                  <MdKeyboardArrowRight size={30} />
                 </Link>
               </div>
             </>
@@ -570,7 +625,7 @@ const Navbar = () => {
               <Typography variant="h6" noWrap component="div">
                 <img
                   style={{
-               
+
                     width: "5rem",
                     marginLeft: "2rem",
                   }}
@@ -667,9 +722,8 @@ const Navbar = () => {
                               onClick={() => setActiveTab(tab.name)}
                             >
                               <img
-                                className={`${
-                                  tab.name === "Buy Crypto" ? "h-5" : "h-6"
-                                }`}
+                                className={`${tab.name === "Buy Crypto" ? "h-5" : "h-6"
+                                  }`}
                                 src={tab.icon}
                                 alt={tab.name}
                               />
@@ -680,9 +734,8 @@ const Navbar = () => {
                                       ? "15.5px"
                                       : "h-6",
                                 }}
-                                className={`flex items-center ${
-                                  activeTab === tab.name ? "white" : ""
-                                } justify-between ml-5 w-full`}
+                                className={`flex items-center ${activeTab === tab.name ? "white" : ""
+                                  } justify-between ml-5 w-full`}
                               >
                                 {tab.name}
                                 {tab.name === "Account" && (

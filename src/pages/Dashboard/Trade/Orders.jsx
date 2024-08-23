@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Message } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
@@ -67,7 +68,7 @@ const Orders = () => {
   };
 
   return (
-    <div className="flex rounded-lg small flex-col gap-2 pr-20 w-full">
+    <div className="flex rounded-lg small flex-col gap-2  w-full">
       
 
       {filteredData.length === 0 ? (

@@ -1,4 +1,9 @@
 /* eslint-disable no-unused-vars */
+import { Button, CircularProgress } from "@mui/material";
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+import axios from "axios";
 import { Copy, Plus, Wallet } from "lucide-react";
 import { useEffect, useState } from "react";
 import { GoArrowDownLeft } from "react-icons/go";
@@ -6,7 +11,14 @@ import { MdArrowOutward, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { RxAvatar } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import Btn from "../../../components/Button";
+import { endpoint } from "../../../utils/APIRoutes";
+import MainProfilePage from "../../Auth/MainProfilePage";
+import Settings from "../../Settings/Settings";
+import Swap from "../../Swap/Swap";
+import BuyCrypto from "../../buyCrypto/BuyCrypto";
+import MainExchange from "../../exchange/MainExchange";
 import SideDash from "../DashboardTabs/SideDash";
 import Table from "../DashboardTabs/Table";
 import Center from "../Trade/Center";
@@ -14,18 +26,6 @@ import Market from "../Trade/Market";
 import Orders from "../Trade/Orders";
 import DepositForm from "./DepositForm";
 import Widthdrwal from "./Widthdrwal";
-import { Button, CircularProgress } from "@mui/material";
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import Typography from '@mui/material/Typography';
-import axios from "axios";
-import { toast } from "react-toastify";
-import { endpoint } from "../../../utils/APIRoutes";
-import MainProfilePage from "../../Auth/MainProfilePage";
-import Settings from "../../Settings/Settings";
-import Swap from "../../Swap/Swap";
-import BuyCrypto from "../../buyCrypto/BuyCrypto";
-import MainExchange from "../../exchange/MainExchange";
 
 const style = {
   position: 'absolute',
@@ -51,6 +51,7 @@ const MainDash = () => {
   console.log('data', data);
 
   const { user } = useSelector((state) => ({ ...state.auth }));
+console.log('user',user);
 
   // useEffect(() => {
   //   if (user?.access) {
@@ -121,6 +122,7 @@ const MainDash = () => {
   const handleClose1 = () => setOpen1(false);
   const [kyc, setKyc] = useState([])
 
+  console.log('kyc', kyc);
 
   // useEffect(()=>{
   // if (kyc.is_verified===true) {
@@ -350,46 +352,66 @@ const MainDash = () => {
   const toggleDropdown = () => {
     setIsDropdownVisible(!isDropdownVisible);
   };
- const [transactions,setTransactions]=useState([])
-//  https://omayaexchangebackend.onrender.com/trading_engine/all-transactions/
+  const [transactions, setTransactions] = useState([])
+  //  https://omayaexchangebackend.onrender.com/trading_engine/all-transactions/
 
 
-useEffect(() => {
-  Transactions()
-}, [user?.access])
-async function Transactions() {
-  const token = user.access;
+  useEffect(() => {
+    Transactions()
+  }, [user?.access])
+  async function Transactions() {
+    const token = user.access;
 
-  if (!token) {
-    toast.error("Authentication token is missing. Please log in again.");
-    navigate("/login");
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
 
-    setLoading1(false);
-    return;
+      setLoading1(false);
+      return;
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await axios.get(
+        ` https://omayaexchangebackend.onrender.com/trading_engine/all-transactions/`,
+        { headers }
+      );
+      setMatch(res.data);
+      setLoading1(false);
+      console.log('paymentssss', res.data);
+
+    } catch (error) {
+      console.log(error);
+      setLoading1(false);
+    }
   }
 
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  };
+  function formatBalance(balance) {
+    let num = parseFloat(balance);
 
-  try {
-    const res = await axios.get(
-      ` https://omayaexchangebackend.onrender.com/trading_engine/all-transactions/`,
-      { headers }
-    );
-    setMatch(res.data);
-    setLoading1(false);
-    console.log('paymentssss', res.data);
-
-  } catch (error) {
-    console.log(error);
-    setLoading1(false);
+    if (num >= 1e9) {
+      return (num / 1e9).toFixed(2) + 'B';
+    } else if (num >= 1e6) {
+      return (num / 1e6).toFixed(2) + 'M';
+    } else {
+      return num.toFixed(2);
+    }
   }
-}
 
-
-
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (kyc.is_verified === false) {
+        window.location.reload();
+      }
+    }, 5000); // Check every 5 seconds
+  
+    return () => clearInterval(interval); // Clean up the interval on component unmount
+  }, [kyc.is_verified]); // Add kyc.is_verified as a dependency
+  
 
 
 
@@ -607,11 +629,11 @@ async function Transactions() {
                     <Orders />
                   </>
                 )}
-                 {activeTab1 === "Market" && (
-          <>
-            <Market />
-          </>
-        )}
+                {activeTab1 === "Market" && (
+                  <>
+                    <Market />
+                  </>
+                )}
                 {activeTab1 === "Center" && (
                   <>
                     <Center />
@@ -713,8 +735,9 @@ async function Transactions() {
                                     payments.map((balance) => {
                                       return (
                                         <p key={balance.id}>
-                                          {typeof balance.balance === 'string' ? Math.floor(balance.balance).toFixed(2) : 'N/A'}
+                                          {typeof balance.balance === 'string' ? formatBalance(balance.balance) : 'N/A'}
                                         </p>
+
                                       )
                                     })
                                   }  <span className="ml-1">USDT</span>{" "}
@@ -724,8 +747,8 @@ async function Transactions() {
                                       payments.map((balance) => {
                                         return (
                                           <p key={balance.id}>
-                                            {typeof balance.balance === 'string' ? Math.floor(balance.balance).toFixed(2) : 'N/A'}
-                                          </p>
+                                          {typeof balance.balance === 'string' ? formatBalance(balance.balance) : 'N/A'}
+                                        </p>
                                         )
                                       })
                                     }  <span className="ml-1">USD</span>
@@ -923,7 +946,7 @@ async function Transactions() {
                             payments.map((balance) => {
                               return (
                                 <>
-                                  <Widthdrwal payments={typeof balance.balance === 'string' ? Math.floor(balance.balance).toFixed(2) : 'N/A'} />
+                                  <Widthdrwal setShow={setShow} payments={typeof balance.balance === 'string' ? Math.floor(balance.balance).toFixed(2) : 'N/A'} />
                                 </>
                               )
                             })
@@ -985,7 +1008,7 @@ async function Transactions() {
                               </div>
                             </div>
                           </div>
-                          <DepositForm />
+                          <DepositForm setDeposit={setShow} />
                         </div>
                       </>
                     )}
@@ -1000,7 +1023,7 @@ async function Transactions() {
             <BuyCrypto />
           </>
         )}
- {activeTab === "Exchange" && (
+        {activeTab === "Exchange" && (
           <>
             <MainExchange />
           </>
@@ -1015,8 +1038,8 @@ async function Transactions() {
             <Settings />
           </>
         )}
-       
-          {activeTab === "Account" && (
+
+        {activeTab === "Account" && (
           <>
             <MainProfilePage />
           </>

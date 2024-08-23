@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-unused-vars */
 import { Copy, Dot, Wallet } from "lucide-react";
@@ -34,7 +35,7 @@ const initialState = {
   document:null,
 };
 
-const DepositForm = () => {
+const DepositForm = ({setDeposit}) => {
 
 
   const [files, setFile] = useState('');
@@ -94,11 +95,12 @@ const DepositForm = () => {
         const data = await response.json();
         if (response.ok) {
           toast.success("Deposited successfully!");
+          setDeposit('P2P')
         } else if (data.code === "token_not_valid") {
           toast.error("Your session has expired. Please log in again.");
           navigate("/login");
         } else {
-          toast.error(`Deposit failed Try again: ${data || data}`);
+          toast.error(`Withdrawal failed:${data.error} `);
         }
       } catch (error) {
         toast.error(`Error: ${error.error}`);
