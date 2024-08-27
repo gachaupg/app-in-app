@@ -36,7 +36,7 @@ console.log(payments);
 
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/p2p/all-orders/?my_orders=true/`,
+        `${endpoint}/trading_engine/p2p/all-orders/?my_orders=true/`,
         { headers }
       );
       setLoading1(false);

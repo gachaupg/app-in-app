@@ -33,6 +33,7 @@ import { RxAvatar } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { setLogout } from "../redux/features/authSlice";
+import { endpoint } from "../utils/APIRoutes";
 
 const drawerWidth = 240;
 
@@ -135,7 +136,7 @@ const Navbar = () => {
 
     try {
       const res = await axios.get(
-        ` https://omayaexchangebackend.onrender.com/api/users/`,
+        ` ${endpoint}/api/users/`,
         { headers }
       );
       setMatch(res.data);

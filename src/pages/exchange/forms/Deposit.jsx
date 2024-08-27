@@ -38,7 +38,7 @@ const initialState = {
     screenshot: null,
     deposit_address: "",
     payment_method: "Bank",
-    payment_provider: "",
+    payment_provider: "Salam",
     additional_info: ""
 };
 
@@ -87,7 +87,7 @@ const DepositForm = () => {
         };
 
         try {
-            const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/user-payment-details/`, {
+            const res = await axios.get(`${endpoint}/trading_engine/user-payment-details/`, {
                 headers,
             });
             setLoading1(false);
@@ -150,7 +150,7 @@ const DepositForm = () => {
         };
 
         try {
-            const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/payment-methods/`, {
+            const res = await axios.get(`${endpoint}/trading_engine/payment-methods/`, {
                 headers,
             });
             setLoading1(false);
@@ -181,7 +181,7 @@ const DepositForm = () => {
         };
 
         try {
-            const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/payment-providers/Bank/`, {
+            const res = await axios.get(`${endpoint}/trading_engine/payment-providers/Bank/`, {
                 headers,
             });
             setLoading1(false);
@@ -241,7 +241,7 @@ const DepositForm = () => {
                     toast.error("Your session has expired. Please log in again.");
                     navigate("/login");
                 } else {
-                    toast.error(`Deposit failed. Please try again: ${data.error}`);
+                    toast.error(`${data.error}`);
                 }
             } catch (error) {
                 toast.error(`Error: ${error.message}`);
@@ -336,7 +336,7 @@ const DepositForm = () => {
                     <p className="flex small flex-row items-center gap-2"><span style={{
                         background: '#35353E'
                     }} className="p-1 rounded-2xl  flex flex-row gap-2 text-white bg-green-300">
-                        <Dot />    Commision 1%
+                        <Dot />    Commision 0%
                     </span> <span className="green">$ 1</span></p>
                     <p className="flex small flex-row items-center gap-2"><span style={{
                         background: '#35353E'
@@ -444,7 +444,7 @@ const DepositForm = () => {
                         </div>
                     </div>
                     <div className=" flex small wrap flex-col mb-3 w-full">
-                        <p className="grey mb-1"> Payment provider</p>
+                        <p className="grey mb-1"> Payment Method</p>
                         <div className="primary small wrap p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
                             <div className="  flex flex-row items-center gap-1 w-full">
                                 <img className="h-6 rounded-full" src="https://res.cloudinary.com/pitz/image/upload/v1721979295/image_7_1_la1uwx.png" alt="" />

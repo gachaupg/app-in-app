@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './Admin.css';
+import { endpoint } from '../utils/APIRoutes';
 
 
 const Admin = () => {
@@ -40,7 +41,7 @@ const Admin = () => {
 
     try {
       const res = await axios.get(
-        ` https://omayaexchangebackend.onrender.com/api/users/`,
+        ` ${endpoint}/api/users/`,
         { headers }
       );
       setMatch(res.data);
@@ -79,7 +80,7 @@ const Admin = () => {
 
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/api/kyc/status/`,
+        `${endpoint}/api/kyc/status/`,
         { headers }
       );
       setKyc(res.data);
@@ -110,7 +111,7 @@ const Admin = () => {
         'Content-Type': 'application/json', // Set content type to JSON
       };
 
-      const response = await fetch(`https://omayaexchangebackend.onrender.com/api/kyc/verify/`, {
+      const response = await fetch(`${endpoint}/api/kyc/verify/`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify({ user_id: id }),
@@ -120,6 +121,7 @@ const Admin = () => {
       if (response.ok) {
         console.log(response);
         toast.success("Approved successfully!");
+        fetchData()
       } else {
         if (result.code === "token_not_valid") {
           toast.error("Your session has expired. Please log in again.");
@@ -159,7 +161,7 @@ const [deposit,setDeposit]=useState([])
   
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/all-transactions/`,
+        `${endpoint}/trading_engine/all-transactions/`,
         { headers }
       );
   
@@ -200,7 +202,7 @@ const [deposit,setDeposit]=useState([])
   
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/all-transactions/`,
+        `${endpoint}/trading_engine/all-transactions/`,
         { headers }
       );
   
@@ -239,7 +241,7 @@ async function fetchData5() {
 
   try {
     const res = await axios.get(
-      `https://omayaexchangebackend.onrender.com/trading_engine/p2p/deposit/`,
+      `${endpoint}/trading_engine/p2p/deposit/`,
       { headers }
     );
     setp2pdeposit(res.data);
@@ -273,7 +275,7 @@ async function fetchData4() {
 
   try {
     const res = await axios.get(
-      `https://omayaexchangebackend.onrender.com/trading_engine/p2p-withdraw/`,
+      `${endpoint}/trading_engine/p2p-withdraw/`,
       { headers }
     );
     setP2PWidth(res.data);

@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
 import { CheckBox } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
@@ -10,7 +9,6 @@ import { FaEyeSlash, FaRegEye } from "react-icons/fa";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { login } from "../redux/features/authSlice";
 
 const initialState = {
@@ -20,10 +18,9 @@ const initialState = {
 
 export default function SignInSide() {
   const [verified, setVerified] = useState(false);
-  function onChange(value) {
-    console.log("Captcha value:", value);
+  const onChange = (value) => {
     setVerified(true);
-  }
+  };
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [user, setUser] = useState(initialState);
@@ -45,14 +42,14 @@ export default function SignInSide() {
     if (validate() && verified) {
       try {
         setLoading(true);
-        await dispatch(login({ user, navigate, toast }));
+        await dispatch(login({ user, navigate }));
       } catch (error) {
-        toast.error("Error");
+        setErrors({ ...errors, form: "Error logging in" });
       } finally {
         setLoading(false);
       }
     } else if (!verified) {
-      toast.error("Please complete the CAPTCHA");
+      setErrors({ ...errors, captcha: "Please complete the CAPTCHA" });
     }
   };
 
@@ -83,7 +80,7 @@ export default function SignInSide() {
             </p>
           </div>
           <div
-            className="  "
+            className=" p-2 "
             style={{
               display: "flex",
               flexDirection: "column",
@@ -98,16 +95,14 @@ export default function SignInSide() {
               style={{ marginTop: "1rem" }}
             >
               <p>Email *</p>
-              <div className="flex border mb-5 border-slate-700  pl-2 rounded-3xl items-center h-12 flex-row  gap-1 w-full secondary small">
+              <div className={`flex border mb-1 pl-2 rounded-3xl items-center h-12 flex-row gap-1 w-full secondary small ${errors.email ? "border-red-500" : "border-slate-700"}`}>
                 <MdOutlineMailOutline
                   size={28}
                   className="text-green-600"
                   color="green"
                 />
                 <input
-                  className={` small w-full no-border border-slate-700 rounded-tr-3xl rounded-br-3xl  secondary  h-11 ${
-                    errors.email && "border-red-500"
-                  }`}
+                  className={`small w-full no-border border-slate-700 rounded-tr-3xl rounded-br-3xl  secondary  h-11 ${errors.email && "border-red-500"}`}
                   required
                   placeholder="Email"
                   id="email"
@@ -116,14 +111,12 @@ export default function SignInSide() {
                   onChange={handleInputChange}
                 />
               </div>
+              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
               <p>Password *</p>
-              {errors.email && <p className="text-red-500">{errors.email}</p>}
-              <div className="flex pr-2 border mb-5 border-slate-700  pl-2 border-slate-200 rounded-3xl items-center h-12 flex-row  gap-1 w-full secondary small">
+              <div className={`flex pr-2 border mb-1 pl-2 rounded-3xl items-center h-12 flex-row gap-1 w-full secondary small ${errors.password ? "border-red-500" : "border-slate-700"}`}>
                 <CiLock size={28} className="text-green-600" color="green" />
                 <input
-                  className={`border border-slate-700 no-border secondary w-full h-11 ${
-                    errors.password && "border-red-500"
-                  }`}
+                  className={`border no-border secondary w-full h-11 ${errors.password && "border-red-500"}`}
                   required
                   placeholder="Password"
                   name="password"
@@ -140,9 +133,7 @@ export default function SignInSide() {
                   )}
                 </div>
               </div>
-              {errors.password && (
-                <p className="text-red-500">{errors.password}</p>
-              )}
+              {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
               <div className="flex mb-2 items-center justify-between flex-wrap mt-3 gap-10">
                 <label className="flex gap-2 g">
                   <CheckBox className="green"/>
@@ -159,6 +150,7 @@ export default function SignInSide() {
                 sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
                 onChange={onChange}
               />
+              {errors.captcha && <p className="text-red-500 text-sm">{errors.captcha}</p>}
               {loading ? (
                 <div className="flex items-center mt-2 justify-center">
                   <CircularProgress className="green" />
@@ -181,6 +173,7 @@ export default function SignInSide() {
                   Login
                 </button>
               )}
+              {errors.form && <p className="text-red-500 text-sm">{errors.form}</p>}
               <Link
                 className="w-full text-center g login-text mb-3"
                 to="/register"

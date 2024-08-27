@@ -16,7 +16,7 @@ import { endpoint } from "../../../../../utils/APIRoutes";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 const initialState = {
   order_type: "",
-  currency: "USD",
+  currency: "USDT",
   amount: "",
   min_order_amount:'',
   max_order_amount:'',
@@ -131,7 +131,7 @@ const Adds = () => {
         amount: sell.amount,
         advertiser_name: user.user,
         order_type: active === "sell" ? "sell" : "buy",
-        currency: "USD",
+        currency: "USDT",
       });
     }
   }, [payments]);
@@ -157,7 +157,7 @@ const Adds = () => {
     };
 
     try {
-      const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/user-payment-details/`, {
+      const res = await axios.get(`${endpoint}/trading_engine/user-payment-details/`, {
         headers,
       });
       setLoading1(false);
@@ -220,7 +220,7 @@ const Adds = () => {
     };
 
     try {
-      const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/payment-methods/`, {
+      const res = await axios.get(`${endpoint}/trading_engine/payment-methods/`, {
         headers,
       });
       setLoading1(false);
@@ -251,7 +251,7 @@ const Adds = () => {
     };
 
     try {
-      const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/payment-providers/Bank/`, {
+      const res = await axios.get(`${endpoint}/trading_engine/payment-providers/Bank/`, {
         headers,
       });
       setLoading1(false);
@@ -292,11 +292,11 @@ const Adds = () => {
         console.log("Sending request with headers:", headers); // Debugging line
         console.log(
           "Sending request to endpoint:",
-          `https://omayaexchangebackend.onrender.com/trading_engine/p2p/orders/`
+          `${endpoint}/trading_engine/p2p/orders/`
         ); // Debugging line
 
         const response = await fetch(
-          `https://omayaexchangebackend.onrender.com/trading_engine/p2p/orders/`,
+          `${endpoint}/trading_engine/p2p/orders/`,
           {
             method: "POST",
             headers: headers,
@@ -314,7 +314,7 @@ const Adds = () => {
             navigate("/login");
           } else {
             toast.error(
-              `Error failed: `, data.error
+               data.error
             );
           }
           console.error("Error response:", data);

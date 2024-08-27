@@ -34,7 +34,7 @@ const initialState = {
   wallet_type: "USDT",
   email_verification_code: "262256",
   amount: "",
-  currency: "USD",
+  currency: "USDT",
   receiver_wallet: "",
 };
 
@@ -45,7 +45,7 @@ const DepositForm = ({payments,setShow}) => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const { user } = useSelector((state) => ({ ...state.auth }));
-// console.log(widthdrwal);
+console.log(widthdrwal);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

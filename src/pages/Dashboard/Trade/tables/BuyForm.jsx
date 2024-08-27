@@ -119,6 +119,7 @@ console.log(order);
             toast.error("Your session has expired. Please log in again.");
             navigate("/login");
           } else {
+            console.error("Error response:", data.error);
             toast.error(`Buy USDT failed: ${data.error || "Unknown error"}`);
           }
           console.error("Error response:", data.error);
@@ -191,7 +192,7 @@ console.log(order);
                 }}
                 className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 greenbg rounded-lg"
               >
-                {payments?.advertiser_name?.split('-')[1]?.substring(1, 3).toUpperCase()}
+                {payments?.advertiser_name?.substring(0, 2).toUpperCase()}
               </span>
             </p>
             <div className="flex flex-col  ">

@@ -30,13 +30,13 @@ const style = {
 
 const initialState = {
 
-    amount: "200",
-    currency: "USD",
+    amount: "",
+    currency: "USDT",
     screenshot: null,
-    deposit_address: "355343",
+    deposit_address: "",
     payment_method: "Bank",
     payment_provider: "Salam bank",
-    additional_info: "helo"
+    additional_info: ""
 };
 
 const Widthform = () => {
@@ -165,7 +165,7 @@ const Widthform = () => {
         };
 
         try {
-            const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/user-payment-details/`, {
+            const res = await axios.get(`${endpoint}/trading_engine/user-payment-details/`, {
                 headers,
             });
             setLoading1(false);
@@ -232,7 +232,7 @@ const Widthform = () => {
         };
 
         try {
-            const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/payment-methods/`, {
+            const res = await axios.get(`${endpoint}/trading_engine/payment-methods/`, {
                 headers,
             });
             setLoading1(false);
@@ -263,7 +263,7 @@ const Widthform = () => {
         };
 
         try {
-            const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/payment-providers/Bank/`, {
+            const res = await axios.get(`${endpoint}/trading_engine/payment-providers/Bank/`, {
                 headers,
             });
             setLoading1(false);
@@ -378,7 +378,7 @@ const Widthform = () => {
                     <p className="flex small wrap flex-row items-center gap-2"><span style={{
                         background: '#35353E'
                     }} className="p-1 rounded-2xl  flex flex-row gap-2 text-white bg-green-300">
-                        <Dot />    Commision 1%
+                        <Dot />    Commision 0%
                     </span> <span className="green">$ 1</span></p>
                     <p className="flex small wrap flex-row items-center gap-2"><span style={{
                         background: '#35353E'

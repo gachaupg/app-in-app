@@ -7,6 +7,7 @@ import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { endpoint } from "../../../utils/APIRoutes";
 
 const SideDash = () => {
   const { user } = useSelector((state) => ({ ...state.auth }));
@@ -35,7 +36,7 @@ const SideDash = () => {
 
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/wallets/`,
+        `${endpoint}/trading_engine/wallets/`,
         { headers }
       );
       setPayments(res.data);

@@ -18,6 +18,7 @@ import { register } from "../redux/features/authSlice";
 const Register = () => {
   const initialState = {
     username: "",
+    lName: "",
     email: "",
     user_type: "",
     password: "",
@@ -45,10 +46,11 @@ const Register = () => {
   console.log("====================================");
   console.log(user);
   console.log("====================================");
-  const handleType = () => {
+  const handleType = (e) => {
     setType((prevType) =>
       prevType === "Individual" ? "Institution" : "Individual"
     );
+    setUser({ ...user, user_type: type });
   };
 
   const togglePasswordVisibility = () => {
@@ -65,6 +67,8 @@ const Register = () => {
   );
   const hasUpperCase = /[A-Z]/.test(user.password);
   const hasLowerCase = /[a-z]/.test(user.password);
+  const getDotColor = (condition) => condition ? 'green' : 'red';
+
   const passwordsMatch = user.password === user.confirmPassword;
   console.log("====================================");
   console.log(user);
@@ -120,7 +124,7 @@ const Register = () => {
     <div className=" primary flex p-4 g justify-around w-full small wrap">
       <div className="image-none ">
         <img
-        className="mt-5"
+          className="mt-5"
           style={{
             height: "27rem",
             objectFit: "fill",
@@ -143,7 +147,7 @@ const Register = () => {
             className="type-btn"
           >
             <BsFillPeopleFill color="white" />
-            <span style={{ marginLeft: "3px", color:type === "Individual" ? "white" : " ", }}>Individual</span>
+            <span style={{ marginLeft: "3px", color: type === "Individual" ? "white" : " ", }}>Individual</span>
           </button>
           <button
             onClick={handleType}
@@ -163,7 +167,7 @@ const Register = () => {
           <form onSubmit={handleSubmit} className="">
             <div className="name-email flex flex-col md:flex-row gap-4">
               <div className="name max-w-screen-md">
-                <label htmlFor="">User Name*</label>
+                <label htmlFor="">First Name*</label>
                 {user.name}
                 <div className="input-group">
                   <AiOutlineUser color="green" className="input-icon" />
@@ -182,6 +186,28 @@ const Register = () => {
                 </div>
               </div>
               <div className="name max-w-screen-md">
+                <label htmlFor="">Last Name*</label>
+                {user.name}
+                <div className="input-group">
+                  <AiOutlineUser color="green" className="input-icon" />
+                  <input
+                    style={{
+                      border: user.name
+                        ? "1px solid rgba(255, 255, 255, 0.5)"
+                        : "1px solid red",
+                    }}
+                    type="text"
+                    onChange={(e) =>
+                      setUser({ ...user, lName: e.target.value })
+                    }
+                    placeholder="Last Name"
+                  />
+                </div>
+              </div>
+
+            </div>
+            <div className="name-email flex mt-5 flex-col md:flex-row gap-4">
+              <div className="name max-w-screen-md">
                 <label htmlFor="">Email*</label>
                 <div className="input-group">
                   <MdOutlineMailOutline color="green" className="input-icon" />
@@ -199,8 +225,6 @@ const Register = () => {
                   />
                 </div>
               </div>
-            </div>
-            <div className="name-email flex mt-5 flex-col md:flex-row gap-4">
               <div className="name-email flex flex-col md:flex-row gap-14">
                 <div className="name max-w-screen-md">
                   <label htmlFor="">Phone number</label>
@@ -222,32 +246,7 @@ const Register = () => {
                   </div>
                 </div>
               </div>
-              <div className="name  max-w-md">
-                <label htmlFor="">Registration Type*</label>
-                <div className="input-group">
-                  <select
-                    style={{
-                      width: "26rem",
-                      border: user.confirmPassword
-                        ? "1px solid rgba(255, 255, 255, 0.5)"
-                        : "1px solid red",
-                    }}
-                    className="w-full select select secondary p-2 rounded-2xl"
-                    name="registration type"
-                    value={user.user_type}
-                    onChange={(e) =>
-                      setUser({ ...user, user_type: e.target.value })
-                    }
-                  >
-                    <option value="" disabled>
-                      Registration Type
-                    </option>
-                    <option value="individual">Individual</option>
-                    <option value="company">Company</option>
-                    <option value="agent">Agent</option>
-                  </select>
-                </div>
-              </div>
+
             </div>
             <div className="name-email mt-5 flex flex-col md:flex-row gap-4">
               <div className="name max-w-md">
@@ -313,18 +312,19 @@ const Register = () => {
                 </div>
               </div>
             </div>
-            <p className="flex flex-row items-center ">
-              <Dot color="green" size="40" />
-              <p className="g">At least 8 characters</p>
+            <p className={`flex flex-row items-center`}>
+              <Dot color={isLengthValid ? 'green' : 'red'} size="40" />
+              <p className={isLengthValid ? 'green' : 'text-red-700'}>At least 8 characters</p>
             </p>
-            <p className="flex flex-row items-center ">
-              <Dot color="green" size="40" />
-              <p className="g">At least one number or symbol</p>
+            <p className={`flex flex-row items-center`}>
+              <Dot color={hasNumberOrSymbol ? 'green' : 'red'} size="40" />
+              <p className={hasNumberOrSymbol ? 'green' : 'text-red-700'}>At least one number or symbol</p>
             </p>
-            <p className="flex flex-row items-center ">
-              <Dot color="green" size="40" />
-              <p className="g">Both uppercase and lowercase</p>
+            <p className={`flex flex-row items-center`}>
+              <Dot color={hasUpperCase && hasLowerCase ? 'green' : 'red'} size="40" />
+              <p className={hasUpperCase && hasLowerCase ? 'green' : 'text-red-700'}>Both uppercase and lowercase</p>
             </p>
+
             <div
               style={{
                 background: "#18181d",
@@ -608,17 +608,17 @@ const Register = () => {
                 </div>
               </div>
             </div>
-            <p className="flex flex-row items-center ">
-              <Dot color="green" size="40" />
-              <p>At least 8 characters</p>
+            <p className={`flex flex-row items-center`}>
+              <Dot color={isLengthValid ? 'green' : 'red'} size="40" />
+              <p className={isLengthValid ? 'text-green-500' : 'text-red-500'}>At least 8 characters</p>
             </p>
-            <p className="flex flex-row items-center ">
-              <Dot color="green" size="40" />
-              <p>At least one number or symbol</p>
+            <p className={`flex flex-row items-center`}>
+              <Dot color={hasNumberOrSymbol ? 'green' : 'red'} size="40" />
+              <p className={hasNumberOrSymbol ? 'text-green-500' : 'text-red-500'}>At least one number or symbol</p>
             </p>
-            <p className="flex flex-row items-center ">
-              <Dot color="green" size="40" />
-              <p>Both uppercase and lowercase</p>
+            <p className={`flex flex-row items-center`}>
+              <Dot color={hasUpperCase && hasLowerCase ? 'green' : 'red'} size="40" />
+              <p className={hasUpperCase && hasLowerCase ? 'text-green-500' : 'text-red-500'}>Both uppercase and lowercase</p>
             </p>
             <div
               style={{

@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Btn from "../../../components/Button";
+import { getDeposits, getWallets } from "../../../redux/features/answerSlice";
 import { endpoint } from "../../../utils/APIRoutes";
 import MainProfilePage from "../../Auth/MainProfilePage";
 import Settings from "../../Settings/Settings";
@@ -156,7 +157,7 @@ console.log('user',user);
 
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/api/kyc/status/`,
+        `http://13.51.161.80:8000/api/kyc/status/`,
         { headers }
       );
       setKyc(res.data);
@@ -175,37 +176,41 @@ console.log('user',user);
   }
 
   useEffect(() => {
-    fetchData()
-  }, [user?.access])
-  async function fetchData() {
-    const token = user.access;
+    const fetchData = async () => {
+      const token = user?.access;
 
-    if (!token) {
-      toast.error("Authentication token is missing. Please log in again.");
-      navigate("/login");
-      setLoading1(false);
-      return;
-    }
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+      }
 
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+        const res = await axios.get(
+          `http://13.51.161.80:8000/trading_engine/wallets/`,
+          { headers }
+        );
+        setPayments(res.data);
+        setLoading1(false);
+        console.log('payments', res.data);
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
     };
 
-    try {
-      const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/wallets/`,
-        { headers }
-      );
-      setPayments(res.data);
-      setLoading1(false);
-      console.log('payments', res.data);
+    fetchData(); // Initial fetch
 
-    } catch (error) {
-      console.log(error);
-      setLoading1(false);
-    }
-  }
+    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+
+    return () => clearInterval(interval); // Clean up interval on unmount
+  }, [user?.access, navigate]);
   //  console.log('beauty',match);
 
   useEffect(() => {
@@ -229,7 +234,7 @@ console.log('user',user);
 
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/trades/matched/`,
+        `${endpoint}/trading_engine/trades/matched/`,
         { headers }
       );
       setMatch(res.data);
@@ -285,7 +290,7 @@ console.log('user',user);
         console.log(response);
 
         toast.success("Request sent successfully!");
-        fetchData();  // Assuming fetchData is defined and fetches the necessary data
+        // fetchData();  // Assuming fetchData is defined and fetches the necessary data
         setLoadingKyc(true);
         setOpen1(false);
       } else {
@@ -356,39 +361,39 @@ console.log('user',user);
   //  https://omayaexchangebackend.onrender.com/trading_engine/all-transactions/
 
 
-  useEffect(() => {
-    Transactions()
-  }, [user?.access])
-  async function Transactions() {
-    const token = user.access;
+  // useEffect(() => {
+  //   Transactions()
+  // }, [user?.access])
+  // async function Transactions() {
+  //   const token = user.access;
 
-    if (!token) {
-      toast.error("Authentication token is missing. Please log in again.");
-      navigate("/login");
+  //   if (!token) {
+  //     toast.error("Authentication token is missing. Please log in again.");
+  //     navigate("/login");
 
-      setLoading1(false);
-      return;
-    }
+  //     setLoading1(false);
+  //     return;
+  //   }
 
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    };
+  //   const headers = {
+  //     "Content-Type": "application/json",
+  //     Authorization: `Bearer ${token}`,
+  //   };
 
-    try {
-      const res = await axios.get(
-        ` https://omayaexchangebackend.onrender.com/trading_engine/all-transactions/`,
-        { headers }
-      );
-      setMatch(res.data);
-      setLoading1(false);
-      console.log('paymentssss', res.data);
+  //   try {
+  //     const res = await axios.get(
+  //       `${endpoint}/trading_engine/all-transactions/`,
+  //       { headers }
+  //     );
+  //     setMatch(res.data);
+  //     setLoading1(false);
+  //     console.log('paymentssss', res.data);
 
-    } catch (error) {
-      console.log(error);
-      setLoading1(false);
-    }
-  }
+  //   } catch (error) {
+  //     console.log(error);
+  //     setLoading1(false);
+  //   }
+  // }
 
   function formatBalance(balance) {
     let num = parseFloat(balance);
@@ -402,19 +407,14 @@ console.log('user',user);
     }
   }
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (kyc.is_verified === false) {
-        window.location.reload();
-      }
-    }, 5000); // Check every 5 seconds
-  
-    return () => clearInterval(interval); // Clean up the interval on component unmount
-  }, [kyc.is_verified]); // Add kyc.is_verified as a dependency
-  
-
-
-
+  const token =user.access
+  const { wallet, loading, error } = useSelector((state) => state.deposits);
+// console.log('depositddds',match);
+useEffect(() => {
+  if (token) {
+    dispatch(getWallets({ token, toast }));
+  }
+}, [dispatch, token]);
 
   return (
     <>
@@ -732,7 +732,7 @@ console.log('user',user);
                                 <p className="grey">Balance</p>
                                 <p className="flex flex-row">
                                   {
-                                    payments.map((balance) => {
+                                    wallet.map((balance) => {
                                       return (
                                         <p key={balance.id}>
                                           {typeof balance.balance === 'string' ? formatBalance(balance.balance) : 'N/A'}
@@ -928,7 +928,7 @@ console.log('user',user);
                                   icon={<Wallet size={20} color="white" />}
                                   title="Deposit"
                                   className={
-                                    "border border-green-600 bg-green-600 text-white"
+                                    "border border-slate-700 text-white"
                                   }
                                 />
                               </div>

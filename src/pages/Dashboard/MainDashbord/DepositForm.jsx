@@ -31,7 +31,7 @@ const initialState = {
   network: "TRON",
   wallet_type: "USDT",
   amount: "",
-  currency: "USD",
+  currency: "USDT",
   document:null,
 };
 
@@ -100,7 +100,7 @@ const DepositForm = ({setDeposit}) => {
           toast.error("Your session has expired. Please log in again.");
           navigate("/login");
         } else {
-          toast.error(`Withdrawal failed:${data.error} `);
+          toast.error(`Deposit failed:${data.error} `);
         }
       } catch (error) {
         toast.error(`Error: ${error.error}`);

@@ -173,7 +173,7 @@ function Table({ show, payments, isLoading }) {
               ))
               : paginatedPayments.map((row, index) => (
                 <>
-                {row.order_type==='sell'&& row?.advertiser_name?.split('-')[0] != user.user.email &&(
+                {row.order_type==='sell'&& row?.advertiser_name != user.user.email &&(
                   <>
                    <tr key={row.id} className="border-bottom" style={{ fontSize: "14px" }}>
                     <td className="flex flex-col i gap-1">
@@ -185,11 +185,11 @@ function Table({ show, payments, isLoading }) {
                             }}
                             className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
                           >
-                            {row?.advertiser_name?.split('-')[1]?.substring(1, 3).toUpperCase()}
+                            {row?.advertiser_name?.substring(0, 2).toUpperCase()}
                           </span>
                         </p>
                         <p style={{ fontSize: "16px" }} className="flex flex-row items-center gap-1">
-                          {row?.advertiser_name?.split('-')[1]}
+                        {row?.advertiser_name?.split('@')[0]}
                           <p className="capitalize"> {row.advertiser_name.username}</p>
                           <img src="https://res.cloudinary.com/pitz/image/upload/v1721730938/Frame_34214_gjn30n.png" alt="" />
                         </p>

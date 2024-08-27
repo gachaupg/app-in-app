@@ -25,6 +25,7 @@ import Widthform from "./forms/Width";
 import ForexWidth from "./forms/ForexWidth";
 import MainProfilePage from "../Auth/MainProfilePage";
 import ExchangeTable from "../Dashboard/DashboardTabs/Exchange";
+import { endpoint } from "../../utils/APIRoutes";
 
 const style = {
   position: 'absolute',
@@ -138,7 +139,7 @@ const MainExchange = () => {
 
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/api/kyc/status/`,
+        `${endpoint}/api/kyc/status/`,
         { headers }
       );
       setKyc(res.data);
@@ -176,7 +177,7 @@ const MainExchange = () => {
 
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/wallets/`,
+        `${endpoint}/trading_engine/wallets/`,
         { headers }
       );
       setPayments(res.data);
@@ -209,7 +210,7 @@ const MainExchange = () => {
 
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/trades/matched/`,
+        `${endpoint}/trading_engine/trades/matched/`,
         { headers }
       );
       setMatch(res.data);

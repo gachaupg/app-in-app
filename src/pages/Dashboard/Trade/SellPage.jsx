@@ -219,7 +219,7 @@ const BuyPage = (props) => {
     };
 
     try {
-      const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/${id}/confirm/`, {
+      const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, {
         headers,
       });
       setLoading1(false);
@@ -303,7 +303,7 @@ console.log('status',status);
                 className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
               >
                 <p>
-                  {payments?.advertiser_name?.split('-')[1]?.substring(1, 3).toUpperCase()}
+                  {payments?.advertiser_name?.substring(0, 2).toUpperCase()}
                 </p>
 
 
@@ -416,10 +416,10 @@ console.log('status',status);
             </span>
           </p>
         </div>
-        <div className="flex gap-10 justify-around p-1 small wrap rounded-lg border border-slate-700 items-center">
+        <div className="flex gap-10 justify-around p-1 w-full small wrap rounded-lg border border-slate-700 items-center">
           <div className="flex flex-col gap-1 p-1  ">
             <p className="g">I want to Send</p>
-            <div className="flex flex-row  justify-between items-center rounded-lg  w-56  gap-1 p-2 border border-slate-700 items-center">
+            <div className="flex flex-row  justify-between items-center rounded-lg   gap-1 p-2 border border-slate-700 items-center">
               <p className="green flex justify-around ">
                 <DollarSign />{" "}
                 {fromDashboard}
@@ -431,7 +431,7 @@ console.log('status',status);
           </div>
           <div className="flex flex-col gap-1 p-1  ">
             <p className="g">I want to Receive</p>
-            <div className="flex  rounded-lg w-56 flex-col gap-1 p-1 border border-slate-700 items-">
+            <div className="flex  rounded-lg  flex-col gap-1 p-1 border border-slate-700 items-">
               <p className="green flex items-center gap-1">
                 <img
                   src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
@@ -444,7 +444,7 @@ console.log('status',status);
           </div>
           <div className="flex flex-col gap-1 p-1  ">
             <p className="g">Commission</p>
-            <div className="flex g  justify-between items-center rounded-lg w-56  gap-1 p-1 border border-slate-700 items-">
+            <div className="flex g  justify-between items-center rounded-lg   gap-1 p-1 border border-slate-700 items-">
               <p className="green flex p-1 justify-center items-center gap-1">
                 <DollarSign /> {payments?.commission_rate}%
               </p>
@@ -545,8 +545,8 @@ console.log('status',status);
             </button>
             <button
               onClick={handleSubmit}
-              className={`w-full  rounded-lg p-2 ${status.status === 'matched' ? 'gback' : 'bg-red-700'}`}
-              disabled={status.status === 'matched'}
+              className={`w-full  rounded-lg p-2 ${ status.status==="matched"? 'gback' : 'bg-red-700'}`}
+              disabled={ status.status==="matched"}
             >
               {loading1 ? <CircularProgress /> : "Payment received notify the buyer"}
             </button>

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './Admin.css';
+import { endpoint } from '../utils/APIRoutes';
 // https://omayaexchangebackend.onrender.com/trading_engine/p2p/deposit/
 const P2pDeposit = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const P2pDeposit = () => {
 
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/p2p-withdraw/`,
+        `${endpoint}/trading_engine/p2p-withdraw/`,
         { headers }
       );
       setMatch(res.data);
@@ -73,7 +74,7 @@ const P2pDeposit = () => {
       };
 
       const formData = new FormData();
-      const response = await fetch(`https://omayaexchangebackend.onrender.com/trading_engine/approve-p2p-withdraw/${transactionId}/`, {
+      const response = await fetch(`${endpoint}/trading_engine/approve-p2p-withdraw/${transactionId}/`, {
         method: "POST",
         headers: headers,
         body: formData,

@@ -37,9 +37,9 @@ const BuyPage = (props) => {
   const [open, setOpen] = React.useState(false);
   const location = useLocation()
   const fromDashboard = location.state;
-  console.log('====================================');
-  console.log(fromDashboard);
-  console.log('====================================');
+  // console.log('====================================');
+  // console.log(fromDashboard);
+  // console.log('====================================');
   const params = useParams();
   const { id } = params;
   const navigate = useNavigate();
@@ -65,7 +65,7 @@ const BuyPage = (props) => {
     auto_reply: payments?.auto_reply || "",
     terms_and_conditions: payments?.terms_and_conditions || "",
   };
-  console.log("hello", status);
+  // console.log("hello", status);
 
   const [buy, setBuy] = useState(initialState);
   console.log("====================================");
@@ -213,7 +213,7 @@ const BuyPage = (props) => {
     };
 
     try {
-      const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/${id}/confirm/`, {
+      const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, {
         headers,
       });
       setLoading1(false);
@@ -298,7 +298,7 @@ const BuyPage = (props) => {
                 className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
               >
                 <p>
-                  {payments?.advertiser_name?.split('-')[1]?.substring(1, 3).toUpperCase()}
+                  {payments?.advertiser_name?.substring(0, 2).toUpperCase()}
                 </p>
 
 

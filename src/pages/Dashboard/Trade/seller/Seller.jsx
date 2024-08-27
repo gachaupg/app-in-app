@@ -173,6 +173,7 @@ const BuyPage = (props) => {
 
                 if (response.ok) {
                     toast.success("Request sent!");
+                    navigate('/dashboard')
                 } else {
                     if (data.code === "token_not_valid") {
                         toast.error("Your session has expired. Please log in again.");
@@ -210,7 +211,7 @@ const BuyPage = (props) => {
         };
 
         try {
-            const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/${id}/confirm/`, {
+            const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, {
                 headers,
             });
             setLoading1(false);
@@ -259,7 +260,7 @@ const [match,setMatch]=useState([]);
         };
     
         try {
-          const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/${id}/confirm/`, {
+          const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, {
             headers,
           });
           setLoading1(false);
@@ -281,6 +282,8 @@ const [match,setMatch]=useState([]);
 
 
 
+
+      
     const style = {
         position: 'absolute',
         top: '50%',

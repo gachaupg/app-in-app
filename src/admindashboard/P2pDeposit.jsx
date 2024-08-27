@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './Admin.css';
+import { endpoint } from '../utils/APIRoutes';
 // https://omayaexchangebackend.onrender.com/trading_engine/p2p/deposit/
 const P2pDeposit = () => {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const P2pDeposit = () => {
 
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/p2p/deposit/`,
+        `${endpoint}/trading_engine/p2p/deposit/`,
         { headers }
       );
       setMatch(res.data);
@@ -73,7 +74,7 @@ const P2pDeposit = () => {
       };
 
       const formData = new FormData();
-      const response = await fetch(`https://omayaexchangebackend.onrender.com/trading_engine/p2p-deposit/${transactionId}/`, {
+      const response = await fetch(`${endpoint}/trading_engine/p2p-deposit/${transactionId}/`, {
         method: "POST",
         headers: headers,
         body: formData,
@@ -84,6 +85,7 @@ const P2pDeposit = () => {
       if (response.ok) {
         console.log(response);
         toast.success("Approved successfully!");
+        fetchData();
         // fetchData();  // Uncomment if you want to refetch data after approval
       } else {
         if (result.code === "token_not_valid") {

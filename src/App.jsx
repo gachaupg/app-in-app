@@ -25,6 +25,11 @@ import BuySell from "./pages/Dashboard/Trade/seller/BuySell";
 import Seller from "./pages/Dashboard/Trade/seller/Seller";
 import SellPage from "./pages/Dashboard/Trade/SellPage";
 import Forgot from "./pages/Forgot";
+import MainProfilePage from './pages/Invisibles/Auth/MainProfilePage';
+import BuyCrypto from './pages/Invisibles/buyCrypto/BuyCrypto';
+import MainExchange from './pages/Invisibles/exchange/MainExchange';
+import Settings from './pages/Invisibles/Settings/Settings';
+import Swap from './pages/Invisibles/Swap/Swap';
 import HomePage from "./pages/landing-page/Home";
 import Login from "./pages/Login";
 import MainMarket from "./pages/MainMaket";
@@ -32,19 +37,15 @@ import Orders from "./pages/p2p/Orders";
 import Register from "./pages/Register";
 import ForgotPasswordButton from "./pages/ResetPassword";
 import { setUser } from "./redux/features/authSlice";
-import Swap from './pages/Invisibles/Swap/Swap';
-import BuyCrypto from './pages/Invisibles/buyCrypto/BuyCrypto';
-import Settings from './pages/Invisibles/Settings/Settings';
-import MainProfilePage from './pages/Invisibles/Auth/MainProfilePage';
-import MainExchange from './pages/Invisibles/exchange/MainExchange';
 //Admin
-import Admin from "./admindashboard/Admin"
-import Kyc from "./admindashboard/Kyc";
-import P2pDeposit from "./admindashboard/P2pDeposit";
-import P2pWithdrawal from "./admindashboard/P2pWithdrawal";
+import Admin from "./admindashboard/Admin";
 import Appeal from "./admindashboard/Appeal";
 import ExchangeDeposit from "./admindashboard/ExchangeDeposit";
 import ExchangeWithdrawal from "./admindashboard/ExchangeWithdrawal";
+import Kyc from "./admindashboard/Kyc";
+import P2pDeposit from "./admindashboard/P2pDeposit";
+import P2pWithdrawal from "./admindashboard/P2pWithdrawal";
+import { endpoint } from './utils/APIRoutes';
 
 const style = {
   position: 'absolute',
@@ -75,13 +76,13 @@ function App() {
 
 
 
-useEffect(()=>{
-if (!user) {
-  navigate('login')
-}else{
-  navigate('dashboard')
-}
-},[])
+// useEffect(()=>{
+// if (!user) {
+//   navigate('login')
+// }else{
+//   navigate('dashboard')
+// }
+// },[])
 
 useEffect(() => {
   fetchData1()
@@ -103,7 +104,7 @@ async function fetchData1() {
 
   try {
     const res = await axios.get(
-      `https://omayaexchangebackend.onrender.com/trading_engine/trades/matched/`,
+      `${endpoint}/trading_engine/trades/matched/`,
       { headers }
     );
     setStatus(res.data);
@@ -139,7 +140,7 @@ async function fetchData1() {
                 <p className="g">You have a new Order</p>
                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                  <Link to='/notifications' state={status}>
-                 <button  className="p-2 greenbg rounded-lg w-full white mt-3">
+                 <button onClick={handleClose}  className="p-2 greenbg rounded-lg w-full white mt-3">
                     Check out the order
                   </button>
                  </Link>

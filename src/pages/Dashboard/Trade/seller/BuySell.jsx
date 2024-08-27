@@ -213,7 +213,7 @@ const BuyPage = (props) => {
         };
 
         try {
-            const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/${id}/confirm/`, {
+            const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, {
                 headers,
             });
             setLoading1(false);
@@ -262,7 +262,7 @@ const BuyPage = (props) => {
         };
 
         try {
-            const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/${id}/confirm/`, {
+            const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, {
                 headers,
             });
             setLoading1(false);
@@ -457,8 +457,8 @@ const BuyPage = (props) => {
                     <button
 
                         onClick={handleSubmit}
-                        className={`w-full rounded-lg p-2 ${match.status === 'matced' ? 'gback' : 'yellowfaded'}`}
-                        disabled={match.status === 'matced'}
+                        className={`w-full rounded-lg p-2 ${match.status === 'half-matched' ? 'gback cursor-not-allowed' : 'yellowfaded'}`}
+                        disabled={match.status === 'half-matched'}
 
                     >
                         {loading1 ? <CircularProgress /> : "Money sent notify the buyer"}

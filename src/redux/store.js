@@ -13,20 +13,20 @@ import userReducer from "./features/userSlice";
 // import cartReducer from "./features/cartSlice";
 // import messageReducer from "./features/Message";
 // import helpReducer from "./features/HelpSlice";
-// import answerReducer from "./features/answerSlice";
+import answerReducer from "./features/answerSlice";
 const rootReducer = combineReducers({
   user: userReducer,
   auth: AuthReducer,
   todosState: todosReducer,
   todos: commentReducer,
   invoice: invoiceReducer,
-  todos: feedbackReducer,
+  // todos: feedbackReducer,
   project: ProductReducer,
   mpesa: MpesaReducer,
   // cart:cartReducer,
   // message:messageReducer,
   // help:helpReducer,
-  // answer:answerReducer,
+  deposits:answerReducer,
 });
 const persistConfig = {
     key: 'root',

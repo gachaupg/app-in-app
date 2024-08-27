@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Feedback from "./p2pCenter/Feedback";
 import MyAdds from "./p2pCenter/MyAdds";
+import { endpoint } from "../../../utils/APIRoutes";
 
 const Center = () => {
   const [show, setShow] = useState("Payments");
@@ -32,6 +33,7 @@ const Center = () => {
 
   const [payments, setPayments] = useState([]);
   const [loading1, setLoading1] = useState(true);
+console.log(form);
 
   useEffect(() => {
     fetchData();
@@ -84,7 +86,7 @@ async function fetchData3() {
     };
 
     try {
-        const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/user-payment-details/`, {
+        const res = await axios.get(`${endpoint}/trading_engine/user-payment-details/`, {
             headers,
         });
         setLoading1(false);
@@ -122,9 +124,9 @@ async function fetchData3() {
         console.log("Sending request with headers:", headers); // Debugging line
         console.log(
           "Sending request to endpoint:",
-         `https://omayaexchangebackend.onrender.com/trading_engine/user-payment-details/`,        ); // Debugging line
+         `${endpoint}/trading_engine/user-payment-details/`,        ); // Debugging line
         const response = await fetch(
-          `https://omayaexchangebackend.onrender.com/trading_engine/user-payment-details/`,              {
+          `${endpoint}/trading_engine/user-payment-details/`,              {
             method: "POST",
             headers: headers,
             body: JSON.stringify(form), // Make sure "withdrawal" is defined in your component

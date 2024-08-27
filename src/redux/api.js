@@ -1,7 +1,8 @@
 import axios from "axios";
+import { endpoint } from "../utils/APIRoutes";
 
 const API = axios.create({
-  baseURL:"https://omayaexchangebackend.onrender.com"
+  baseURL:endpoint
 });
 
 API.interceptors.request.use((req) => {
