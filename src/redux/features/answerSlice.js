@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-const api = 'http://13.51.161.80:8000';
+const api = 'https://www.pybreeze.com';
 
 export const getDeposits = createAsyncThunk(
   "deposits/getDeposits",

@@ -66,8 +66,19 @@ const DepositForm = () => {
     const [provider, setProvider] = useState([]);
     const [loading1, setLoading1] = useState(false);
     const [payments1, setPayments1] = useState([]);
-    console.log('hello', payments);
+    // console.log('hello', payments);
+    const[price,setPrice]=useState('')
 
+    const [calculatedAmount, setCalculatedAmount] = useState("0.0");
+
+    useEffect(() => {
+        if (widthdrwal.amount !== null && widthdrwal.amount !== "") {
+            const calculatedAmount = (Number(widthdrwal.amount) - Number(widthdrwal.amount) * 0.003).toFixed(2);
+            setCalculatedAmount(calculatedAmount);
+        } else {
+            setCalculatedAmount("0.0");
+        } 
+    }, [widthdrwal.amount]);
 
     useEffect(() => {
         fetchData3();
@@ -211,7 +222,7 @@ const DepositForm = () => {
             };
 
             const formData = new FormData();
-            formData.append('amount', widthdrwal.amount);
+            formData.append('amount', 0);
             formData.append('deposit_address', widthdrwal.deposit_address);
             formData.append('payment_provider', widthdrwal.payment_provider);
             formData.append('payment_method', widthdrwal.payment_method);
@@ -287,7 +298,7 @@ const DepositForm = () => {
                         style={{ width: "50%" }}
                         className="flex small flex-col p-1 it gap-2 "
                     >
-                        <p className="grey"> i want to recieve</p>
+                        <p className="grey"> i want  to recieve</p>
                         <div className="primary p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
                             <div className="  flex flex-row items-center gap-1 w-full">
                                 <DollarSign color="green" />
@@ -328,8 +339,10 @@ const DepositForm = () => {
                     <span style={{
                         background: '#0E713E'
                     }} className="p-1 rounded-2xl w-20 flex flex-row gap-2 text-white bg-green-300">
-                        <DollarSign /> {widthdrwal.amount != null ? `${Number(widthdrwal.amount) + 3}` : 0.0}
-                    </span>
+                        <DollarSign />
+                        {widthdrwal.amount !== null
+                            ? `${(Number(widthdrwal.amount) - Number(widthdrwal.amount) * 0.003).toFixed(2)}`
+                            : "0.0"}                    </span>
                 </button>
                 <button className="p-1 wrap small rounded-2xl gap-2 w--full mt-3 border border-slate-700 mt-2 flex flex-row items-center justify-center">
 
@@ -348,7 +361,11 @@ const DepositForm = () => {
                         color: '#F79330'
                     }} className="p-1 rounded-2xl  flex flex-row gap-2 text-white bg-green-300">
                         <Dot />  Total fees
-                    </span> <span className="yellowT">$ {widthdrwal.amount != null ? `${Number(widthdrwal.amount) + 3}` : 0.00}</span></p>
+                    </span> <span className="yellowT">$ 
+                    {widthdrwal.amount !== null
+                            ? `${(Number(widthdrwal.amount) - Number(widthdrwal.amount) * 0.003).toFixed(2)}`
+                            : "0.0"}                          
+                        </span></p>
                 </button>
                 {/* <div className="flex w-full flex-row gap-10 wrap items-center ">
                     <div
@@ -513,7 +530,12 @@ const DepositForm = () => {
                         <label htmlFor="file-upload" className="cursor-pointer">
                             <button
                                 className="greenbg p-1 w-12 flex justify-center items-center text-center rounded-lg"
-                                onClick={() => document.getElementById("file-upload").click()}
+                                onClick={() => {
+                                    document.getElementById("file-upload").click();
+                                    toast.success('picked successfully')
+                                }
+                                    
+                                }
                             >
                                 <FiUpload className="text-white" />
                             </button>

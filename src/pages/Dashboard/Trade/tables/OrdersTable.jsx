@@ -45,9 +45,7 @@ console.log(payments);
         { headers }
       );
       setLoading1(false);
-      const data = res.data.filter(
-        (data) => data.advertiser_name.id === user.user.id
-      );
+     
       setPayments(res.data);
     } catch (error) {
       console.log(error);

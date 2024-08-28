@@ -279,7 +279,9 @@ cursor: pointer !important;
   border: none;
   outline: none;
 }
-
+.pl::placeholder {
+  color: #35353E !important; /* or any shade of grey you prefer */
+}
 .no-border option {
   border: none;
   outline: none;
@@ -745,6 +747,8 @@ padding-left: 25rem !important;
   background-color:#1D1D23 !important;
   color: azure !important;
   /* padding-left: 1rem; */
+  /* position: fixed; */
+  /* width: 100% !important; */
   /* height: 4rem; */
 }
 .sidebar{
@@ -1256,8 +1260,11 @@ color: green;
   top: 50%;
   transform: translateY(-50%);
 }
+.bgi{
+  background-color: #1f1f27;
 
-.name input {
+}
+.names {
   padding-left: 30px; /* Adjust the padding to make room for the icon */
   background-color: #1f1f27;
   border-radius: 1.2rem;

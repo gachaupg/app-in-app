@@ -6,6 +6,7 @@ import { RxAvatar } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { endpoint } from "../../utils/APIRoutes";
 
 const ProfileTab = () => {
   const { user } = useSelector((state) => ({ ...state.auth }));
@@ -96,7 +97,7 @@ const ProfileTab = () => {
 
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/api/kyc/status/`,
+        `${endpoint}/api/kyc/status/`,
         { headers }
       );
       setKyc(res.data);
@@ -134,7 +135,7 @@ const ProfileTab = () => {
 
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/wallets/`,
+        `${endpoint}/trading_engine/wallets/`,
         { headers }
       );
       setPayments(res.data);
@@ -169,7 +170,7 @@ const ProfileTab = () => {
 
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/trades/matched/`,
+        `${endpoint}/trading_engine/trades/matched/`,
         { headers }
       );
       setMatch(res.data);
@@ -205,7 +206,7 @@ const ProfileTab = () => {
         <div className="flex flex-row w-full items-center gap-1">
           <RxAvatar className="h-20 g  w-10" color="" height={70} />
           <p className="flex flex-col items- justify-center  ">
-            <p className="capitalize white">{user?.user?.username}</p>
+            <p className="capitalize white">{user?.user?.first_name}</p>
             <p
               style={{ fontSize: "12px", color: "#F79330" }}
               className=" flex flex-row items-center gap-1 "

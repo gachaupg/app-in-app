@@ -307,7 +307,7 @@ console.log(order);
                   alt=""
                 />{" "}
                 <p>
-                  {order.amount !== "" ? (order.amount - 0.5) : "0.0"}
+                  {order.amount !== "" ? (order.amount - order.commission_rate) : "0.0"}
                 </p>
                 <span className="g ">USDT</span>
               </p>

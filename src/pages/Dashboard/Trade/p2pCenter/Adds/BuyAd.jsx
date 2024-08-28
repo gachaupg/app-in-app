@@ -9,11 +9,11 @@ import { DollarSign, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoCheckmarkCircleSharp } from "react-icons/io5";
+import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../../../utils/APIRoutes";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 const initialState = {
   order_type: "",
   currency: "USDT",
@@ -48,7 +48,7 @@ const Adds = () => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 250,
+    // width: 250,
     bgcolor: "background.black",
     border: "1px solid green",
     borderRadius: 3,
@@ -327,24 +327,79 @@ const Adds = () => {
       }
     }
   };
-  // async function Dets() {
-  //   setTimeout(() => {
-  //     if (details.length === 0) {
-  //       setOpen1(true);
-  //     } else {
-  //       setOpen1(false);
-  //     }
-  //   }, 5000); // 5-second delay
-  // }
-  
-  // useEffect(() => {
-  //   Dets();
-  // }, [details]);
-  
+ 
 
-  console.log(details.length);
+  const initialState1 = {
+    provider_name: "",
+    account_name: "",
+    account_number: "",
+  };
 
+  const [form1, setForm1] = useState(initialState1);
+  const [loading, setLoading] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const handleOpen2 = () => setOpen2(true);
+  const handleClose2 = () => setOpen2(false);
 
+  const handleSubmit1 = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    // Assuming user.user.access is available in your component's state or context
+    const token = user.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading(false);
+      return;
+    }
+
+    if (form1.account_name) {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+        console.log("Sending request with headers:", headers); // Debugging line
+        console.log(
+          "Sending request to endpoint:",
+          `${endpoint}/trading_engine/user-payment-details/`,); // Debugging line
+        const response = await fetch(
+          `${endpoint}/trading_engine/user-payment-details/`, {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(form1), // Make sure "withdrawal" is defined in your component
+        }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          toast.success("Added successful!");
+          handleClose2()
+          handleClose()
+          fetchData();
+        } else if (data.code === "token_not_valid") {
+          toast.error("Your session has expired. Please log in again.");
+          navigate("/login"); // Redirect to login page or handle re-authentication
+        } else {
+          toast.error(`Save bank details failed: ${data || data}`);
+          console.log(data);
+          console.log("====================================");
+          console.log(form1);
+          console.log("====================================");
+        }
+      } catch (error) {
+        toast.error(`Error: ${error.error}`);
+        console.error("Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      toast.error("Invalid code");
+      setLoading(false); // Ensure loading state is reset in case of invalid code
+    }
+  };
   return (
     <>
       {activeTab1 === "Market" && (
@@ -356,21 +411,118 @@ const Adds = () => {
           />
         </div>
       )}
-      <div className="primary  flex wrap small justify-between flex-row ">
+      <div className="primary w-full  flex wrap small justify-between flex-row ">
         <Modal
           open={open1}
           // onClose={handleClose}
           aria-labelledby="child-modal-title"
           aria-describedby="child-modal-description"
         >
-          <Box className="primary border border-slate-700 g" sx={{ ...style, width: 500 }}>
+          <Box className="primary w-full border border-slate-700 g" sx={{ ...style, width: 700 }}>
             <h2 id="child-modal-title">You have no payments Details</h2>
             <h2>To proceed add payments details on the profile page</h2>
-            <Link to='/account'>
-              <button className="p-1 white mt-2 rounded-2xl greenbg w-full">
+            
+              <button onClick={handleOpen2} className="p-1 white mt-2 rounded-2xl greenbg w-full">
                 Add Payments Details
               </button>
-            </Link>
+          </Box>
+        </Modal>
+
+        <Modal
+          open={open2}
+          onClose={handleClose2}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box className="primary white" sx={style}>
+            <Typography o id="modal-modal-title" variant="h6" component="h2">
+              Add payment details
+            </Typography>
+            <div
+              className={` small   p-2  rounded-lg flex flex-col justify-between `}
+            >
+              <p className="white flex flex-row w-64 p-1  rounded-3xl items-center gap-1">
+                <img
+                  className="rounded-full object-contain"
+                  src="https://res.cloudinary.com/pitz/image/upload/v1721925032/492x0w_1_rw99fe.png"
+                  alt=""
+                />{" "}
+                <select
+                  onChange={(e) =>
+                    setForm1({
+                      ...form1,
+                      provider_name: e.target.value,
+                    })
+                  }
+                  className="secondary white p-1  cursor-pointer  w-64   no-border"
+                  name=""
+                  id=""
+                >
+                  <option value="">Provider</option>
+
+                  {" "}
+                  {/* {provider.map((i) => {
+                  return ( */}
+                  <>
+                    <option value='Salam'>Salam</option>{" "}
+                  </>
+                  {/* );
+                })} */}
+                </select>
+              </p>
+              <div className="w-full small wrap flex flex-col items-center justify-between gap-6">
+                <div
+                  style={{
+                    background: "#35353E                ",
+                  }}
+                  className="secondary mt-2   rounded-3xl w-full p-2"
+                >
+                  <input
+                    onChange={(e) =>
+                      setForm1({ ...form1, account_name: e.target.value })
+                    }
+                    style={{
+                      background: "#35353E                ",
+                    }}
+                    className="no-border p-1 secondary white w-full"
+                    type="text"
+                    placeholder=" Account Holder"
+                  />
+                  {/* <p className="g">Account Holder</p> */}
+                </div>
+                <div
+                  style={{
+                    background: "#35353E                ",
+                  }} className=" mt-2  rounded-3xl w-full p-2">
+                  <input
+                    onChange={(e) =>
+                      setForm1({ ...form1, account_number: e.target.value })
+                    }
+                    style={{
+                      background: "#35353E                ",
+                    }}
+                    className="no-border text-white p-1  w-full"
+                    type="text"
+                    placeholder=" Account Number"
+                  />
+                </div>
+
+              </div>
+              <div>
+                {loading === true ? (
+                  <div className="flex items-center justify-center">
+                    <CircularProgress />
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleSubmit1}
+                    className="p-2 w-full mt-3 mb-2 bg-green-700 rounded-lg text-white"
+                  >
+                    Add
+                  </button>
+                )}
+              </div>
+            </div>
           </Box>
         </Modal>
         <div
@@ -514,7 +666,7 @@ const Adds = () => {
                       onChange={(e) =>
                         setSell({ ...sell, amount: e.target.value })
                       }
-                      className="w-full no-border primary text-white custom-placeholder"
+                      className="w-full no-border pl primary text-white custom-placeholder"
                       placeholder="1,000 USDT"
                       type="number"
                     />
@@ -541,7 +693,7 @@ const Adds = () => {
                         onChange={(e) =>
                           setSell({ ...sell, min_order_amount: e.target.value })
                         }
-                        className="w-full no-border primary text-white custom-placeholder"
+                        className="w-full no-border pl primary g custom-placeholder"
                         placeholder="10 USDT"
                         type="number"
                       />
@@ -573,7 +725,7 @@ const Adds = () => {
                         onChange={(e) =>
                           setSell({ ...sell, max_order_amount: e.target.value })
                         }
-                        className="w-full no-border primary text-white custom-placeholder"
+                        className="w-full no-border pl primary g custom-placeholder"
                         placeholder="1000 USDT"
                         type="number"
                       />
@@ -772,7 +924,7 @@ const Adds = () => {
                 </>
               </div>
             </div>
-            <button className="greenbg w-48 text-white p-1 rounded-3xl">
+            <button onClick={handleOpen2} className="greenbg w-48 text-white p-1 rounded-3xl">
               Add payment method
             </button>
           </div>

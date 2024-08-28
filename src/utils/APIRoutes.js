@@ -1,4 +1,4 @@
-export const endpoint = "http://13.51.161.80:8000";
+export const endpoint = "https://www.pybreeze.com";
 export const host = "https://omayaexchangebackend.onrender.com";
 export const loginRoute = `${host}/api/auth/login`;
 export const registerRoute = `${host}/api/auth/register`;

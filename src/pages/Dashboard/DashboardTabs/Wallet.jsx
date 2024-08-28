@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { endpoint } from "../../../utils/APIRoutes";
 const style = {
   position: 'absolute',
   top: '50%',
@@ -67,9 +68,9 @@ console.log(form);
         console.log("Sending request with headers:", headers); // Debugging line
         console.log(
           "Sending request to endpoint:",
-         `https://omayaexchangebackend.onrender.com/trading_engine/user-payment-details/`,        ); // Debugging line
+         `${endpoint}/trading_engine/user-payment-details/`,        ); // Debugging line
         const response = await fetch(
-          `https://omayaexchangebackend.onrender.com/trading_engine/user-payment-details/`,              {
+          `${endpoint}/trading_engine/user-payment-details/`,              {
             method: "POST",
             headers: headers,
             body: JSON.stringify(form), // Make sure "withdrawal" is defined in your component
@@ -109,7 +110,7 @@ console.log(form);
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-      >
+       >
         <Box className="primary white" sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Add payment details

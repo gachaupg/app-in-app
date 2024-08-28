@@ -106,7 +106,9 @@ const MainExchange = () => {
     },
   ];
   const [graph, setGraph] = useState('sells')
-
+const handlClick=()=>{
+  setShow('P2P')
+}
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -755,12 +757,12 @@ const MainExchange = () => {
             )}
             {show === 'width' && (
               <>
-                <Deposit />
+                <Deposit setShow={handlClick} />
               </>
             )}
             {show === "Withdraw" && crypto === 'crypto' && (
               <>
-                <Widthform />
+                <Widthform   setShow={handlClick}/>
               </>
             )}
             {show === "Withdraw" && crypto === 'forex' && (

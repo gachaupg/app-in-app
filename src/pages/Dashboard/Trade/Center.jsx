@@ -1,15 +1,32 @@
 /* eslint-disable no-unused-vars */
 import { CheckBox } from "@mui/icons-material";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Modal, Typography } from "@mui/material";
 import axios from "axios";
-import { Plus, Trash2Icon } from "lucide-react";
+import { Box, Plus, Trash2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { endpoint } from "../../../utils/APIRoutes";
 import Feedback from "./p2pCenter/Feedback";
 import MyAdds from "./p2pCenter/MyAdds";
-import { endpoint } from "../../../utils/APIRoutes";
+import { getWallets } from "../../../redux/features/answerSlice";
+
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 600,
+  // bgcolor: 'background.paper',
+  // border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+
+
 
 const Center = () => {
   const [show, setShow] = useState("Payments");
@@ -17,7 +34,7 @@ const Center = () => {
   const navigate = useNavigate("");
   const [provider, setProvider] = useState([]);
 
-// console.log(provider);
+  // console.log(provider);
 
 
 
@@ -30,10 +47,12 @@ const Center = () => {
 
   const [form, setForm] = useState(initialState);
   const [loading, setLoading] = useState(false);
-
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const [payments, setPayments] = useState([]);
   const [loading1, setLoading1] = useState(true);
-console.log(form);
+  console.log(form);
 
   useEffect(() => {
     fetchData();
@@ -54,7 +73,7 @@ console.log(form);
     };
 
     try {
-      const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/payment-providers/Bank/`, {
+      const res = await axios.get(`${endpoint}/trading_engine/payment-providers/Bank/`, {
         headers,
       });
       setLoading1(false);
@@ -65,38 +84,38 @@ console.log(form);
       setLoading1(false);
     }
   }
-  const [details, setdetails] = useState([]);  
-  console.log('payments',details);
+  const [details, setdetails] = useState([]);
+  console.log('payments', details);
 
   useEffect(() => {
     fetchData3();
-}, [user.access]);
-async function fetchData3() {
+  }, [user.access]);
+  async function fetchData3() {
     const token = user.access;
     if (!token) {
-        toast.error("Authentication token is missing. Please log in again.");
-        navigate("/login");
-        setLoading1(false);
-        return;
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
     }
 
     const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     };
 
     try {
-        const res = await axios.get(`${endpoint}/trading_engine/user-payment-details/`, {
-            headers,
-        });
-        setLoading1(false);
-        setdetails(res.data); // Assuming the response data is what you need to set
-        console.log("hello", res.data);
+      const res = await axios.get(`${endpoint}/trading_engine/user-payment-details/`, {
+        headers,
+      });
+      setLoading1(false);
+      setdetails(res.data); // Assuming the response data is what you need to set
+      console.log("hello", res.data);
     } catch (error) {
-        console.log(error);
-        setLoading1(false);
+      console.log(error);
+      setLoading1(false);
     }
-}
+  }
 
   // Add token to the dependency array
 
@@ -124,13 +143,13 @@ async function fetchData3() {
         console.log("Sending request with headers:", headers); // Debugging line
         console.log(
           "Sending request to endpoint:",
-         `${endpoint}/trading_engine/user-payment-details/`,        ); // Debugging line
+          `${endpoint}/trading_engine/user-payment-details/`,); // Debugging line
         const response = await fetch(
-          `${endpoint}/trading_engine/user-payment-details/`,              {
-            method: "POST",
-            headers: headers,
-            body: JSON.stringify(form), // Make sure "withdrawal" is defined in your component
-          }
+          `${endpoint}/trading_engine/user-payment-details/`, {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(form), // Make sure "withdrawal" is defined in your component
+        }
         );
         const data = await response.json();
         if (response.ok) {
@@ -157,11 +176,235 @@ async function fetchData3() {
       setLoading(false); // Ensure loading state is reset in case of invalid code
     }
   };
+
+
+  const [payments1, setPayments1] = useState([]);
+  console.log(payments);
+  const initialState1 = {
+    provider_name: "",
+    account_name: "",
+    account_number: "",
+  };
+
+  const [form1, setForm1] = useState(initialState1);
+  useEffect(() => {
+    fetchData1();
+  }, [user]);
+
+  async function fetchData1() {
+    const token = user?.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading1(false);
+      return;
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await axios.get(
+        `${endpoint}/trading_engine/p2p/all-orders/?my_orders=true/`,
+        { headers }
+      );
+      setLoading1(false);
+      const data = res.data.filter((data) => data.advertiser_name.id?.split('-')[1] === user.user.username);
+      setPayments1(res.data);
+    } catch (error) {
+      console.log(error);
+      setLoading1(false);
+    }
+  }
+
+
+
+  const handleSubmit1 = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    // Assuming user.user.access is available in your component's state or context
+    const token = user.access;
+
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading(false);
+      return;
+    }
+
+    if (form.account_name) {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+        console.log("Sending request with headers:", headers); // Debugging line
+        console.log(
+          "Sending request to endpoint:",
+          `${endpoint}/trading_engine/user-payment-details/`,); // Debugging line
+        const response = await fetch(
+          `${endpoint}/trading_engine/user-payment-details/`, {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify(form), // Make sure "withdrawal" is defined in your component
+        }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          toast.success("Added successful!");
+          // fetchData();
+        } else if (data.code === "token_not_valid") {
+          toast.error("Your session has expired. Please log in again.");
+          navigate("/login"); // Redirect to login page or handle re-authentication
+        } else {
+          toast.error(`Save bank details failed: ${data || data}`);
+          console.log(data);
+          console.log("====================================");
+          console.log(form);
+          console.log("====================================");
+        }
+      } catch (error) {
+        toast.error(`Error: ${error.error}`);
+        console.error("Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      toast.error("Invalid code");
+      setLoading(false); // Ensure loading state is reset in case of invalid code
+    }
+  };
+  const dispatch = useDispatch();
+  const token = user.access
+  const { wallet, error } = useSelector((state) => state.deposits);
+  // console.log('depositddds',match);
+  useEffect(() => {
+    if (token) {
+      dispatch(getWallets({ token, toast }));
+    }
+  }, [dispatch, token]);
+
+  function formatBalance(balance) {
+    let num = parseFloat(balance);
+
+    if (num >= 1e9) {
+      return (num / 1e9).toFixed(2) + 'B';
+    } else if (num >= 1e6) {
+      return (num / 1e6).toFixed(2) + 'M';
+    } else {
+      return num.toFixed(2);
+    }
+  }
+
+
   return (
     <div className="flex rounded-lg flex-col  gap-2 w-full">
       <div
         className={`secondary wrap small border border-slate-700 p-2  rounded-lg flex flex-row justify-between `}
       >
+
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box className="primary white" sx={style}>
+            <Typography o id="modal-modal-title" variant="h6" component="h2">
+              Add payment details
+            </Typography>
+            <div
+              className={` small   p-2  rounded-lg flex flex-col justify-between `}
+            >
+              <p className="white flex flex-row w-64 p-1  rounded-3xl items-center gap-1">
+                <img
+                  className="rounded-full object-contain"
+                  src="https://res.cloudinary.com/pitz/image/upload/v1721925032/492x0w_1_rw99fe.png"
+                  alt=""
+                />{" "}
+                <select
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      provider_name: e.target.value,
+                    })
+                  }
+                  className="secondary white p-1  cursor-pointer  w-64   no-border"
+                  name=""
+                  id=""
+                >
+                  <option value="">Provider</option>
+
+                  {" "}
+                  {/* {provider.map((i) => {
+                  return ( */}
+                  <>
+                    <option value='Salam'>Salam</option>{" "}
+                  </>
+                  {/* );
+                })} */}
+                </select>
+              </p>
+              <div className="w-full small wrap flex flex-col items-center justify-between gap-6">
+                <div
+                  style={{
+                    background: "#35353E                ",
+                  }}
+                  className="secondary mt-2   rounded-3xl w-full p-2"
+                >
+                  <input
+                    onChange={(e) =>
+                      setForm({ ...form, account_name: e.target.value })
+                    }
+                    style={{
+                      background: "#35353E                ",
+                    }}
+                    className="no-border p-1 secondary white w-full"
+                    type="text"
+                    placeholder=" Account Holder"
+                  />
+                  {/* <p className="g">Account Holder</p> */}
+                </div>
+                <div
+                  style={{
+                    background: "#35353E                ",
+                  }} className=" mt-2  rounded-3xl w-full p-2">
+                  <input
+                    onChange={(e) =>
+                      setForm({ ...form, account_number: e.target.value })
+                    }
+                    style={{
+                      background: "#35353E                ",
+                    }}
+                    className="no-border text-white p-1  w-full"
+                    type="text"
+                    placeholder=" Account Number"
+                  />
+                </div>
+
+              </div>
+              <div>
+                {loading === true ? (
+                  <div className="flex items-center justify-center">
+                    <CircularProgress />
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleSubmit}
+                    className="p-2 w-full mt-3 mb-2 bg-green-700 rounded-lg text-white"
+                  >
+                    Add
+                  </button>
+                )}
+              </div>
+            </div>
+          </Box>
+        </Modal>
         <div className="flex flex-col gap-2 ">
           <p className="flex flex-row items-center gap-3 r">
             <p className="p-2 bg-green-600 text-white h-10 w-10 rounded-full flex items-center ">
@@ -199,8 +442,30 @@ async function fetchData3() {
         </div>
         <div className="flex flex-col gap-2 items-center mt-5 justify-center float-left">
           <p className="green float-left">P2P Balance</p>
-          <p className="g">
-            <span className="white"> 00.00 USDT</span> ≈ 00.00 USD
+          <p className="g w-full flex">
+            <span className="white w-full flex">
+
+
+              {
+                wallet.map((balance) => {
+                  return (
+                    <p key={balance.id}>
+                      {typeof balance.balance === 'string' ? formatBalance(balance.balance) : 'N/A'}
+                    </p>
+
+                  )
+                })
+              }
+              USDT</span> ≈ {
+              wallet.map((balance) => {
+                return (
+                  <p key={balance.id}>
+                    {typeof balance.balance === 'string' ? formatBalance(balance.balance) : 'N/A'}
+                  </p>
+
+                )
+              })
+            }  USD
           </p>
           <p className="g">
             In escrow : <span className="white">00 USD</span>
@@ -246,7 +511,7 @@ async function fetchData3() {
         className={`primary small  wrap  p-2  flex flex-row justify-between `}
       >
         <div style={{
-          width:'74%'
+          width: '74%'
         }} className={`primary small wrap   p-2  flex flex-row gap-5 `}>
           <button
             onClick={() => setShow("Payments")}
@@ -283,7 +548,7 @@ async function fetchData3() {
               }}
               className="g"
             >
-              (0)
+              ({payments1.length})
             </span>
           </button>
           <button
@@ -363,16 +628,16 @@ async function fetchData3() {
                 className="secondary white  cursor-pointer  w-64   no-border"
                 name=""
                 id=""
-              >                       
-                   <option value="">Provider</option>
+              >
+                <option value="">Provider</option>
 
                 {" "}
                 {/* {provider.map((i) => {
                   return ( */}
-                    <>
-                      <option value='Salam'>Salam</option>{" "}
-                    </>
-                  {/* );
+                <>
+                  <option value='Salam'>Salam</option>{" "}
+                </>
+                {/* );
                 })} */}
               </select>
             </p>
@@ -421,7 +686,7 @@ async function fetchData3() {
                 )}
               </div>
             </div>
-           
+
             <p
               style={{
                 height: "1px",

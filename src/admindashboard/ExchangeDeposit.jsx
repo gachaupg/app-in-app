@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './Admin.css';
+import { endpoint } from '../utils/APIRoutes';
 
 const P2pDeposit = () => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const P2pDeposit = () => {
     };
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/all-transactions/`,
+        `${endpoint}/trading_engine/all-transactions/`,
         { headers }
       );
             const filteredData = 
@@ -61,7 +62,7 @@ const P2pDeposit = () => {
         Authorization: `Bearer ${token}`,
       };
 
-      const response = await fetch(`https://omayaexchangebackend.onrender.com/trading_engine/approve-transaction/${transactionId}/`, {
+      const response = await fetch(`${endpoint}/trading_engine/approve-transaction/${transactionId}/`, {
         method: "POST",
         headers: headers,
       });

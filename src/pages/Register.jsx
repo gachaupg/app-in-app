@@ -17,8 +17,8 @@ import { register } from "../redux/features/authSlice";
 
 const Register = () => {
   const initialState = {
-    username: "",
-    lName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     user_type: "",
     password: "",
@@ -37,20 +37,20 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passerror, setPassError] = useState("");
   const [type, setType] = useState("Individual");
+
+  const [formErrors, setFormErrors] = useState({});
+
   useEffect(() => {
     setUser((prevUser) => ({
       ...prevUser,
       refferal_code: "5353535",
     }));
   }, []);
-  console.log("====================================");
-  console.log(user);
-  console.log("====================================");
+
   const handleType = (e) => {
-    setType((prevType) =>
-      prevType === "Individual" ? "Institution" : "Individual"
-    );
-    setUser({ ...user, user_type: type });
+    const newType = type === "Individual" ? "Institution" : "Individual";
+    setType(newType);
+    setUser({ ...user, user_type: newType });
   };
 
   const togglePasswordVisibility = () => {
@@ -61,55 +61,44 @@ const Register = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!user.first_name) errors.first_name = "First name is required";
+    if (!user.last_name) errors.last_name = "Last name is required";
+    if (!user.email) errors.email = "Email is required";
+    if (!user.password) errors.password = "Password is required";
+    if (user.password !== user.confirmPassword) {
+      errors.confirmPassword = "Passwords do not match";
+    }
+    if (!isLengthValid) {
+      errors.password = "Password must be at least 8 characters long";
+    }
+    if (!hasNumberOrSymbol) {
+      errors.password = "Password must contain a number or symbol";
+    }
+    if (!hasUpperCase) {
+      errors.password = "Password must contain an uppercase letter";
+    }
+    if (!hasLowerCase) {
+      errors.password = "Password must contain a lowercase letter";
+    }
+    return errors;
+  };
+
   const isLengthValid = user.password.length >= 8;
-  const hasNumberOrSymbol = /[0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(
-    user.password
-  );
+  const hasNumberOrSymbol = /[0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(user.password);
   const hasUpperCase = /[A-Z]/.test(user.password);
   const hasLowerCase = /[a-z]/.test(user.password);
-  const getDotColor = (condition) => condition ? 'green' : 'red';
 
-  const passwordsMatch = user.password === user.confirmPassword;
-  console.log("====================================");
-  console.log(user);
-  console.log("====================================");
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (user.confirmPassword !== user.password) {
-      setPassError("Password did not match");
-      toast.error("Password did not match");
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
       return;
     }
 
-    if (!isLengthValid) {
-      setPassError("Password must be 8 characters long");
-      toast.error("Password must be 8 characters long");
-      return;
-    }
-    if (!hasNumberOrSymbol) {
-      setPassError("Password must contain a number or symbol");
-      toast.error("Password must contain a number or symbol");
-      return;
-    }
-    if (!hasUpperCase) {
-      setPassError("Password must contain an uppercase letter");
-      toast.error("Password must contain an uppercase letter");
-      return;
-    }
-    if (!hasLowerCase) {
-      setPassError("Password must contain a lowercase letter");
-      toast.error("Password must contain a lowercase letter");
-      return;
-    }
-    if (error) {
-      toast.error(error);
-    }
-
-    if (!user.username || !user.email || !user.password || !user.user_type) {
-      toast.error("All fields are required");
-      return;
-    }
     try {
       setLoading(true);
       await dispatch(register({ user, navigate, toast }));
@@ -121,40 +110,32 @@ const Register = () => {
   };
 
   return (
-    <div className=" primary flex p-4 g justify-around w-full small wrap">
-      <div className="image-none ">
+    <div className="primary flex p-4 justify-around w-full small wrap">
+      <div className="image-none">
         <img
           className="mt-5"
-          style={{
-            height: "27rem",
-            objectFit: "fill",
-            marginBottom: "5rem",
-          }}
+          style={{ height: "27rem", objectFit: "fill", marginBottom: "5rem" }}
           src="https://res.cloudinary.com/pitz/image/upload/v1723127986/Frame_34357_uyqvfq.png"
           alt=""
         />
       </div>
-      <div className="p-4 ">
+      <div className="p-4 g">
         <p>Please Register with correct information</p>
         <h6>Account Type*</h6>
         <div className="account-type mb-10">
           <button
             onClick={handleType}
-            style={{
-              background:
-                type === "Individual" ? "#1D8751" : "#1f1f27 ",
-            }}
+            style={{ background: type === "Individual" ? "#1D8751" : "#1f1f27" }}
             className="type-btn"
           >
             <BsFillPeopleFill color="white" />
-            <span style={{ marginLeft: "3px", color: type === "Individual" ? "white" : " ", }}>Individual</span>
+            <span style={{ marginLeft: "3px", color: type === "Individual" ? "white" : "" }}>
+              Individual
+            </span>
           </button>
           <button
             onClick={handleType}
-            style={{
-              background:
-                type === "Institution" ? "#1D8751              " : "#1f1f27 ",
-            }}
+            style={{ background: type === "Institution" ? "#1D8751" : "#1f1f27" }}
             className="type-btn1"
           >
             <BiSolidInstitution color="white" />
@@ -164,167 +145,153 @@ const Register = () => {
           </button>
         </div>
         {type === "Individual" && (
-          <form onSubmit={handleSubmit} className="">
+          <form className="g" onSubmit={handleSubmit}>
             <div className="name-email flex flex-col md:flex-row gap-4">
               <div className="name max-w-screen-md">
                 <label htmlFor="">First Name*</label>
-                {user.name}
-                <div className="input-group">
+                <div style={{ border: formErrors.first_name ? "1px solid red" : "1px solid rgba(255, 255, 255, 0.5)" }}
+                  className="input-group names">
                   <AiOutlineUser color="green" className="input-icon" />
                   <input
+                    className="no-border  h-full bgi "
                     style={{
-                      border: user.name
-                        ? "1px solid rgba(255, 255, 255, 0.5)"
-                        : "1px solid red",
+                      width: '95%'
                     }}
                     type="text"
-                    onChange={(e) =>
-                      setUser({ ...user, username: e.target.value })
-                    }
+                    value={user.first_name}
+                    onChange={(e) => setUser({ ...user, first_name: e.target.value })}
                     placeholder="Full Name"
                   />
                 </div>
+                {formErrors.first_name && <p className="error-text text-red-600">{formErrors.first_name}</p>}
               </div>
+
               <div className="name max-w-screen-md">
                 <label htmlFor="">Last Name*</label>
-                {user.name}
-                <div className="input-group">
+                <div style={{ border: formErrors.last_name ? "1px solid red" : "1px solid rgba(255, 255, 255, 0.5)" }}
+                  className="input-group names">
                   <AiOutlineUser color="green" className="input-icon" />
                   <input
+                    className="no-border  h-full bgi "
                     style={{
-                      border: user.name
-                        ? "1px solid rgba(255, 255, 255, 0.5)"
-                        : "1px solid red",
+                      width: '95%'
                     }}
                     type="text"
-                    onChange={(e) =>
-                      setUser({ ...user, lName: e.target.value })
-                    }
+                    value={user.last_name}
+                    onChange={(e) => setUser({ ...user, last_name: e.target.value })}
                     placeholder="Last Name"
                   />
                 </div>
+                {formErrors.last_name && <p className="error-text text-red-600">{formErrors.last_name}</p>}
               </div>
-
             </div>
+
             <div className="name-email flex mt-5 flex-col md:flex-row gap-4">
               <div className="name max-w-screen-md">
                 <label htmlFor="">Email*</label>
-                <div className="input-group">
+                <div className="input-group names" style={{ border: formErrors.email ? "1px solid red" : "1px solid rgba(255, 255, 255, 0.5)" }}
+                >
                   <MdOutlineMailOutline color="green" className="input-icon" />
                   <input
+                    className="no-border  h-full bgi "
                     style={{
-                      border: user.email
-                        ? "1px solid rgba(255, 255, 255, 0.5)"
-                        : "1px solid red",
+                      width: '95%'
                     }}
                     type="email"
-                    onChange={(e) =>
-                      setUser({ ...user, email: e.target.value })
-                    }
+                    value={user.email}
+                    onChange={(e) => setUser({ ...user, email: e.target.value })}
                     placeholder="Email"
                   />
                 </div>
-              </div>
-              <div className="name-email flex flex-col md:flex-row gap-14">
-                <div className="name max-w-screen-md">
-                  <label htmlFor="">Phone number</label>
-                  <div className="input-group">
-                    <Call color="green" className="input-icon text-green-500" />
-                    <input
-                      style={{
-                        border: user.email
-                          ? "1px solid rgba(255, 255, 255, 0.5)"
-                          : "1px solid red",
-                      }}
-                      type="tel"
-                      inputMode="numeric"
-                      onChange={(e) =>
-                        setUser({ ...user, phone_number: e.target.value })
-                      }
-                      placeholder="Phone number"
-                    />
-                  </div>
-                </div>
+                {formErrors.email && <p className="error-text text-red-600">{formErrors.email}</p>}
               </div>
 
+              <div className="name max-w-screen-md">
+                <label htmlFor="">Phone number</label>
+                <div style={{ border: user.phone_number ? "1px solid rgba(255, 255, 255, 0.5)" : "1px solid red" }}
+                  className="input-group names">
+                  <Call color="green" className="input-icon text-green-500" />
+                  <input
+                    className="no-border  h-full bgi "
+                    style={{
+                      width: '95%'
+                    }}
+                    type="tel"
+                    inputMode="numeric"
+                    value={user.phone_number}
+                    onChange={(e) => setUser({ ...user, phone_number: e.target.value })}
+                    placeholder="Phone number"
+                  />
+                </div>
+              </div>
             </div>
+
             <div className="name-email mt-5 flex flex-col md:flex-row gap-4">
               <div className="name max-w-md">
                 <label htmlFor="">Password*</label>
-                <div className="input-group">
+                <div style={{ border: formErrors.password ? "1px solid red" : "1px solid rgba(255, 255, 255, 0.5)" }}
+                  className="input-group names">
                   <FaLock color="green" className="input-icon" />
                   <input
+                    className="no-border  h-full bgi "
                     style={{
-                      border: user.password
-                        ? "1px solid rgba(255, 255, 255, 0.5)"
-                        : "1px solid red",
+                      width: '95%'
                     }}
                     type={showPassword ? "text" : "password"}
-                    onChange={(e) =>
-                      setUser({ ...user, password: e.target.value })
-                    }
+                    value={user.password}
+                    onChange={(e) => setUser({ ...user, password: e.target.value })}
                     placeholder="Password"
                   />
-                  {showPassword ? (
-                    <FaRegEyeSlash
-                      color="green"
-                      className="input-icon1 cursor-pointer"
-                      onClick={togglePasswordVisibility}
-                    />
-                  ) : (
-                    <BsEye
-                      color="green"
-                      className="input-icon1 cursor-pointer"
-                      onClick={togglePasswordVisibility}
-                    />
-                  )}
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={togglePasswordVisibility}
+                  >
+                    {showPassword ? <BsEye /> : <FaRegEyeSlash />}
+                  </button>
                 </div>
+                {formErrors.password && <p className="error-text text-red-600">{formErrors.password}</p>}
               </div>
-              <div className="name">
+
+              <div className="name max-w-md">
                 <label htmlFor="">Confirm Password*</label>
-                <div className="input-group">
+                <div style={{ border: formErrors.confirmPassword ? "1px solid red" : "1px solid rgba(255, 255, 255, 0.5)" }} className="input-group names ">
                   <FaLock color="green" className="input-icon" />
                   <input
+                    className="no-border  h-full bgi "
                     style={{
-                      border: user.confirmPassword
-                        ? "1px solid rgba(255, 255, 255, 0.5)"
-                        : "1px solid red",
+                      width: '95%'
                     }}
                     type={showConfirmPassword ? "text" : "password"}
-                    onChange={(e) =>
-                      setUser({ ...user, confirmPassword: e.target.value })
-                    }
+                    value={user.confirmPassword}
+                    onChange={(e) => setUser({ ...user, confirmPassword: e.target.value })}
                     placeholder="Confirm Password"
                   />
-                  {showConfirmPassword ? (
-                    <FaRegEyeSlash
-                      color="green"
-                      className="input-icon1 cursor-pointer"
-                      onClick={toggleConfirmPasswordVisibility}
-                    />
-                  ) : (
-                    <BsEye
-                      color="green"
-                      className="input-icon1 cursor-pointer"
-                      onClick={toggleConfirmPasswordVisibility}
-                    />
-                  )}
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={toggleConfirmPasswordVisibility}
+                  >
+                    {showConfirmPassword ? <BsEye /> : <FaRegEyeSlash />}
+                  </button>
                 </div>
+                {formErrors.confirmPassword && <p className="error-text text-red-600">{formErrors.confirmPassword}</p>}
               </div>
             </div>
+
+
             <p className={`flex flex-row items-center`}>
               <Dot color={isLengthValid ? 'green' : 'red'} size="40" />
-              <p className={isLengthValid ? 'green' : 'text-red-700'}>At least 8 characters</p>
+              <p className={isLengthValid ? 'text-green-500' : 'text-red-500'}>At least 8 characters</p>
             </p>
             <p className={`flex flex-row items-center`}>
               <Dot color={hasNumberOrSymbol ? 'green' : 'red'} size="40" />
-              <p className={hasNumberOrSymbol ? 'green' : 'text-red-700'}>At least one number or symbol</p>
+              <p className={hasNumberOrSymbol ? 'text-green-500' : 'text-red-500'}>At least one number or symbol</p>
             </p>
             <p className={`flex flex-row items-center`}>
               <Dot color={hasUpperCase && hasLowerCase ? 'green' : 'red'} size="40" />
-              <p className={hasUpperCase && hasLowerCase ? 'green' : 'text-red-700'}>Both uppercase and lowercase</p>
+              <p className={hasUpperCase && hasLowerCase ? 'text-green-500' : 'text-red-500'}>Both uppercase and lowercase</p>
             </p>
-
             <div
               style={{
                 background: "#18181d",
@@ -366,32 +333,21 @@ const Register = () => {
                 alt=""
               />
             </div>
-            {loading ? (
-              <>
-                <div className="flex items-center justify-center">
-                  <CircularProgress />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="btn-submit white mt-5 flex greenbg p-2 rounded-3xl justify-center">
-                  <button type="submit" className="submit-btn">
-                    {loading ? "Submitting" : "Register"}
-                  </button>
-                </div>
-              </>
-            )}
-
+            <div className="btn-submit white mt-5 flex greenbg p-2 rounded-3xl justify-center">
+              <button type="submit" className="submit-btn">
+                {loading ? <CircularProgress size={24} /> : "Register"}
+              </button>
+            </div>
             <div className="flex flex-col items-center justify-center">
-              <p className="mt-5 mb-3 flex g text-center">
+              <p className="mt-5 mb-3 flex text-center">
                 Already have an account?{" "}
-                <Link to="/login" className="green">
+                <Link to="/login" className="text-blue-500">
                   Login here
                 </Link>
               </p>
               <p>Or </p>
               <p className="mt-5 mb-3 flex text-center">Sign up with</p>
-              <div className="social-buttons1 mb-5 gap-6 flex w-full flex-wrap items-center justify-center">
+              <div className="social-buttons1 mb-5 gap-6 flex w-full flex-wrap">
                 <MDBBtn
                   className="social-btn1 w-full btn-full flex items-center justify-center ml-4"
                   size="lg"
@@ -421,6 +377,7 @@ const Register = () => {
             </div>
           </form>
         )}
+
         {type === "Institution" && (
           <form onSubmit={handleSubmit} className="form">
             <div className="name-email flex flex-col md:flex-row gap-4">
@@ -436,7 +393,7 @@ const Register = () => {
                         : "1px solid red",
                     }}
                     type="text"
-                    onChange={(e) => setUser({ ...user, name: e.target.value })}
+                    onChange={(e) => setUser({ ...user, first_name: e.target.value })}
                     placeholder="Institution Name"
                   />
                 </div>

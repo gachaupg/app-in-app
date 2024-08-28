@@ -1,13 +1,14 @@
 /* eslint-disable no-unused-vars */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-const api= 'http://13.51.161.80:8000/api/'
+import { endpoint } from "../../utils/APIRoutes";
+const api= 'https://www.pybreeze.com/api/'
 
 export const login = createAsyncThunk(
   "auth/login",
   async ({ user, navigate, toast }, { rejectWithValue }) => {
     try {
-      const response = await  axios.post(`http://13.51.161.80:8000/api/login/`,user);
+      const response = await  axios.post(`${endpoint}/api/login/`,user);
       // toast.success("Login Successfully");
       navigate("/dashboard");
       console.log(response.data);
@@ -23,7 +24,7 @@ export const register = createAsyncThunk(
   "auth/register",
   async ({ user, navigate, toast }, { rejectWithValue }) => {
     try {
-      const response = await  axios.post(`http://13.51.161.80:8000/api/register/`,user);
+      const response = await  axios.post(`${endpoint}/api/register/`,user);
       toast.success("Register Successfully");
       navigate("/login");
       // return response.data;

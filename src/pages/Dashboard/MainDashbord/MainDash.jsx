@@ -646,7 +646,7 @@ useEffect(() => {
                         <RxAvatar className="text-slate-500" size={40} />
                         <div>
                           <p style={{ fontSize: "16px" }} className="white capitalize">
-                            Hello, {user?.user?.username}!
+                            Hello, {user?.user?.first_name}!
                           </p>
                           <p
                             style={{ fontSize: "12px", color: "#F79330" }}

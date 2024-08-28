@@ -1,7 +1,7 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-unused-vars */
-import { CheckBox } from "@mui/icons-material";
-import { CircularProgress } from "@mui/material";
+import { Checkbox, CircularProgress } from "@mui/material";
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import axios from "axios";
@@ -15,6 +15,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../utils/APIRoutes";
+
+const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
 const style = {
     position: "absolute",
     top: "50%",
@@ -39,7 +42,7 @@ const initialState = {
     additional_info: ""
 };
 
-const Widthform = () => {
+const Widthform = ({setShow}) => {
 
 
     const [files, setFile] = useState('');
@@ -119,7 +122,7 @@ const Widthform = () => {
                 const data = await response.json();
                 if (response.ok) {
                     toast.success("Withdrwal  successfully!");
-                } else if (data.code === "token_not_valid") {
+                    window.location.reload();                } else if (data.code === "token_not_valid") {
                     toast.error("Your session has expired. Please log in again.");
                     navigate("/login");
                 } else {
@@ -310,12 +313,12 @@ const Widthform = () => {
                             <div className="primary  flex flex-row items-center gap-1 w-full">
                                 <img
                                     className="h-8"
-                                    src="https://res.cloudinary.com/pitz/image/upload/v1721374473/87496d50-2408-43e1-ad4c-78b47b448a6a.png_aoj8i3.png"
+                                    src="https://res.cloudinary.com/pitz/image/upload/v1721628835/TRC20_j1e6si.png"
                                     alt=""
                                 />
 
                                 <p>
-                                    BTC
+                                    TRC
                                 </p>
                             </div>
                             <IoMdArrowDropdown color="white" />
@@ -343,7 +346,7 @@ const Widthform = () => {
                                     alt=""
                                 />
                                 <p>
-                                    {widthdrwal.amount != "" ? widthdrwal.amount * 0.000017 : '00'} USDT
+                                    {widthdrwal.amount != "" ? widthdrwal.amount : '00'} USDT
                                     <span
                                         style={{
                                             fontSize: "12px",
@@ -368,9 +371,10 @@ const Widthform = () => {
                         className="p-1 rounded-2xl w-20 flex flex-row gap-2 text-white"
                     >
                         <DollarSign />
-                        {widthdrwal.amount !== null ? `${Number(widthdrwal.amount) + 3}` : "0.0"}
+                        {widthdrwal.amount !== null
+                            ? `${(Number(widthdrwal.amount) - Number(widthdrwal.amount) * 0.003).toFixed(2)}`
+                            : "0.0"}
                     </span>
-
 
                 </button>
                 <button className="p-1 small wrap rounded-2xl gap-2 w--full mt-3 border border-slate-700 mt-2 flex flex-row items-center justify-center">
@@ -586,7 +590,10 @@ const Widthform = () => {
                         <label htmlFor="file-upload" className="cursor-pointer">
                             <button
                                 className="greenbg p-1 w-12 flex justify-center items-center text-center rounded-lg"
-                                onClick={() => document.getElementById("file-upload").click()}
+                                onClick={() => {
+                                    document.getElementById("file-upload").click();
+                                    toast.success('picked successfully')
+                                }}
                             >
                                 <FiUpload className="text-white" />
                             </button>
@@ -612,14 +619,20 @@ const Widthform = () => {
                         className="p-1 w-full primary  rounded-2xl p-2 no-border primary" />
 
                     <div className="flex flex-row items-center gap-2">
-                        <CheckBox className="green border border-green-700   rounded-sm" />
+                        <Checkbox
+                            className="border border-green-700 green checkbox"
+                            {...label} />
                         <p>I confirm that I sent the payment</p>
                     </div>
                     <div className="flex flex-row items-center gap-2">
-                        <CheckBox className="green border border-green-700   rounded-sm" />
+                        <Checkbox
+                            className="border border-green-700 green checkbox"
+                            {...label} />
                         <p>I confirm that I sent the payment</p>
                     </div>
-                    {loading ? <CircularProgress /> :
+                    {loading ? <div className="flex items-center justify-center">
+                        <CircularProgress /> 
+                    </div>:
                         <button onClick={handleSubmit} className="p-2 greenbg rounded-2xl white w-full">
                             Submit
                         </button>

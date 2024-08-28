@@ -31,7 +31,7 @@ function Table({ show, payments, isLoading }) {
     return amountMatch && selectFilter && bankMatch;
   });
 
-  const rowsPerPage = 8; // Each page has 8 rows
+  const rowsPerPage = 14; // Each page has 8 rows
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
