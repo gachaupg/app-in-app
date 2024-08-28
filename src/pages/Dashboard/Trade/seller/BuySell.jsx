@@ -181,6 +181,9 @@ const BuyPage = (props) => {
                 if (response.ok) {
                     toast.success("Request sent!");
                     fetchData3();
+                    if (status.status === 'completed' ) {
+                        navigate('/dashboard')
+                      }
                 } else {
                     if (data.code === "token_not_valid") {
                         toast.error("Your session has expired. Please log in again.");
@@ -225,7 +228,7 @@ const BuyPage = (props) => {
             setStatus(res.data); // Assuming the response data is what you need to set
             if (res.data.status === 'completed') {
                 setOpen1(true);
-
+            
             }
         } catch (error) {
             console.log(error);
@@ -270,13 +273,14 @@ const BuyPage = (props) => {
               const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, 
                 { headers }
             );
-            setMatch(res.data);
             setStatus(res.data);
+            setMatch(res.data);
             setLoading1(false);
             console.log('payments', res.data);
             if (res.data.status === 'completed') {
-              setOpen1(true); 
-              navigate('/')
+              setOpen1(true);
+                navigate('/dashboard')
+              
             }
           } catch (error) {
             console.log(error);
@@ -291,11 +295,9 @@ const BuyPage = (props) => {
         return () => clearInterval(interval); // Clean up interval on unmount
       }, [user?.access, navigate]);
 
-    useEffect(()=>{
-        if (status.status === 'completed' ) {
-          navigate('/dashboard')
-        }
-          },[match])
+    // useEffect(()=>{
+       
+    //       },[match])
 
 
 
@@ -423,13 +425,12 @@ const BuyPage = (props) => {
 
                                     </div>
                                     <div className="w-full flex items-center wrap flex-row ">
-                                        <p className="g w-36">Account Name</p>
+                                        <p className="g w-36">Account Number</p>
                                         <div className="flex flex-row gap-2 justify-between  w-full">
                                             <p className="border text-green-600 flex items-center w-full greybg border-green-600 rounded-2xl p-1">
                                                 <Dot color="green" />{" "}
-                                                <p>{payments?.account_name}</p>
+                                                <p>{payments?.account_number}</p>
                                             </p>
-
                                         </div>
                                     </div>
 

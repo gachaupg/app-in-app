@@ -182,6 +182,7 @@ const BuyPage = (props) => {
         if (response.ok) {
           toast.success("Buy Request sent!");
           // fetchData3();
+         
         } else {
           if (data.code === "token_not_valid") {
             toast.error("Your session has expired. Please log in again.");
@@ -226,6 +227,8 @@ const BuyPage = (props) => {
         console.log('payments', res.data);
         if (res.data.status === 'completed') {
           setOpen1(true);
+            navigate('/dashboard')
+          
         }
       } catch (error) {
         console.log(error);
@@ -273,7 +276,7 @@ const BuyPage = (props) => {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Box className="flex flex-col primary items-center" sx={style}>
+          <Box className="flex w-full flex-col primary items-center" sx={style}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
               <IoCheckmarkCircleSharp className="green" size={40} />
             </Typography>
@@ -291,9 +294,14 @@ const BuyPage = (props) => {
              className="w-full small mt-3 p-1 white greenbg rounded-2xl">
               Cancel
               </button>
-              <button onClick={() => {
-              handleClose1()}  }
-             className="w-full small mt-3 p-1 white greenbg rounded-2xl">
+              <button
+              style={{
+                width:'13rem'
+              }}
+               onClick={() => {
+                navigate('/dashboard')
+              }  }
+             className=" w-72 small mt-3 p-1 white greenbg rounded-2xl">
               Provide feedback
               </button>
             </div>

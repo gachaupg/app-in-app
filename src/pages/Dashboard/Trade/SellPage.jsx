@@ -183,9 +183,10 @@ const BuyPage = (props) => {
         if (response.ok) {
           toast.success("USDT transferred successfully!");
           // fetchData3();
+          setOpen1(true);
           if (status.status==='completed') {
-            setOpen1(true);
             
+            navigate('/dashboard')
           }else{
             setOpen1(false)
           }
@@ -208,50 +209,51 @@ const BuyPage = (props) => {
   };
 
 
-console.log('status',status);
-useEffect(() => {
-  const fetchData = async () => {
-    const token = user?.access;
-
-    if (!token) {
-      toast.error("Authentication token is missing. Please log in again.");
-      navigate("/login");
-      setLoading1(false);
-      return;
-    }
-
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = user?.access;
+  
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+      }
+  
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+  
+      try {
+        
+          const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, 
+            { headers }
+        );
+        setStatus(res.data);
+        setMatch(res.data);
+        setLoading1(false);
+        console.log('payments', res.data);
+        if (res.data.status === 'completed') {
+          setOpen1(true);
+            navigate('/dashboard')
+          
+        }
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
     };
-
-    try {
-      
-        const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, 
-          { headers }
-      );
-      setStatus(res.data);
-      setLoading1(false);
-      console.log('payments', res.data);
-    } catch (error) {
-      console.log(error);
-      setLoading1(false);
-    }
-  };
-
-  fetchData(); // Initial fetch
-
-  const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
-
-  return () => clearInterval(interval); // Clean up interval on unmount
-}, [user?.access, navigate]);
+  
+    fetchData(); // Initial fetch
+  
+    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+  
+    return () => clearInterval(interval); // Clean up interval on unmount
+  }, [user?.access, navigate]);
 
 
-// useEffect(()=>{
-//   if (status.status === 'completed' ) {
-//     navigate('/dashboard')
-//   }
-//     },[status])
+
 
   const style = {
     position: 'absolute',
@@ -500,11 +502,11 @@ useEffect(() => {
                 </div>
               </div>
               <div className="w-full">
-                <p className="g">Account Name</p>
+                <p className="g">Account Number</p>
                 <div className="flex flex-row gap-2 justify-between  w-full">
                   <p className="border text-green-600 flex items-center w-full greybg border-green-600 rounded-2xl p-1">
                     <Dot color="green" />{" "}
-                    <p>{payments?.account_name}</p>
+                    <p>{payments?.account_number}</p>
                   </p>
                   <p className="text-green-600 flex items-center">
                     {" "}

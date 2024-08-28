@@ -64,7 +64,7 @@ const BuyPage = (props) => {
         auto_reply: payments?.auto_reply || "",
         terms_and_conditions: payments?.terms_and_conditions || "",
     };
-    console.log("hello", status);
+    console.log("hello", fromDashboard);
 
     const [buy, setBuy] = useState(initialState);
     
@@ -256,49 +256,49 @@ const BuyPage = (props) => {
     }, [seconds]);
 const [match,setMatch]=useState([]);
 
-    useEffect(() => {
-        fetchData4();
-      }, [user.access]);
-      async function fetchData4() {
-        const token = user.access;
-        if (!token) {
-          toast.error("Authentication token is missing. Please log in again.");
-          navigate("/login");
-          setLoading1(false);
-          return;
-        }
     
-        const headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        };
-    
-        try {
-          const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, {
-            headers,
-          });
-          setLoading1(false);
-          setMatch(res.data); 
-          console.log('jjj',res.data.status);
-          
-          // Assuming the response data is what you need to set
-          if (res.data.status === 'completed') {
-            setOpen1(true);
-    
-          }
-        } catch (error) {
-          console.log(error);
-          setLoading1(false);
-        }
+useEffect(() => {
+    const fetchData = async () => {
+      const token = user?.access;
+  
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
       }
-
-
-
-  useEffect(()=>{
-if (status.status === 'completed' ) {
-  navigate('/dashboard')
-}
-  },[match])
+  
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+  
+      try {
+        
+          const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, 
+            { headers }
+        );
+        setStatus(res.data);
+        setMatch(res.data);
+        setLoading1(false);
+        console.log('payments', res.data);
+        if (res.data.status === 'completed') {
+          setOpen1(true);
+            navigate('/dashboard')
+          
+        }
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
+    };
+  
+    fetchData(); // Initial fetch
+  
+    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+  
+    return () => clearInterval(interval); // Clean up interval on unmount
+  }, [user?.access, navigate]);
 
 
       
@@ -449,7 +449,10 @@ if (status.status === 'completed' ) {
                                 <p className="white flex flex-row items-center">
                                     <Dot size={30} />
                                     <p className="flex items-center">
-                                        {fromDashboard.buyer.split('@')[0]}
+                                       {
+                                        fromDashboard.order_type=='buy'? <p>{fromDashboard.buyer.split('@')[0]}</p>:
+                                        <p>{fromDashboard.seller.split('@')[0]}</p>
+                                       }
                                     </p>
 
                                 </p>

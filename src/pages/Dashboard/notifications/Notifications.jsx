@@ -37,7 +37,7 @@ const Notifications = () => {
                                                 <div className="g flex gap-2">
                                                     <RxAvatar size={34} />
                                                     <div>
-                                                        <p>{truncateBuyer(i.buyer)} </p>
+                                                   { i.order_type==='sell'?<p>{truncateBuyer(i.seller)} </p>:<p>{truncateBuyer(i.buyer)} </p>}   
                                                         <p>{formatAmount(i.amount)} USD</p>
                                                     </div>
                                                 </div>
