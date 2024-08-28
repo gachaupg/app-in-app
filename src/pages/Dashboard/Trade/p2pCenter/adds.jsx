@@ -684,14 +684,14 @@ const Adds = () => {
                   I want to sell
                 </p>
                 <div className="border p-1 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full primary ">
-                  <p className="flex w-full flex-row items-center gap-2">
+                  <p className="flex w-full flex-row items-center g gap-2">
                     <img
                       src="https://res.cloudinary.com/pitz/image/upload/v1721628835/TRC20_j1e6si.png"
                       alt=""
                     />
                     <input
                       onChange={(e) => setSell({ ...sell, amount: e.target.value })}
-                      className="w-full no-border primary pl"
+                      className="w-full no-border primary g pl"
                       placeholder="1,000 USDT"
                       type="number"
                     />

@@ -39,11 +39,19 @@ const Register = () => {
   const [type, setType] = useState("Individual");
 
   const [formErrors, setFormErrors] = useState({});
+console.log(user);
 
   useEffect(() => {
     setUser((prevUser) => ({
       ...prevUser,
       refferal_code: "5353535",
+    }));
+  }, []);
+
+  useEffect(() => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      user_type: type,
     }));
   }, []);
 

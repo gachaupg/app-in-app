@@ -68,9 +68,6 @@ const BuyPage = (props) => {
 
     const [buy, setBuy] = useState(initialState);
     
-    useEffect(() => {
-        fetchData();
-    }, [user?.access]);
 
 
     useEffect(() => {
@@ -103,35 +100,43 @@ const BuyPage = (props) => {
         setOpen(false);
     };
 
-    async function fetchData() {
-        const token = user.access;
-
-        if (!token) {
-          toast.error("Authentication token is missing. Please log in again.");
-          navigate("/login");
-          setLoading1(false);
-          return;
-        }
-
-        const headers = {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        };
-
-        try {
-            const res = await axios.get(
-                `${endpoint}/trading_engine/p2porders/${id}/`,
-                { headers }
-            );
-            setPayments(res.data);
-            setLoading1(false);
-            console.log(payments);
-
-        } catch (error) {
-            console.log(error);
-            setLoading1(false);
-        }
-    }
+      useEffect(() => {
+    const fetchData = async () => {
+      const token = user?.access;
+  
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+      }
+  
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+  
+      try {
+        
+          const res = await axios.get(
+            `${endpoint}/trading_engine/p2porders/${id}/`,
+            { headers }
+        );
+        setPayments(res.data);
+        setLoading1(false);
+        console.log('payments', res.data);
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
+    };
+  
+    fetchData(); // Initial fetch
+  
+    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+  
+    return () => clearInterval(interval); // Clean up interval on unmount
+  }, [user?.access, navigate]);
     const [open1, setOpen1] = useState(false);
     const handleOpen1 = () => setOpen1(true);
     const handleClose1 = () => setOpen1(false);
@@ -194,38 +199,47 @@ const BuyPage = (props) => {
 
 
     useEffect(() => {
-        fetchData3();
-    }, [user?.access]);
-    async function fetchData3() {
-        const token = user.access;
-        if (!token) {
-          toast.error("Authentication token is missing. Please log in again.");
-          navigate("/login");
-          setLoading1(false);
-          return;
-        }
-
-        const headers = {
+        const fetchData = async () => {
+          const token = user?.access;
+      
+          if (!token) {
+            toast.error("Authentication token is missing. Please log in again.");
+            navigate("/login");
+            setLoading1(false);
+            return;
+          }
+      
+          const headers = {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-        };
+          };
+      
+          try {
+            
+              const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, 
+                { headers }
+            );
+            setMatch(res.data); 
 
-        try {
-            const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, {
-                headers,
-            });
+            setMatch(res.data);
             setLoading1(false);
-            setStatus(res.data); // Assuming the response data is what you need to set
+            console.log('payments', res.data);
             if (res.data.status === 'completed') {
-                setOpen1(true);
-
+              setOpen1(true);
             }
-        } catch (error) {
+          } catch (error) {
             console.log(error);
             setLoading1(false);
-        }
-    }
-
+          }
+        };
+      
+        fetchData(); // Initial fetch
+      
+        const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+      
+        return () => clearInterval(interval); // Clean up interval on unmount
+      }, [user?.access, navigate]);
+    
     const [seconds, setSeconds] = useState(9);
     const [isDisabled, setIsDisabled] = useState(false);
 
@@ -280,7 +294,11 @@ const [match,setMatch]=useState([]);
 
 
 
-
+  useEffect(()=>{
+if (status.status === 'completed' ) {
+  navigate('/dashboard')
+}
+  },[match])
 
 
       
@@ -323,7 +341,7 @@ const [match,setMatch]=useState([]);
                             I will receive {payments?.amount}
                         </Typography>
                         <button onClick={() => {
-                            handleClose1()
+                            navigate('/dashboard')
 
                         }
 

@@ -67,7 +67,7 @@ const DepositForm = () => {
     const [loading1, setLoading1] = useState(false);
     const [payments1, setPayments1] = useState([]);
     // console.log('hello', payments);
-    const[price,setPrice]=useState('')
+    const [price, setPrice] = useState('')
 
     const [calculatedAmount, setCalculatedAmount] = useState("0.0");
 
@@ -77,7 +77,7 @@ const DepositForm = () => {
             setCalculatedAmount(calculatedAmount);
         } else {
             setCalculatedAmount("0.0");
-        } 
+        }
     }, [widthdrwal.amount]);
 
     useEffect(() => {
@@ -220,9 +220,11 @@ const DepositForm = () => {
             const headers = {
                 Authorization: `Bearer ${token}`,
             };
-
+            const amount = parseFloat(widthdrwal.amount) || 0; // Ensure amount is a valid number
+            const totalAmount = (amount + (amount * 0.003) + (amount * 0.002)).toFixed(2); // Amount including total fees
+            console.log('amountsss', totalAmount);
             const formData = new FormData();
-            formData.append('amount', 0);
+            formData.append('amount', totalAmount);
             formData.append('deposit_address', widthdrwal.deposit_address);
             formData.append('payment_provider', widthdrwal.payment_provider);
             formData.append('payment_method', widthdrwal.payment_method);
@@ -232,7 +234,7 @@ const DepositForm = () => {
                 formData.append('screenshot', widthdrwal.screenshot);
             }
             for (const [key, value] of formData.entries()) {
-                console.log(`${key}: ${value}`);
+                console.log(`new ${key}: ${value}`);
             }
             try {
                 const response = await fetch(
@@ -341,15 +343,16 @@ const DepositForm = () => {
                     }} className="p-1 rounded-2xl w-20 flex flex-row gap-2 text-white bg-green-300">
                         <DollarSign />
                         {widthdrwal.amount !== null
-                            ? `${(Number(widthdrwal.amount) - Number(widthdrwal.amount) * 0.003).toFixed(2)}`
-                            : "0.0"}                    </span>
+                            ? `${((Number(widthdrwal.amount) + Number(widthdrwal.amount) * 0.003) + Number(widthdrwal.amount) * 0.002).toFixed(2)}`
+                            : "0.0"}
+                    </span>
                 </button>
                 <button className="p-1 wrap small rounded-2xl gap-2 w--full mt-3 border border-slate-700 mt-2 flex flex-row items-center justify-center">
 
                     <p className="flex small flex-row items-center gap-2"><span style={{
                         background: '#35353E'
                     }} className="p-1 rounded-2xl  flex flex-row gap-2 text-white bg-green-300">
-                        <Dot />    Commision 0%
+                        <Dot />    Commision 0.2%
                     </span> <span className="green">$ 1</span></p>
                     <p className="flex small flex-row items-center gap-2"><span style={{
                         background: '#35353E'
@@ -361,10 +364,10 @@ const DepositForm = () => {
                         color: '#F79330'
                     }} className="p-1 rounded-2xl  flex flex-row gap-2 text-white bg-green-300">
                         <Dot />  Total fees
-                    </span> <span className="yellowT">$ 
-                    {widthdrwal.amount !== null
-                            ? `${(Number(widthdrwal.amount) - Number(widthdrwal.amount) * 0.003).toFixed(2)}`
-                            : "0.0"}                          
+                    </span> <span className="yellowT">$
+                            {widthdrwal.amount !== null
+                                ? `${((Number(widthdrwal.amount) + Number(widthdrwal.amount) * 0.003) + Number(widthdrwal.amount) * 0.002).toFixed(2)}`
+                                : "0.0"}
                         </span></p>
                 </button>
                 {/* <div className="flex w-full flex-row gap-10 wrap items-center ">
@@ -411,8 +414,8 @@ const DepositForm = () => {
                     </div>
                 </div>
                 <p> <Checkbox
-                         className="border border-green-700 green checkbox"
-                         {...label} /> I Confirm that the above submitted address is correct Address for the Cryptocurrency i chose, and not other Crypto *</p>
+                    className="border border-green-700 green checkbox"
+                    {...label} /> I Confirm that the above submitted address is correct Address for the Cryptocurrency i chose, and not other Crypto *</p>
             </div>
 
             <p className="grey flex m-1 mt-2 flex-row items-center gap-1">
@@ -428,9 +431,9 @@ const DepositForm = () => {
                 <div>
                     <p className="flex flex-row gao-2 items-center">
                         <Checkbox
-                         className="border border-green-700 green checkbox"
-                         {...label} />
-                        
+                            className="border border-green-700 green checkbox"
+                            {...label} />
+
                         Please SEND the Funds to the preferred Payment Method below </p>
                 </div>
                 <div className="flex secondary small wrap flex-row justify-between gap-6 w-full items-center">
@@ -447,7 +450,7 @@ const DepositForm = () => {
                                         </option>
                                     ))}
                                 </select> */}
-                                <select onChange={(e)=>setWidthdrwal({...widthdrwal,payment_method:e.target.value})} className="p-2 primary no-border w-full" >
+                                <select onChange={(e) => setWidthdrwal({ ...widthdrwal, payment_method: e.target.value })} className="p-2 primary no-border w-full" >
                                     <option value="">Payment provider</option>
                                     {payments.map((i) => {
                                         return (
@@ -534,7 +537,7 @@ const DepositForm = () => {
                                     document.getElementById("file-upload").click();
                                     toast.success('picked successfully')
                                 }
-                                    
+
                                 }
                             >
                                 <FiUpload className="text-white" />
@@ -561,15 +564,15 @@ const DepositForm = () => {
                         className="p-1 w-full primary  rounded-2xl p-2 no-border primary" />
 
                     <div className="flex flex-row items-center gap-2">
-                    <Checkbox
-                         className="border border-green-700 green checkbox"
-                         {...label} />
+                        <Checkbox
+                            className="border border-green-700 green checkbox"
+                            {...label} />
                         <p>I confirm that I sent the payment</p>
                     </div>
                     <div className="flex flex-row items-center gap-2">
-                    <Checkbox
-                         className="border border-green-700 green checkbox"
-                         {...label} />
+                        <Checkbox
+                            className="border border-green-700 green checkbox"
+                            {...label} />
                         <p>I confirm that I sent the payment</p>
                     </div>
 

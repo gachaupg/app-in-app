@@ -73,7 +73,15 @@ function App() {
   const { user } = useSelector((state) => ({ ...state.auth }));
   const [loading1, setLoading1] = useState(false);
   const [status, setStatus] = useState([]);
-
+  console.log('user',user);
+  
+    // useEffect(() => {
+    //   if (user?.access) {
+    //     navigate("/dashboard");
+    //   } else {
+    //     navigate("/")
+    //   }
+    // }, [user]);
   useEffect(() => {
     if (!modalShown) {
       fetchData1();

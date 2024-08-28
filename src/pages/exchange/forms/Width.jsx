@@ -42,7 +42,7 @@ const initialState = {
     additional_info: ""
 };
 
-const Widthform = ({setShow}) => {
+const Widthform = ({ setShow }) => {
 
 
     const [files, setFile] = useState('');
@@ -95,9 +95,11 @@ const Widthform = ({setShow}) => {
             const headers = {
                 Authorization: `Bearer ${token}`,
             };
-
+            const amount = parseFloat(widthdrwal.amount) || 0; // Ensure amount is a valid number
+            const totalAmount = (amount - (amount * 0.003) - (amount * 0.002)).toFixed(2); // Amount including total fees
+            console.log('amountsss', totalAmount);
             const formData = new FormData();
-            formData.append('amount', widthdrwal.amount);
+            formData.append('amount', totalAmount);
             formData.append('deposit_address', widthdrwal.deposit_address);
             formData.append('payment_provider', widthdrwal.payment_provider);
             formData.append('payment_method', widthdrwal.payment_method);
@@ -107,7 +109,7 @@ const Widthform = ({setShow}) => {
                 formData.append('screenshot', widthdrwal.screenshot);
             }
             for (const [key, value] of formData.entries()) {
-                console.log(`${key}: ${value}`);
+                console.log(`new data${key}: ${value}`);
             }
             try {
                 const response = await fetch(
@@ -122,7 +124,8 @@ const Widthform = ({setShow}) => {
                 const data = await response.json();
                 if (response.ok) {
                     toast.success("Withdrwal  successfully!");
-                    window.location.reload();                } else if (data.code === "token_not_valid") {
+                    window.location.reload();
+                } else if (data.code === "token_not_valid") {
                     toast.error("Your session has expired. Please log in again.");
                     navigate("/login");
                 } else {
@@ -372,7 +375,7 @@ const Widthform = ({setShow}) => {
                     >
                         <DollarSign />
                         {widthdrwal.amount !== null
-                            ? `${(Number(widthdrwal.amount) - Number(widthdrwal.amount) * 0.003).toFixed(2)}`
+                            ? `${((Number(widthdrwal.amount) - Number(widthdrwal.amount) * 0.003) - Number(widthdrwal.amount) * 0.002).toFixed(2)}`
                             : "0.0"}
                     </span>
 
@@ -394,7 +397,12 @@ const Widthform = ({setShow}) => {
                         color: '#F79330'
                     }} className="p-1 rounded-2xl  flex flex-row gap-2 text-white bg-green-300">
                         <Dot />  Total fees
-                    </span> <span className="yellowT">$ {widthdrwal.amount != null ? `${Number(widthdrwal.amount) + 3}` : 0.00}</span></p>
+                    </span> <span className="yellowT">$
+                            {widthdrwal.amount !== null
+                                ? `${((Number(widthdrwal.amount) - Number(widthdrwal.amount) * 0.003) - Number(widthdrwal.amount) * 0.002).toFixed(2)}`
+                                : "0.0"}                         
+                                </span>
+                                </p>
                 </button>
                 {/* <div className="flex w-full flex-row gap-10 wrap items-center ">
                     <div
@@ -631,8 +639,8 @@ const Widthform = ({setShow}) => {
                         <p>I confirm that I sent the payment</p>
                     </div>
                     {loading ? <div className="flex items-center justify-center">
-                        <CircularProgress /> 
-                    </div>:
+                        <CircularProgress />
+                    </div> :
                         <button onClick={handleSubmit} className="p-2 greenbg rounded-2xl white w-full">
                             Submit
                         </button>

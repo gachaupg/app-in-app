@@ -71,10 +71,7 @@ const BuyPage = (props) => {
   console.log("====================================");
   // console.log("buyddd", payments);
   console.log("====================================");
-  useEffect(() => {
-    fetchData();
-  }, [user.access]);
-
+  
 
   useEffect(() => {
 
@@ -106,35 +103,45 @@ const BuyPage = (props) => {
     setOpen(false);
   };
 
-  async function fetchData() {
-    const token = user.access;
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = user?.access;
 
-    if (!token) {
-      toast.error("Authentication token is missing. Please log in again.");
-      navigate("/login");
-      setLoading1(false);
-      return;
-    }
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+      }
 
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+        const res = await axios.get(
+          `${endpoint}/trading_engine/p2porders/${id}/`,
+          { headers }
+        );
+        setPayments(res.data);
+        setLoading1(false);
+        console.log('payments', res.data);
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
     };
 
-    try {
-      const res = await axios.get(
-        `${endpoint}/trading_engine/p2porders/${id}/`,
-        { headers }
-      );
-      setPayments(res.data);
-      setLoading1(false);
-      console.log(payments);
+    fetchData(); // Initial fetch
 
-    } catch (error) {
-      console.log(error);
-      setLoading1(false);
-    }
-  }
+    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+
+    return () => clearInterval(interval); // Clean up interval on unmount
+  }, [user?.access, navigate]);
+
+
+
   const [open1, setOpen1] = useState(false);
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
@@ -175,7 +182,7 @@ const BuyPage = (props) => {
 
         if (response.ok) {
           toast.success("USDT transferred successfully!");
-          fetchData3();
+          // fetchData3();
           if (status.status==='completed') {
             setOpen1(true);
             
@@ -201,11 +208,11 @@ const BuyPage = (props) => {
   };
 
 
-  useEffect(() => {
-    fetchData3();
-  }, [user.access]);
-  async function fetchData3() {
-    const token = user.access;
+console.log('status',status);
+useEffect(() => {
+  const fetchData = async () => {
+    const token = user?.access;
+
     if (!token) {
       toast.error("Authentication token is missing. Please log in again.");
       navigate("/login");
@@ -219,23 +226,32 @@ const BuyPage = (props) => {
     };
 
     try {
-      const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, {
-        headers,
-      });
+      
+        const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, 
+          { headers }
+      );
+      setStatus(res.data);
       setLoading1(false);
-      setStatus(res.data); // Assuming the response data is what you need to set
-      if (res.data.status === 'completed') {
-        setOpen1(true);
-
-      }
+      console.log('payments', res.data);
     } catch (error) {
       console.log(error);
       setLoading1(false);
     }
+  };
+
+  fetchData(); // Initial fetch
+
+  const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+
+  return () => clearInterval(interval); // Clean up interval on unmount
+}, [user?.access, navigate]);
+
+
+useEffect(()=>{
+  if (status.status === 'completed' ) {
+    navigate('/dashboard')
   }
-
-console.log('status',status);
-
+    },[status])
 
   const style = {
     position: 'absolute',
@@ -545,8 +561,8 @@ console.log('status',status);
             </button>
             <button
               onClick={handleSubmit}
-              className={`w-full  rounded-lg p-2 ${ status.status==="matched"? 'gback' : 'bg-red-700'}`}
-              disabled={ status.status==="matched"}
+              className={`w-full  rounded-lg p-2 ${ status.status==="matched" ? 'gback cursor-not-allowed' : 'bg-red-700'}`}
+              disabled={ status.status==="matched" }
             >
               {loading1 ? <CircularProgress /> : "Payment received notify the buyer"}
             </button>

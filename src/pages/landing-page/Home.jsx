@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   ArticlesSection,
   CTA,
@@ -8,8 +10,6 @@ import {
   HeroSection,
   SetupProcess,
 } from "./sections";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const users = JSON.parse(localStorage.getItem("profile"));

@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Btn from "../../../components/Button";
-import { getDeposits, getWallets } from "../../../redux/features/answerSlice";
+import { getWallets } from "../../../redux/features/answerSlice";
 import { endpoint } from "../../../utils/APIRoutes";
 import MainProfilePage from "../../Auth/MainProfilePage";
 import Settings from "../../Settings/Settings";
@@ -54,13 +54,13 @@ const MainDash = () => {
   const { user } = useSelector((state) => ({ ...state.auth }));
 console.log('user',user);
 
-  // useEffect(() => {
-  //   if (user?.access) {
-  //     navigate("/dashboard");
-  //   } else {
-  //     navigate("/")
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (user?.access) {
+      navigate("/dashboard");
+    } else {
+      navigate("/")
+    }
+  }, [user]);
 
   const [activeTab, setActiveTab] = useState("P2P Trading");
   const [Verified, setVerified] = useState(false);
@@ -137,43 +137,43 @@ console.log('user',user);
 
 
   // https://omayaexchangebackend.onrender.com/api/kyc/status/
+
   useEffect(() => {
-    fetchKyc()
-  }, [user])
-  async function fetchKyc() {
-    const token = user.access;
+    const fetchData = async () => {
+      const token = user?.access;
 
-    if (!token) {
-      toast.error("Authentication token is missing. Please log in again.");
-      navigate("/login");
-      setLoading1(false);
-      return;
-    }
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+      }
 
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+        const res = await axios.get(
+          `${endpoint}/api/kyc/status/`,
+          { headers }
+        );
+        setKyc(res.data);
+        setLoading1(false);
+        console.log('payments', res.data);
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
     };
 
-    try {
-      const res = await axios.get(
-        `http://13.51.161.80:8000/api/kyc/status/`,
-        { headers }
-      );
-      setKyc(res.data);
-      console.log(res.data);
+    fetchData(); // Initial fetch
 
-      setLoading1(false);
-      if (res.data.is_verified === false) {
-        setOpen(true)
-      } else {
-        setOpen(false)
-      }
-    } catch (error) {
-      console.log(error);
-      setLoading1(false);
-    }
-  }
+    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+
+    return () => clearInterval(interval); // Clean up interval on unmount
+  }, [user?.access, navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -211,41 +211,50 @@ console.log('user',user);
 
     return () => clearInterval(interval); // Clean up interval on unmount
   }, [user?.access, navigate]);
-  //  console.log('beauty',match);
+
+  
 
   useEffect(() => {
-    fetchData1()
-  }, [user?.access])
-  async function fetchData1() {
-    const token = user.access;
+    const fetchData1 = async () => {
+      const token = user?.access;
 
-    if (!token) {
-      toast.error("Authentication token is missing. Please log in again.");
-      navigate("/login");
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+      }
 
-      setLoading1(false);
-      return;
-    }
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
 
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      try {
+        const res = await axios.get(
+          `${endpoint}/trading_engine/trades/matched/`,
+          { headers }
+        );
+        setMatch(res.data);
+        setLoading1(false);
+        console.log('payments', res.data);
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
     };
 
-    try {
-      const res = await axios.get(
-        `${endpoint}/trading_engine/trades/matched/`,
-        { headers }
-      );
-      setMatch(res.data);
-      setLoading1(false);
-      console.log('paymentssss', res.data);
+    fetchData1(); // Initial fetch
 
-    } catch (error) {
-      console.log(error);
-      setLoading1(false);
-    }
-  }
+    const interval = setInterval(fetchData1, 5000); // Fetch every 5 seconds
+
+    return () => clearInterval(interval); // Clean up interval on unmount
+  }, [user?.access, navigate]);
+
+
+
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -732,7 +741,7 @@ useEffect(() => {
                                 <p className="grey">Balance</p>
                                 <p className="flex flex-row">
                                   {
-                                    wallet.map((balance) => {
+                                    payments.map((balance) => {
                                       return (
                                         <p key={balance.id}>
                                           {typeof balance.balance === 'string' ? formatBalance(balance.balance) : 'N/A'}
