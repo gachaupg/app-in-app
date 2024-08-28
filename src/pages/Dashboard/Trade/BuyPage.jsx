@@ -254,11 +254,11 @@ const BuyPage = (props) => {
     p: 4,
   };
 
-  useEffect(()=>{
-if (status.status === 'completed' ) {
-  navigate('/dashboard')
-}
-  },[status])
+//   useEffect(()=>{
+// if (status.status === 'completed' ) {
+//   navigate('/dashboard')
+// }
+//   },[status])
   return (
     <div className="white primary flex justify-between  pt-10  wrap small pr-40 pl-40 ">
       <div

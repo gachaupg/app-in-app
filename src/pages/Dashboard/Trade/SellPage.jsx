@@ -247,11 +247,11 @@ useEffect(() => {
 }, [user?.access, navigate]);
 
 
-useEffect(()=>{
-  if (status.status === 'completed' ) {
-    navigate('/dashboard')
-  }
-    },[status])
+// useEffect(()=>{
+//   if (status.status === 'completed' ) {
+//     navigate('/dashboard')
+//   }
+//     },[status])
 
   const style = {
     position: 'absolute',
