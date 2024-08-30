@@ -161,13 +161,13 @@ const BuyPage = (props) => {
                 console.log("Sending request with headers:", buy); // Debugging line
                 console.log(
                     "Sending request to endpoint:",
-                    `${endpoint}/trading_engine/p2p/trades/${id}/confirm/`,
+                    `${endpoint}/trading_engine/p2p/trades/${status.id}/confirm/`,
 
                     // https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/<int:trade_id>/complete/
                 ); // Debugging line
                 // https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/1/confirm/
                 const response = await fetch(
-                    `${endpoint}/trading_engine/p2p/trades/${id}/confirm/`,
+                    `${endpoint}/trading_engine/p2p/trades/${status.id}/confirm/`,
 
                     // `${endpoint}/trading_engine/p2p/trades/${id}/complete/`,
                     {
@@ -181,9 +181,9 @@ const BuyPage = (props) => {
                 if (response.ok) {
                     toast.success("Request sent!");
                     fetchData3();
-                    if (status.status === 'completed' ) {
-                        navigate('/dashboard')
-                      }
+                    // if (status.status === 'completed' ) {
+                    //     navigate('/dashboard')
+                    //   }
                 } else {
                     if (data.code === "token_not_valid") {
                         toast.error("Your session has expired. Please log in again.");
@@ -420,7 +420,7 @@ const BuyPage = (props) => {
                                     <div className="w-full flex items-center wrap flex-row ">
                                         <p className="g w-36">Account Name</p>
                                         <p className="border w-full flex items-center w-full greybg border-green-600 rounded-2xl p-1">
-                                            <Dot /> <p> {payments?.account_name}</p>
+                                            <Dot /> <p> {payments?.account_provider_name}</p>
                                         </p>
 
                                     </div>
@@ -429,7 +429,7 @@ const BuyPage = (props) => {
                                         <div className="flex flex-row gap-2 justify-between  w-full">
                                             <p className="border text-green-600 flex items-center w-full greybg border-green-600 rounded-2xl p-1">
                                                 <Dot color="green" />{" "}
-                                                <p>{payments?.account_number}</p>
+                                                <p>{payments?.account_provider_number}</p>
                                             </p>
                                         </div>
                                     </div>
@@ -473,8 +473,8 @@ const BuyPage = (props) => {
                     <button
 
                         onClick={handleSubmit}
-                        className={`w-full rounded-lg p-2 ${match.status === 'completed' ? 'gback cursor-not-allowed' : 'yellowfaded'}`}
-                        disabled={match.status === 'completed'}
+                        className={`w-full rounded-lg p-2 ${match.status === 'half-matched' ? 'gback cursor-not-allowed' : 'yellowfaded'}`}
+                        disabled={match.status === 'half-matched'}
 
                     >
                         {loading1 ? <CircularProgress /> : "Money sent notify the buyer"}

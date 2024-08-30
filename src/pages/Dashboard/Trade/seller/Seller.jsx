@@ -38,7 +38,7 @@ const BuyPage = (props) => {
     const [open, setOpen] = React.useState(false);
     const location = useLocation()
     const fromDashboard = location.state;
-    
+
     const params = useParams();
     const { id } = params;
     const navigate = useNavigate();
@@ -67,7 +67,7 @@ const BuyPage = (props) => {
     console.log("hello", fromDashboard);
 
     const [buy, setBuy] = useState(initialState);
-    
+
 
 
     useEffect(() => {
@@ -100,43 +100,43 @@ const BuyPage = (props) => {
         setOpen(false);
     };
 
-      useEffect(() => {
-    const fetchData = async () => {
-      const token = user?.access;
-  
-      if (!token) {
-        toast.error("Authentication token is missing. Please log in again.");
-        navigate("/login");
-        setLoading1(false);
-        return;
-      }
-  
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
-  
-      try {
-        
-          const res = await axios.get(
-            `${endpoint}/trading_engine/p2porders/${id}/`,
-            { headers }
-        );
-        setPayments(res.data);
-        setLoading1(false);
-        console.log('payments', res.data);
-      } catch (error) {
-        console.log(error);
-        setLoading1(false);
-      }
-    };
-  
-    fetchData(); // Initial fetch
-  
-    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
-  
-    return () => clearInterval(interval); // Clean up interval on unmount
-  }, [user?.access, navigate]);
+    useEffect(() => {
+        const fetchData = async () => {
+            const token = user?.access;
+
+            if (!token) {
+                toast.error("Authentication token is missing. Please log in again.");
+                navigate("/login");
+                setLoading1(false);
+                return;
+            }
+
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            };
+
+            try {
+
+                const res = await axios.get(
+                    `${endpoint}/trading_engine/p2porders/${id}/`,
+                    { headers }
+                );
+                setPayments(res.data);
+                setLoading1(false);
+                console.log('payments', res.data);
+            } catch (error) {
+                console.log(error);
+                setLoading1(false);
+            }
+        };
+
+        fetchData(); // Initial fetch
+
+        const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+
+        return () => clearInterval(interval); // Clean up interval on unmount
+    }, [user?.access, navigate]);
     const [open1, setOpen1] = useState(false);
     const handleOpen1 = () => setOpen1(true);
     const handleClose1 = () => setOpen1(false);
@@ -146,10 +146,10 @@ const BuyPage = (props) => {
         setLoading1(true);
         const token = user.access;
         if (!token) {
-          toast.error("Authentication token is missing. Please log in again.");
-          navigate("/login");
-          setLoading1(false);
-          return;
+            toast.error("Authentication token is missing. Please log in again.");
+            navigate("/login");
+            setLoading1(false);
+            return;
         }
 
         if (buy.order_type === 'buy') {
@@ -178,7 +178,7 @@ const BuyPage = (props) => {
 
                 if (response.ok) {
                     toast.success("Request sent!");
-                    navigate('/dashboard')
+                    // navigate('/dashboard')
                 } else {
                     if (data.code === "token_not_valid") {
                         toast.error("Your session has expired. Please log in again.");
@@ -200,46 +200,46 @@ const BuyPage = (props) => {
 
     useEffect(() => {
         const fetchData = async () => {
-          const token = user?.access;
-      
-          if (!token) {
-            toast.error("Authentication token is missing. Please log in again.");
-            navigate("/login");
-            setLoading1(false);
-            return;
-          }
-      
-          const headers = {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          };
-      
-          try {
-            
-              const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, 
-                { headers }
-            );
-            setMatch(res.data); 
+            const token = user?.access;
 
-            setMatch(res.data);
-            setLoading1(false);
-            console.log('payments', res.data);
-            if (res.data.status === 'completed') {
-              setOpen1(true);
+            if (!token) {
+                toast.error("Authentication token is missing. Please log in again.");
+                navigate("/login");
+                setLoading1(false);
+                return;
             }
-          } catch (error) {
-            console.log(error);
-            setLoading1(false);
-          }
+
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            };
+
+            try {
+
+                const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`,
+                    { headers }
+                );
+                setMatch(res.data);
+
+                setMatch(res.data);
+                setLoading1(false);
+                console.log('payments', res.data);
+                if (res.data.status === 'completed') {
+                    setOpen1(true);
+                }
+            } catch (error) {
+                console.log(error);
+                setLoading1(false);
+            }
         };
-      
+
         fetchData(); // Initial fetch
-      
+
         const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
-      
+
         return () => clearInterval(interval); // Clean up interval on unmount
-      }, [user?.access, navigate]);
-    
+    }, [user?.access, navigate]);
+
     const [seconds, setSeconds] = useState(9);
     const [isDisabled, setIsDisabled] = useState(false);
 
@@ -254,54 +254,54 @@ const BuyPage = (props) => {
             setIsDisabled(true); // Disable the button when seconds reach 0
         }
     }, [seconds]);
-const [match,setMatch]=useState([]);
-
-    
-useEffect(() => {
-    const fetchData = async () => {
-      const token = user?.access;
-  
-      if (!token) {
-        toast.error("Authentication token is missing. Please log in again.");
-        navigate("/login");
-        setLoading1(false);
-        return;
-      }
-  
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
-  
-      try {
-        
-          const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, 
-            { headers }
-        );
-        setStatus(res.data);
-        setMatch(res.data);
-        setLoading1(false);
-        console.log('payments', res.data);
-        if (res.data.status === 'completed') {
-          setOpen1(true);
-            navigate('/dashboard')
-          
-        }
-      } catch (error) {
-        console.log(error);
-        setLoading1(false);
-      }
-    };
-  
-    fetchData(); // Initial fetch
-  
-    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
-  
-    return () => clearInterval(interval); // Clean up interval on unmount
-  }, [user?.access, navigate]);
+    const [match, setMatch] = useState([]);
 
 
-      
+    useEffect(() => {
+        const fetchData = async () => {
+            const token = user?.access;
+
+            if (!token) {
+                toast.error("Authentication token is missing. Please log in again.");
+                navigate("/login");
+                setLoading1(false);
+                return;
+            }
+
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            };
+
+            try {
+
+                const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`,
+                    { headers }
+                );
+                setStatus(res.data);
+                setMatch(res.data);
+                setLoading1(false);
+                console.log('payments', res.data);
+                if (res.data.status === 'completed') {
+                    setOpen1(true);
+                    navigate('/dashboard')
+
+                }
+            } catch (error) {
+                console.log(error);
+                setLoading1(false);
+            }
+        };
+
+        fetchData(); // Initial fetch
+
+        const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+
+        return () => clearInterval(interval); // Clean up interval on unmount
+    }, [user?.access, navigate]);
+
+
+
     const style = {
         position: 'absolute',
         top: '50%',
@@ -421,16 +421,16 @@ useEffect(() => {
                                     <div className="w-full flex items-center wrap flex-row ">
                                         <p className="g w-36">Account Name</p>
                                         <p className="border w-full flex items-center w-full greybg border-green-600 rounded-2xl p-1">
-                                            <Dot /> <p> {payments?.account_name}</p>
+                                            <Dot /> <p> {payments?.account_provider_name}</p>
                                         </p>
 
                                     </div>
                                     <div className="w-full flex items-center wrap flex-row ">
-                                        <p className="g w-36">Account Name</p>
+                                        <p className="g w-36">Account Number</p>
                                         <div className="flex flex-row gap-2 justify-between  w-full">
                                             <p className="border text-green-600 flex items-center w-full greybg border-green-600 rounded-2xl p-1">
                                                 <Dot color="green" />{" "}
-                                                <p>{payments?.account_name}</p>
+                                                <p>{payments?.account_provider_number}</p>
                                             </p>
 
                                         </div>
@@ -449,10 +449,10 @@ useEffect(() => {
                                 <p className="white flex flex-row items-center">
                                     <Dot size={30} />
                                     <p className="flex items-center">
-                                       {
-                                        fromDashboard.order_type=='buy'? <p>{fromDashboard.buyer.split('@')[0]}</p>:
-                                        <p>{fromDashboard.seller.split('@')[0]}</p>
-                                       }
+                                        {
+                                            fromDashboard.order_type == 'buy' ? <p>{fromDashboard.buyer.split('@')[0]}</p> :
+                                                <p>{fromDashboard.seller.split('@')[0]}</p>
+                                        }
                                     </p>
 
                                 </p>
@@ -476,11 +476,11 @@ useEffect(() => {
                         {isDisabled ? 'Cant Appeal' : `Appeal in ${seconds} seconds`}
                     </button>
                     <button
-                    
+
                         onClick={handleSubmit}
-                        className={`w-full rounded-lg p-2 ${match.status === 'matched' || match.status==='complete' ? 'gback' : 'yellowfaded'}`}
-                        disabled={match.status === 'matched'|| match.status==='complete'}
-                        
+                        className={`w-full rounded-lg p-2 ${match.status === 'matched' || match.status === 'complete' ? 'gback' : 'yellowfaded'}`}
+                        disabled={match.status === 'matched' || match.status === 'complete'}
+
                     >
                         {loading1 ? <CircularProgress /> : "Payments received release USDT"}
                     </button>

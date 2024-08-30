@@ -65,7 +65,7 @@ const BuyPage = (props) => {
     auto_reply: payments?.auto_reply || "",
     terms_and_conditions: payments?.terms_and_conditions || "",
   };
-  console.log("hello", status.status);
+  console.log("hello", status);
 
   const [buy, setBuy] = useState(initialState);
   console.log("====================================");
@@ -127,6 +127,7 @@ const BuyPage = (props) => {
         setPayments(res.data);
         setLoading1(false);
         console.log('payments', res.data);
+
       } catch (error) {
         console.log(error);
         setLoading1(false);
@@ -167,11 +168,11 @@ const BuyPage = (props) => {
         console.log("Sending request with headers:", buy); // Debugging line
         console.log(
           "Sending request to endpoint:",
-          `${endpoint}/trading_engine/p2p/trades/${id}/complete/`
+          `${endpoint}/trading_engine/p2p/trades/${status.id}/complete/`
         ); // Debugging line
         // https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/1/confirm/
         const response = await fetch(
-          `${endpoint}/trading_engine/p2p/trades/${id}/complete/`,
+          `${endpoint}/trading_engine/p2p/trades/${status.id}/complete/`,
           {
             method: "POST",
             headers: headers,
@@ -181,15 +182,17 @@ const BuyPage = (props) => {
         const data = await response.json();
 
         if (response.ok) {
+          
           toast.success("USDT transferred successfully!");
           // fetchData3();
           setOpen1(true);
-          if (status.status==='completed') {
+          navigate('/dashboard')
+          // if (status.status==='completed') {
             
-            navigate('/dashboard')
-          }else{
-            setOpen1(false)
-          }
+          //   
+          // }else{
+          //   setOpen1(false)
+          // }
         } else {
           if (data.code === "token_not_valid") {
             toast.error("Your session has expired. Please log in again.");
@@ -234,11 +237,8 @@ const BuyPage = (props) => {
         setMatch(res.data);
         setLoading1(false);
         console.log('payments', res.data);
-        if (res.data.status === 'completed') {
-          setOpen1(true);
-            navigate('/dashboard')
-          
-        }
+        localStorage.setItem('id', JSON.stringify(res.data.id));
+
       } catch (error) {
         console.log(error);
         setLoading1(false);
@@ -253,6 +253,52 @@ const BuyPage = (props) => {
   }, [user?.access, navigate]);
 
 
+  const [complete, setComplete] = useState([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = user?.access;
+
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+      }
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+
+        var uid = JSON.parse(localStorage.getItem('id'));
+
+        const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${uid}/confirm/`,
+          { headers }
+        );
+        setComplete(res.data);
+        console.log('new data ',res.data);
+        
+        setLoading1(false);
+        if (res.data.status === 'completed') {
+          setOpen1(true);
+          navigate('/dashboard')
+
+        }
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
+    };
+
+    fetchData(); // Initial fetch
+
+    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+
+    return () => clearInterval(interval); // Clean up interval on unmount
+  }, [user?.access, navigate]);
 
 
   const style = {

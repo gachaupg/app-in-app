@@ -9,13 +9,13 @@ import { DollarSign } from "lucide-react";
 import { IoIosArrowDown } from "react-icons/io";
 import { Link } from "react-router-dom";
 
-const Sell = ({ show ,payments,isLoading}) => {
+const Sell = ({ show ,payments,isLoading, verified,setOpen}) => {
   return (
     <>
       <div className="   flex wrap small flex-row gap-2w-36 justify-between p-1">
         
       </div>
-      <Table show={show} payments={payments} isLoading={isLoading}/>
+      <Table show={show} payments={payments} isLoading={isLoading} verified={verified} setOpen={setOpen}/>
     </>
   );
 };

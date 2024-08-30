@@ -52,8 +52,8 @@ const Center = () => {
   const handleClose = () => setOpen(false);
   const [payments, setPayments] = useState([]);
   const [loading1, setLoading1] = useState(true);
-  console.log(form);
-
+  console.log('data', form);
+  const [mombile, setMombile] = useState('')
   useEffect(() => {
     fetchData();
   }, [user.access]);
@@ -302,6 +302,7 @@ const Center = () => {
   }
 
 
+
   return (
     <div className="flex rounded-lg flex-col  gap-2 w-full">
       <div
@@ -407,10 +408,9 @@ const Center = () => {
         </Modal>
         <div className="flex flex-col gap-2 ">
           <p className="flex flex-row items-center gap-3 r">
-            <p className="p-2 bg-green-600 text-white h-10 w-10 rounded-full flex items-center ">
-              OA
-            </p>
-            <p className="g capitalize">{user.user.username}</p>
+          <p className="p-2 bg-green-600 text-white h-10 w-10 rounded-full flex items-center justify-center text-center uppercase">
+          {user?.user?.first_name?.substring(0, 2)}            </p>
+            <p className="g capitalize">{user.user.first_name}</p>
             <p className="g bg-green-600 text-white h-6 w-6 rounded-full flex items-center justify-center">
               <img
                 src="https://res.cloudinary.com/pitz/image/upload/v1721926700/Icon_2_wrahsk.png"
@@ -595,7 +595,7 @@ const Center = () => {
               <p className="white">Bank</p>
               <div className="border flex items-center  p-1 white border-green-600 rounded-lg">
                 <Plus color="green" />{" "}
-                <select className="secondary w-44 no-border" name="" id="">
+                <select onChange={(e) => setMombile(e.target.value)} className="secondary w-44 no-border" name="" id="">
                   <option value="">
                     {" "}
                     <Plus color="green" /> Add Method
@@ -635,7 +635,21 @@ const Center = () => {
                 {/* {provider.map((i) => {
                   return ( */}
                 <>
-                  <option value='Salam'>Salam</option>{" "}
+                 {
+                  mombile==='bank'?
+                  (
+                    <>
+                    <option value='Salam'>Salam</option>
+                    <option value='Salam'>Premiear</option>
+                    </>
+                  ):(
+                    <>
+                    <>
+                      <option value='mpesa'>M-mpesa</option>
+                      </>
+                    </>
+                   ) 
+                 }
                 </>
                 {/* );
                 })} */}

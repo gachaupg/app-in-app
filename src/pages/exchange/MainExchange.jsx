@@ -275,7 +275,22 @@ const handlClick=()=>{
     setIsDropdownVisible(!isDropdownVisible);
   };
   const [crypto, setCrypto] = useState('crypto');
+  const handleVerify2 = () => {
+    if (kyc.is_verified) {
+      setShow("Deposit")
+    } else {
+      setOpen(true)
 
+    }
+  }
+  const handleVerify3 = () => {
+    if (kyc.is_verified) {
+      setShow("Withdraw")
+    } else {
+      setOpen(true)
+
+    }
+  }
   return (
     <>
       <div>
@@ -455,10 +470,10 @@ const handlClick=()=>{
                 <div>
                   <p className="white">  Transaction Type</p>
                   <div className=" w-full p-2 flex flex-row items-center justify-center gap-5 small">
-                    <button onClick={() => setShow("Deposit")} className={`white gap-3 flex items-center justify-center border border-green-700  w-36 ${show === 'Deposit' ? 'greenbg' : ''} p-1 rounded-3xl`}>
+                    <button onClick={handleVerify2} className={`white gap-3 flex items-center justify-center border border-green-700  w-36 ${show === 'Deposit' ? 'greenbg' : ''} p-1 rounded-3xl`}>
                       <MdArrowOutward color="white" />  Deposit
                     </button>
-                    <button onClick={() => setShow("Withdraw")} className={`border gap-3 white w-36 flex items-center white justify-center border-red-700 ${show === 'Withdraw' ? 'bg-red-700' : ''} p-1 rounded-3xl`}>
+                    <button onClick={handleVerify3} className={`border gap-3 white w-36 flex items-center white justify-center border-red-700 ${show === 'Withdraw' ? 'bg-red-700' : ''} p-1 rounded-3xl`}>
                       <GoArrowDownLeft color="white" />   Withdraw
                     </button>
                   </div>

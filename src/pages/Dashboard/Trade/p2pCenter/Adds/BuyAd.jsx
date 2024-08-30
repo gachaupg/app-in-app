@@ -18,8 +18,8 @@ const initialState = {
   order_type: "",
   currency: "USDT",
   amount: "",
-  min_order_amount:'',
-  max_order_amount:'',
+  min_order_amount: '',
+  max_order_amount: '',
   commission_rate: "",
   exchange_rate: "0.3",
   payment_method_name: "1",
@@ -130,7 +130,7 @@ const Adds = () => {
         terms_and_conditions: sell.terms_and_conditions,
         amount: sell.amount,
         advertiser_name: user.user,
-        order_type: active === "sell" ? "sell" : "buy",
+        order_type: active === "sell" ? "buy" : "sell",
         currency: "USDT",
       });
     }
@@ -262,12 +262,22 @@ const Adds = () => {
       setLoading1(false);
     }
   }
-
+  const [errors1, setErrors1] = useState('');
+console.log('errors',errors1);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading1(true);
+            // setLoading1(true);
 
+            let validationErrors = {};
+            if (sell.commission_rate==="" || null ||sell.amount==="" || null ||
+              sell.max_order_amount==="" || null ||sell.min_order_amount==="" || null||sell.limit==="" || null
+            ) {
+              setErrors1( "Field can't be empty") ;
+
+            }
+            
+            
     // Assuming user.user.access is available in your component's state or context
     const token = user.access;
 
@@ -279,15 +289,15 @@ const Adds = () => {
     }
     if (details.length === 0) {
       setOpen1(true)
-  } else {
+    } else {
       setOpen1(false)
-  }
+    }
     if (sell.amount) {
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       };
-     
+
       try {
         console.log("Sending request with headers:", headers); // Debugging line
         console.log(
@@ -314,7 +324,7 @@ const Adds = () => {
             navigate("/login");
           } else {
             toast.error(
-               data.error
+              data.error
             );
           }
           console.error("Error response:", data);
@@ -327,7 +337,7 @@ const Adds = () => {
       }
     }
   };
- 
+
 
   const initialState1 = {
     provider_name: "",
@@ -340,14 +350,15 @@ const Adds = () => {
   const [open2, setOpen2] = useState(false);
   const handleOpen2 = () => setOpen2(true);
   const handleClose2 = () => setOpen2(false);
-
+  const [err, setErr] = useState('')
   const handleSubmit1 = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Assuming user.user.access is available in your component's state or context
     const token = user.access;
-
+    if (sell.commission_rate === "") {
+      setErr('Field cant be emp')
+    }
     if (!token) {
       toast.error("Authentication token is missing. Please log in again.");
       navigate("/login");
@@ -421,10 +432,10 @@ const Adds = () => {
           <Box className="primary w-full border border-slate-700 g" sx={{ ...style, width: 700 }}>
             <h2 id="child-modal-title">You have no payments Details</h2>
             <h2>To proceed add payments details on the profile page</h2>
-            
-              <button onClick={handleOpen2} className="p-1 white mt-2 rounded-2xl greenbg w-full">
-                Add Payments Details
-              </button>
+
+            <button onClick={handleOpen2} className="p-1 white mt-2 rounded-2xl greenbg w-full">
+              Add Payments Details
+            </button>
           </Box>
         </Modal>
 
@@ -590,7 +601,7 @@ const Adds = () => {
                 </Typography>
                 <button
                   onClick={() => {
-                   navigate('/dashboard')
+                    navigate('/dashboard')
                   }}
                   className="w-full mt-3 p-1 white greenbg rounded-2xl"
                 >
@@ -647,6 +658,9 @@ const Adds = () => {
                   className="green"
                 ></p>
               </div>
+              {errors1===null ?"": <p className="text-red-500">{errors1}</p>}
+
+
             </div>
           </div>
           <p className="g">Amount & Payment Method</p>
@@ -677,6 +691,8 @@ const Adds = () => {
                   </p>
                   {/* <IoMdArrowDropdown color="white" /> */}
                 </div>
+                {errors1===null ?"": <p className="text-red-500">{errors1}</p>}
+
               </div>
               <div className="flex flex-col w-full gap-1">
                 <p style={{ fontSize: "14px" }} className="g">
@@ -709,6 +725,8 @@ const Adds = () => {
                     USD <IoIosArrowDown />
                   </p>
                 </div>
+                {errors1===null ?"": <p className="text-red-500">{errors1}</p>}
+
               </div>
               <div className="flex flex-col w-full gap-1">
                 <p style={{ fontSize: "14px" }} className="g">
@@ -741,7 +759,10 @@ const Adds = () => {
                     USD <IoIosArrowDown />
                   </p>
                 </div>
+                {errors1===null ?"": <p className="text-red-500">{errors1}</p>}
+
               </div>
+
             </div>
             <div className=" secondary  small wrap  w-full  flex flex-row gap-6 items-center">
               <div className="flex flex-col w-full gap-1">
@@ -860,7 +881,10 @@ const Adds = () => {
                     </select>
                   </p>
                 </div>
+                {errors1===null ?"": <p className="text-red-500">{errors1}</p>}
+
               </div>
+              
             </div>
             <div className=" secondary small wrap  w-full  flex flex-row gap-6 items-center">
               <div className="flex flex-col w-full gap-1">
@@ -957,14 +981,14 @@ const Adds = () => {
                 Cancel
               </button>
               {loading1 ? <div>
-                <CircularProgress/>
+                <CircularProgress />
               </div> :
-              <button
-                onClick={handleSubmit}
-                className={` ${active === "sell" ? "bg-red-700" : "greenbg"}  p-2 w-full rounded-2xl p-1 white`}
-              >
-               Post Ad
-              </button>}
+                <button
+                  onClick={handleSubmit}
+                  className={` ${active === "sell" ? "bg-red-700" : "greenbg"}  p-2 w-full rounded-2xl p-1 white`}
+                >
+                  Post Ad
+                </button>}
             </div>
           </div>
         </div>

@@ -10,7 +10,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useSelector } from "react-redux";
 import SellForm from "./SellForm";
 
-function Table({ show, payments, isLoading }) {
+function Table({ show, payments, isLoading,verified,setOpen }) {
   const [buy, setBuy] = useState(false);
   const [showTop, setShowTop] = useState("");
   const [id, setId] = useState("");
@@ -229,7 +229,7 @@ function Table({ show, payments, isLoading }) {
                   {buy === row.id && (
                     <tr>
                       <td colSpan="5">
-                        <SellForm id={id} buy={buy} setBuy={setBuy} setId={setId}/>
+                        <SellForm id={id} buy={buy} setBuy={setBuy} setId={setId} setOpen={setOpen} verified={verified}/>
                       </td>
                     </tr>
                   )}

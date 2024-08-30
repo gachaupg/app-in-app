@@ -54,7 +54,7 @@ const Notifications = () => {
                                                     <p className="g">Order Id: {i.id}</p>
                                                 </div>
                                                 <div>
-                                                    <Link to={`/${i.order_type==='buy'?'rates':'buysell'}/${i.buy_order || i.sell_order}`} state={i}>
+                                                    <Link to={`/${i.order_type==='buy'?'rates':'buysell'}/${i.id}`} state={i}>
                                                         <button className="flex white p-1 greenbg rounded-lg">
                                                             View Order
                                                         </button>

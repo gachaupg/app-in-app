@@ -52,7 +52,7 @@ const MainDash = () => {
   console.log('data', data);
 
   const { user } = useSelector((state) => ({ ...state.auth }));
-console.log('user',user);
+  console.log('user', user);
 
   useEffect(() => {
     if (user?.access) {
@@ -161,18 +161,16 @@ console.log('user',user);
         );
         setKyc(res.data);
         setLoading1(false);
-        console.log('payments', res.data);
+
       } catch (error) {
         console.log(error);
         setLoading1(false);
       }
     };
 
-    fetchData(); // Initial fetch
-
-    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
-
-    return () => clearInterval(interval); // Clean up interval on unmount
+    fetchData(); 
+    const interval = setInterval(fetchData, 5000); 
+    return () => clearInterval(interval); 
   }, [user?.access, navigate]);
 
   useEffect(() => {
@@ -193,7 +191,7 @@ console.log('user',user);
 
       try {
         const res = await axios.get(
-          `http://13.51.161.80:8000/trading_engine/wallets/`,
+          `${endpoint}/trading_engine/wallets/`,
           { headers }
         );
         setPayments(res.data);
@@ -212,7 +210,7 @@ console.log('user',user);
     return () => clearInterval(interval); // Clean up interval on unmount
   }, [user?.access, navigate]);
 
-  
+
 
   useEffect(() => {
     const fetchData1 = async () => {
@@ -416,15 +414,46 @@ console.log('user',user);
     }
   }
 
-  const token =user.access
+  const token = user.access
   const { wallet, loading, error } = useSelector((state) => state.deposits);
-// console.log('depositddds',match);
-useEffect(() => {
-  if (token) {
-    dispatch(getWallets({ token, toast }));
-  }
-}, [dispatch, token]);
+  // console.log('depositddds',match);
+  useEffect(() => {
+    if (token) {
+      dispatch(getWallets({ token, toast }));
+    }
+  }, [dispatch, token]);
 
+  const handleVerify = () => {
+    if (kyc.is_verified) {
+      setShow("Deposit")
+    } else {
+      setOpen(true)
+    }
+  }
+  const handleVerify1 = () => {
+    if (kyc.is_verified) {
+      setShow("Withdraw")
+    } else {
+      setOpen(true)
+    }
+  }
+  const handleVerify2 = () => {
+    if (kyc.is_verified) {
+      navigate('/adds')
+    } else {
+      setOpen(true)
+
+    }
+  }
+  const handleVerify3 = () => {
+    if (kyc.is_verified) {
+      navigate('/buy-adds')
+
+    } else {
+      setOpen(true)
+
+    }
+  }
   return (
     <>
       <div>
@@ -575,10 +604,11 @@ useEffect(() => {
                         Verify Account
                       </Typography>
                       <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        <button onClick={handleOpen1} className="p-2 greenbg rounded-lg w-32 white mt-3">
-                          {loadingKy ? 'processing...' : 'Verify Now'}
-                        </button>
+                        <p onClick={handleOpen1} className="w-full">
+                          {loadingKy ? 'Account will be verified soon!, It may take upto 24 hrs' : 'Verify Now'}
+                        </p>
                       </Typography>
+                      <button onClick={() => setOpen(false)} className="flex p-1 items-center justify-center mt-3 w-full border border-slate-700 rounded-lg">Cancel</button>
                     </Box>
                   </Modal>
                 </div>
@@ -658,7 +688,7 @@ useEffect(() => {
                             Hello, {user?.user?.first_name}!
                           </p>
                           <p
-                            style={{ fontSize: "12px", color: "#F79330" }}
+                            style={{ fontSize: "12px", color: "red" }}
                             className=" flex flex-row items-center gap-1 "
                           >
                             {kyc.is_verified ? <p className="green">Verified</p> : 'Unerified account'} {" "}
@@ -688,7 +718,7 @@ useEffect(() => {
                       </div>
                       <div className="flex flex-row wrap small-gap items-center gap-5">
                         <div className="flex flex-row gap-3">
-                          <Link to="/buy-adds">
+                          <div onClick={handleVerify3}>
                             <Btn
                               title="Post Buy Ad"
                               icon={<Plus size={15} />}
@@ -697,8 +727,8 @@ useEffect(() => {
                               className="additional-class-name"
                             />
 
-                          </Link>
-                          <Link to="/adds">
+                          </div>
+                          <div onClick={handleVerify2}>
                             <Btn
                               title="Post Sell Ad"
                               icon={<Plus size={15} />}
@@ -706,7 +736,7 @@ useEffect(() => {
                               color="#FFFFFF"
                               className="additional-class-name"
                             />
-                          </Link>
+                          </div>
                         </div>
 
                         <div className="relative inline-block">
@@ -756,8 +786,8 @@ useEffect(() => {
                                       payments.map((balance) => {
                                         return (
                                           <p key={balance.id}>
-                                          {typeof balance.balance === 'string' ? formatBalance(balance.balance) : 'N/A'}
-                                        </p>
+                                            {typeof balance.balance === 'string' ? formatBalance(balance.balance) : 'N/A'}
+                                          </p>
                                         )
                                       })
                                     }  <span className="ml-1">USD</span>
@@ -766,7 +796,9 @@ useEffect(() => {
                               </div>
 
                               <div className="flex gap-2 small wrap">
-                                <div onClick={() => setShow("Deposit")}>
+                                <div onClick={() => {
+                                  handleVerify()
+                                }}>
                                   <Btn
                                     color="#FFFFFF"
                                     icon={<MdArrowOutward size={20} color="" />}
@@ -774,7 +806,7 @@ useEffect(() => {
                                     className={`border border-green-600`}
                                   />
                                 </div>
-                                <div onClick={() => setShow("Withdraw")}>
+                                <div onClick={handleVerify1}>
                                   <Btn
                                     color="#FFFFFF"
                                     icon={<GoArrowDownLeft size={20} color="red" />}

@@ -127,7 +127,7 @@ const Adds = () => {
         terms_and_conditions: sell.terms_and_conditions,
         amount: sell.amount,
         advertiser_name: user.user,
-        order_type: active === "sell" ? "sell" : "buy",
+        order_type: active === "sell" ? "buy" : "sell",
         currency: "USDT",
       });
     }

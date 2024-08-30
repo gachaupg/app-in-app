@@ -11,7 +11,7 @@ import SellForm from "./SellForm";
 import BuyForm from "./BuyForm";
 import { useSelector } from "react-redux";
 
-function Table({ show, payments, isLoading }) {
+function Table({ show, payments, isLoading,verified }) {
   const [buy, setBuy] = useState(false);
   const [showTop, setShowTop] = useState("");
   const [id, setId] = useState("");
@@ -43,6 +43,26 @@ function Table({ show, payments, isLoading }) {
   );
 
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+
+
+  const handleVerify2 = () => {
+    if (kyc.is_verified) {
+      navigate('/adds')
+    } else {
+      // setOpen(true)
+
+    }
+  }
+  const handleVerify3 = () => {
+    if (kyc.is_verified) {
+      navigate('/buy-adds')
+
+    } else {
+      // setOpen(true)
+
+    }
+  }
+
 
   return (
     <div style={{ width: "100%", overflowX: "auto" }} className="Table">
@@ -238,7 +258,7 @@ function Table({ show, payments, isLoading }) {
                   {buy === row.id && (
                     <tr>
                       <td colSpan="5">
-                        <BuyForm id={id} buy={buy} setBuy={setBuy} setId={setId}/>
+                        <BuyForm id={id} buy={buy} setBuy={setBuy} setId={setId} verified={verified}/>
                       </td>
                     </tr>
                   )}

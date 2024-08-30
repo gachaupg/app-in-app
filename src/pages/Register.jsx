@@ -392,14 +392,15 @@ console.log(user);
               <div className="name max-w-screen-md">
                 <label htmlFor="">Institution Name*</label>
                 {user.name}
-                <div className="input-group">
-                  <AiOutlineUser color="green" className="input-icon" />
-                  <input
-                    style={{
+                <div style={{
                       border: user.name
                         ? "1px solid rgba(255, 255, 255, 0.5)"
                         : "1px solid red",
-                    }}
+                    }} className="input-group names">
+                  <AiOutlineUser color="green" className="input-icon" />
+                  <input
+                   className="no-border  h-full bgi "
+                    
                     type="text"
                     onChange={(e) => setUser({ ...user, first_name: e.target.value })}
                     placeholder="Institution Name"
@@ -408,13 +409,15 @@ console.log(user);
               </div>
               <div className="name">
                 <label htmlFor="">Established date*</label>
-                <div className="input-group">
-                  <input
-                    style={{
+                <div style={{
                       border: user.establishedDate
                         ? "1px solid rgba(255, 255, 255, 0.5)"
                         : "1px solid red",
-                    }}
+                    }} className="input-group names">
+                  <input
+                   
+                    className="no-border  h-full bgi "
+
                     type="date"
                     onChange={(e) =>
                       setUser({ ...user, establishedDate: e.target.value })
@@ -427,13 +430,17 @@ console.log(user);
             <div className="name-email mt-3 flex flex-col md:flex-row gap-4">
               <div className="name max-w-screen-md">
                 <label htmlFor="">Email*</label>
-                <div className="input-group">
-                  <MdOutlineMailOutline color="green" className="input-icon" />
-                  <input
-                    style={{
+                <div style={{
                       border: user.email
                         ? "1px solid rgba(255, 255, 255, 0.5)"
                         : "1px solid red",
+                    }} className="input-group names ">
+                  <MdOutlineMailOutline color="green" className="input-icon" />
+                  <input
+                    
+                    className="no-border w- h-full bgi "
+                    style={{
+                      width:'90%'
                     }}
                     type="email"
                     onChange={(e) =>
@@ -445,13 +452,14 @@ console.log(user);
               </div>
               <div className="name">
                 <label htmlFor="">Registration*</label>
-                <div className="input-group">
-                  <input
-                    style={{
+                <div style={{
                       border: user.registration
                         ? "1px solid rgba(255, 255, 255, 0.5)"
                         : "1px solid red",
-                    }}
+                    }}className="input-group names">
+                  <input
+                                       className="no-border  h-full bgi "
+
                     type="text"
                     onChange={(e) =>
                       setUser({ ...user, registration: e.target.value })
@@ -465,14 +473,15 @@ console.log(user);
               <div className="name-email flex flex-col md:flex-row gap-14">
                 <div className="name max-w-screen-md">
                   <label htmlFor="">Phone number</label>
-                  <div className="input-group">
-                    <Call color="green" className="input-icon text-green-500" />
-                    <input
-                      style={{
+                  <div  style={{
                         border: user.email
                           ? "1px solid rgba(255, 255, 255, 0.5)"
                           : "1px solid red",
-                      }}
+                      }}className="input-group names">
+                    <Call color="green" className="input-icon text-green-500" />
+                    <input
+                                        className="no-border  h-full bgi "
+
                       type="tel"
                       onChange={(e) =>
                         setUser({ ...user, phone_number: e.target.value })
@@ -484,15 +493,15 @@ console.log(user);
               </div>
               <div className="name  max-w-md">
                 <label htmlFor="">Registration Type*</label>
-                <div className="input-group">
-                  <select
-                    style={{
+                <div style={{
                       width: "26rem",
                       border: user.confirmPassword
                         ? "1px solid rgba(255, 255, 255, 0.5)"
                         : "1px solid red",
-                    }}
-                    className="w-full select select bg-slate-700 p-2 rounded-2xl"
+                    }} className="input-group names">
+                  <select
+                   
+                   className="no-border  h-full bgi "
                     name="registration type"
                     value={user.user_type}
                     onChange={(e) =>
@@ -512,14 +521,18 @@ console.log(user);
             <div className="name-email mt-5 flex flex-col md:flex-row gap-4">
               <div className="name max-w-md">
                 <label htmlFor="">Password*</label>
-                <div className="input-group">
-                  <FaLock color="green" className="input-icon" />
-                  <input
-                    style={{
+                <div style={{
                       border: user.password
                         ? "1px solid rgba(255, 255, 255, 0.5)"
                         : "1px solid red",
+                    }} className="input-group names">
+                  <FaLock color="green" className="input-icon" />
+                  <input
+                     style={{
+                      width:'90%'
                     }}
+                    className="no-border w-full  h-full bgi "
+
                     type={showPassword ? "text" : "password"}
                     onChange={(e) =>
                       setUser({ ...user, password: e.target.value })
@@ -543,14 +556,15 @@ console.log(user);
               </div>
               <div className="name">
                 <label htmlFor="">Confirm Password*</label>
-                <div className="input-group">
-                  <FaLock color="green" className="input-icon" />
-                  <input
-                    style={{
+                <div style={{
                       border: user.confirmPassword
                         ? "1px solid rgba(255, 255, 255, 0.5)"
                         : "1px solid red",
-                    }}
+                    }}className="input-group names">
+                  <FaLock color="green" className="input-icon" />
+                  <input
+                                       className="no-border  h-full bgi "
+
                     type={showConfirmPassword ? "text" : "password"}
                     onChange={(e) =>
                       setUser({ ...user, confirmPassword: e.target.value })
