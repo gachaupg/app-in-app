@@ -30,10 +30,10 @@ const TransactionCard = () => {
             <p className="text-white">My Transactions</p>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <p className="p-2 bg-green-800 rounded-2xl text-white text-xs">Exchange</p>
-            <p className="text-green-800 border border-green-800 text-xs p-2 rounded-2xl">P2P</p>
-            <p className="text-green-800 border border-green-800 text-xs p-2 rounded-2xl">Swap</p>
-            <p className="text-green-800 border border-green-800 text-xs p-2 rounded-2xl">Buy</p>
+            <button className="p-2 bg-green-800 rounded-2xl text-white text-xs">Exchange</button>
+            <button className="text-green-800 border border-green-800 text-xs p-2 rounded-2xl">P2P</button>
+            <button className="text-green-800 border border-green-800 text-xs p-2 rounded-2xl">Swap</button>
+            <button className="text-green-800 border border-green-800 text-xs p-2 rounded-2xl">Buy</button>
           </div>
         </div>
         <div className="overflow-x-auto mt-4">
@@ -456,10 +456,10 @@ const UserDashboard = () => {
                                 <p className="text-white">Overview Total</p>
                             </div>
                             <div className="flex flex-wrap gap-2 sm:gap-4">
-                                <p className="p-2 bg-green-800 rounded-2xl text-white text-xs">Exchange</p>
-                                <p className="text-green-800 border border-green-800 text-xs p-2 rounded-2xl">P2P</p>
-                                <p className="text-green-800 border border-green-800 text-xs p-2 rounded-2xl">Swap</p>
-                                <p className="text-green-800 border border-green-800 text-xs p-2 rounded-2xl">Buy</p>
+                                <button className="p-2 bg-green-800 rounded-2xl text-white text-xs">Exchange</button>
+                                <button className="text-green-800 border border-green-800 text-xs p-2 rounded-2xl">P2P</button>
+                                <button className="text-green-800 border border-green-800 text-xs p-2 rounded-2xl">Swap</button>
+                                <button className="text-green-800 border border-green-800 text-xs p-2 rounded-2xl">Buy</button>
                             </div>
                             </div>
                             <div className="stats flex flex-col md:flex-row justify-between mt-4 gap-4">
@@ -501,7 +501,7 @@ const UserDashboard = () => {
                             <p className="text-white font-semibold flex-grow">Your Referral Commissions</p>
                             <div className="flex items-center">
                                 <p className="text-gray-400">Month</p>
-                                <svg className="w-4 h-4 ml-1 text-gray-400" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <svg className="w-4 h-4 ml-1 text-gray-400 cursor-pointer" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                 <path d="M5.25 7.5L10 12.25L14.75 7.5H5.25Z" />
                                 </svg>
                             </div>
