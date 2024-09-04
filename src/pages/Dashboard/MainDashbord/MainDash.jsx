@@ -27,6 +27,7 @@ import Market from "../Trade/Market";
 import Orders from "../Trade/Orders";
 import DepositForm from "./DepositForm";
 import Widthdrwal from "./Widthdrwal";
+import UserDashboard from "../UserDashboard/UserDashboard";
 
 const style = {
   position: 'absolute',
@@ -62,7 +63,7 @@ const MainDash = () => {
     }
   }, [user]);
 
-  const [activeTab, setActiveTab] = useState("P2P Trading");
+  const [activeTab, setActiveTab] = useState("Dashboard");
   const [Verified, setVerified] = useState(false);
   const [activeTab1, setActiveTab1] = useState("Dashboard");
   const [show, setShow] = useState("P2P");
@@ -1062,6 +1063,11 @@ const MainDash = () => {
         {activeTab === "Buy Crypto" && (
           <>
             <BuyCrypto />
+          </>
+        )}
+         {activeTab === "Dashboard" && (
+          <>
+            <UserDashboard />
           </>
         )}
         {activeTab === "Exchange" && (
