@@ -152,7 +152,7 @@ const Adds = () => {
     };
 
     try {
-      const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/user-payment-details/`, {
+      const res = await axios.get(`${endpoint}/trading_engine/user-payment-details/`, {
         headers,
       });
       setLoading1(false);
@@ -215,7 +215,7 @@ const Adds = () => {
     };
 
     try {
-      const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/payment-methods/`, {
+      const res = await axios.get(`${endpoint}/trading_engine/payment-methods/`, {
         headers,
       });
       setLoading1(false);
@@ -246,7 +246,7 @@ const Adds = () => {
     };
 
     try {
-      const res = await axios.get(`https://omayaexchangebackend.onrender.com/trading_engine/payment-providers/Bank/`, {
+      const res = await axios.get(`${endpoint}/trading_engine/payment-providers/Bank/`, {
         headers,
       });
       setLoading1(false);
@@ -284,11 +284,11 @@ const Adds = () => {
         console.log("Sending request with headers:", headers); // Debugging line
         console.log(
           "Sending request to endpoint:",
-          `https://omayaexchangebackend.onrender.com/trading_engine/p2p/orders/`
+          `${endpoint}/trading_engine/p2p/orders/`
         ); // Debugging line
 
         const response = await fetch(
-          `https://omayaexchangebackend.onrender.com/trading_engine/p2p/orders/`,
+          `${endpoint}/trading_engine/p2p/orders/`,
           {
             method: "POST",
             headers: headers,
@@ -441,7 +441,7 @@ const Adds = () => {
               </div>
             </div>
             <div className="flex flex-col w-full gap-1">
-              <p className="g">Commission</p>
+              <p className="g">Rate</p>
               <div className="border p-1 pl-2 rounded-3xl border-slate-700 flex flex-row justify-between  w-full primary ">
                 <p className="flex w-full flex-row items-center gap-2">
                   <img
@@ -464,7 +464,10 @@ const Adds = () => {
                   className="green"
                 ></p>
               </div>
+              {sell.commission_rate >= 0.9 && sell.commission_rate <= 1 ? "" : <p className="text-red-700">0.9 - 1</p>}
+
             </div>
+
           </div>
           <p className="g">Amount & Payment Method</p>
           <div className="border small wrap secondary p-3 border-slate-700 rounded-lg w-full  flex flex-col gap-6 ">
@@ -727,7 +730,7 @@ const Adds = () => {
                 </>
               </div>
 
-             
+
             </div>
             <button className="bg-green-600 w-48 text-white p-1 rounded-3xl">
               Add payment method

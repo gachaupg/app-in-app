@@ -1,11 +1,12 @@
+/* eslint-disable no-unused-vars */
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { FaCashRegister, FaExclamationCircle, FaHome, FaLifeRing, FaUserShield, FaUsers, FaUsersCog, FaWallet } from 'react-icons/fa';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import './Admin.css';
 import { endpoint } from '../utils/APIRoutes';
+import './Admin.css';
 
 const P2pDeposit = () => {
   const navigate = useNavigate();
@@ -141,7 +142,7 @@ const P2pDeposit = () => {
           </div>
           <h2 className="mt-8">All Deposits</h2>
           <div className="overflow-x-auto mt-4">
-            <table className="min-w-full divide-y divide-gray-800">
+            <table className="min-w-full divide-y  divide-gray-800">
               <thead className="bg-black-800 text-white">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Profile</th>
@@ -160,17 +161,35 @@ const P2pDeposit = () => {
                     </td>
                     <td>{deposit.transaction_id}</td>
                     <td>{deposit.currency}</td>
-                    <td>{deposit.user}</td>
+                    <td>{deposit.user_email}</td>
                     <td>{deposit.amount}</td>
                     <td className="space-x-2">
-                      <button 
-                        onClick={() => handleSubmit(deposit.transaction_id)}
-                        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500 disabled:opacity-50"
-                        disabled={loadingStates[deposit.transaction_id]}
-                      >
-                        {loadingStates[deposit.transaction_id] ? 'Approving...' : 'Approve'}
-                      </button>
-                      <button className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500">Reject</button>
+                    <td className="px-6 py-4 flex space-x-2">
+                            {
+                              deposit.status==='approved' ? (
+                                <p
+                                  className="text-green-600">
+
+                                  Approved
+
+                                </p>
+                              ) : (
+                                <button
+                                  onClick={() => handleSubmit(deposit.transaction_id)} // Pass deposit.id to handleSubmit
+                                  className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-500"
+                                >
+                                  {loadingStates[deposit.id] ? 'Approving...' : 'Approve'}
+                                </button>
+
+                              )
+                            }
+                            {deposit.status==='approved' ? (
+''
+                            ):
+                            <button className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-500">Reject</button>
+
+                            }
+                          </td>
                     </td>
                   </tr>
                 ))}

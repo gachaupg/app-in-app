@@ -29,7 +29,7 @@ const style = {
 
 
 const Center = () => {
-  const [show, setShow] = useState("Payments");
+  const [show, setShow] = useState("myAds");
   const { user } = useSelector((state) => ({ ...state.auth }));
   const navigate = useNavigate("");
   const [provider, setProvider] = useState([]);
@@ -408,8 +408,8 @@ const Center = () => {
         </Modal>
         <div className="flex flex-col gap-2 ">
           <p className="flex flex-row items-center gap-3 r">
-          <p className="p-2 bg-green-600 text-white h-10 w-10 rounded-full flex items-center justify-center text-center uppercase">
-          {user?.user?.first_name?.substring(0, 2)}            </p>
+            <p className="p-2 bg-green-600 text-white h-10 w-10 rounded-full flex items-center justify-center text-center uppercase">
+              {user?.user?.first_name?.substring(0, 2)}            </p>
             <p className="g capitalize">{user.user.first_name}</p>
             <p className="g bg-green-600 text-white h-6 w-6 rounded-full flex items-center justify-center">
               <img
@@ -635,24 +635,22 @@ const Center = () => {
                 {/* {provider.map((i) => {
                   return ( */}
                 <>
-                 {
-                  mombile==='bank'?
-                  (
-                    <>
-                    <option value='Salam'>Salam</option>
-                    <option value='Salam'>Premiear</option>
-                    </>
-                  ):(
-                    <>
-                    <>
-                      <option value='mpesa'>M-mpesa</option>
-                      </>
-                    </>
-                   ) 
-                 }
+                  {
+                    mombile === 'bank' ?
+                      (
+                        <>
+                          <option value='Salam'>Salam</option>
+                          <option value='Salam'>Premiear</option>
+                        </>
+                      ) : (
+                        <>
+                          <>
+                            <option value='mpesa'>M-mpesa</option>
+                          </>
+                        </>
+                      )
+                  }
                 </>
-                {/* );
-                })} */}
               </select>
             </p>
             <div className="w-full small wrap flex flex-row items-center justify-between gap-6">

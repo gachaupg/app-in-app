@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-unused-vars */
 import Checkbox from '@mui/material/Checkbox';
@@ -42,7 +43,7 @@ const initialState = {
     additional_info: ""
 };
 
-const DepositForm = () => {
+const DepositForm = ({ setShow, network }) => {
 
 
     const [files, setFile] = useState('');
@@ -221,7 +222,7 @@ const DepositForm = () => {
                 Authorization: `Bearer ${token}`,
             };
             const amount = parseFloat(widthdrwal.amount) || 0; // Ensure amount is a valid number
-            const totalAmount = (amount + (amount * 0.003) + (amount * 0.002)).toFixed(2); // Amount including total fees
+            const totalAmount = (amount + 2).toFixed(2); // Amount including total fees
             console.log('amountsss', totalAmount);
             const formData = new FormData();
             formData.append('amount', totalAmount);
@@ -248,8 +249,9 @@ const DepositForm = () => {
 
                 const data = await response.json();
                 if (response.ok) {
-                    toast.success("Deposited successfully!");
-                    window.location.reload();
+                    toast.success("Request sent successfully and its under review!");
+                    setShow('P2P')
+                    window.scrollTo(0, 0);
                 } else if (data.code === "token_not_valid") {
                     toast.error("Your session has expired. Please log in again.");
                     navigate("/login");
@@ -268,10 +270,36 @@ const DepositForm = () => {
         }
     };
 
+    const name = 'Omaya Exchange';
+    const num = '13242542';
 
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text).then(() => {
+            toast.success('Text copied to clipboard!');
+        }).catch((err) => {
+            console.error('Failed to copy text: ', err);
+        });
+    };
+
+    const [pastedText, setPastedText] = useState('');
+
+    const pasteFromClipboard = () => {
+        navigator.clipboard.readText().then((text) => {
+            setPastedText(text);
+        }).catch((err) => {
+            console.error('Failed to read text from clipboard: ', err);
+        });
+    };
+    const handleInputChange = (e) => {
+        const value = e.target.value;
+        setPastedText(value);
+        setWidthdrwal({ ...widthdrwal, deposit_address: value });
+    };
     return (
-        <div className="text-white mt-2">
-            <p className="g">Transaction Info</p>
+        <div style={{
+            fontSize: '14px'
+        }} className="text-white mt-2">
+            <p className="g"> 1- Transaction Infos</p>
             <div
                 style={{ width: "100%" }}
                 className="border small size border-gray-700 wrap secondary w-full rounded-2xl p-3    flex flex-col justify-between"
@@ -288,12 +316,25 @@ const DepositForm = () => {
                                     src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
                                     alt=""
                                 />
+                                <select className="primary no-border flex flex-row items-center gap-1 w-full" name="" id="">
+                                    {
+                                        ['USDT', 'ETH', 'BTC', 'TRC20'].sort((a, b) => {
+                                            if (network === a) return -1;
+                                            if (network === b) return 1;
+                                            return 0;
+                                        }).map(option => (
+                                            <option key={option} value={option}>
+                                                {option}
+                                            </option>
+                                        ))
+                                    }
+                                </select>
 
-                                <p>
-                                    USDT <span className="grey">TRC20 </span>
-                                </p>
+
+
+
                             </div>
-                            <IoMdArrowDropdown color="white" />
+                            {/* <IoMdArrowDropdown color="white" /> */}
                         </div>
                     </div>
                     <div
@@ -318,7 +359,7 @@ const DepositForm = () => {
                                     alt=""
                                 />
                                 <p>
-                                    {widthdrwal.amount != "" ? widthdrwal.amount : '00'} USDT
+                                    {widthdrwal.amount != "" ? widthdrwal.amount : '00'} {network}
                                     <span
                                         style={{
                                             fontSize: "12px",
@@ -332,7 +373,9 @@ const DepositForm = () => {
                         </div>
                     </div>
                 </div>
-                <p className="w-full flex flex-row items-center gap-1"><LiaExclamationCircleSolid size={30} className="text-red-700" />
+                <p style={{
+                    fontSize: '14px'
+                }} className="w-full flex flex-row items-center  gap-1"><LiaExclamationCircleSolid size={30} className="text-red-700" />
                     This is only estimated price and its based on current Market Price.  We will fix the price when we receive the funds .</p>
                 <p className="white">Net Amount to Transfer</p>
 
@@ -343,7 +386,7 @@ const DepositForm = () => {
                     }} className="p-1 rounded-2xl w-20 flex flex-row gap-2 text-white bg-green-300">
                         <DollarSign />
                         {widthdrwal.amount !== null
-                            ? `${((Number(widthdrwal.amount) + Number(widthdrwal.amount) * 0.003) + Number(widthdrwal.amount) * 0.002).toFixed(2)}`
+                            ? `${((Number(widthdrwal.amount) + 2))}`
                             : "0.0"}
                     </span>
                 </button>
@@ -352,7 +395,7 @@ const DepositForm = () => {
                     <p className="flex small flex-row items-center gap-2"><span style={{
                         background: '#35353E'
                     }} className="p-1 rounded-2xl  flex flex-row gap-2 text-white bg-green-300">
-                        <Dot />    Commision 0.2%
+                        <Dot />    Commision 1%
                     </span> <span className="green">$ 1</span></p>
                     <p className="flex small flex-row items-center gap-2"><span style={{
                         background: '#35353E'
@@ -365,51 +408,29 @@ const DepositForm = () => {
                     }} className="p-1 rounded-2xl  flex flex-row gap-2 text-white bg-green-300">
                         <Dot />  Total fees
                     </span> <span className="yellowT">$
-                            {widthdrwal.amount !== null
-                                ? `${((Number(widthdrwal.amount) + Number(widthdrwal.amount) * 0.003) + Number(widthdrwal.amount) * 0.002).toFixed(2)}`
-                                : "0.0"}
+                        $2
                         </span></p>
                 </button>
-                {/* <div className="flex w-full flex-row gap-10 wrap items-center ">
-                    <div
-                        style={{ width: "100%" }}
-                        className="flex small flex-col p-1 it gap-2 "
-                    >
-                        <div className="mainGrey p-1 pr-2 mt-2 rounded-2xl flex flex-row justify-between w-full items-center">
-                            <input onChange={(e) => setWidthdrwal({ ...widthdrwal, amount: e.target.value })} placeholder="Amount to deposit" className="p-1 mainGrey w-full no-border" type="number" />
-                        </div>
-                    </div>
-
-                </div> */}
                 <p className="w-full flex flex-row items-center mt-3 gap-1"> <LiaExclamationCircleSolid className="yellowT" />
                     Transactions are subject to commission, above is the information on the commission rates</p>
-                {/* <div className="flex flex-row items-center gap-2">
-                    <input
-                        type="checkbox"
-                        className="w-5 h-5 appearance-none rounded-md border-2 border-green-600 bg-white checked:bg-green-600 checked:border-green-600 cursor-pointer relative"
-                        style={{
-                            WebkitAppearance: "none", // Ensures that the custom styles are applied across browsers
-                        }}
-                    />
-                    <label className="text-white">
-                        I confirm that I sent the payment
-                    </label>
-                </div> */}
-
-
             </div>
-            <p className="g">Your Wallet Address</p>
+            <p className="g">2- Your Wallet Address</p>
             <div className="flex flex-col items-start border secondary  border-slate-700 rounded-2xl p-2">
-                <p className="g">Wallet/ Account Address</p>
+                <p className="g mb-3">Wallet/ Account Address</p>
                 <div className="flex w-full flex-row items gap-5">
 
                     <div style={{
                         width: '100%'
                     }} className="w-full flex flex-row p-1 rounded-2xl items-center primary">
                         <p className="flex items-center green"> <BiPaste /></p>
-                        <input type="text" onChange={(e) => setWidthdrwal({ ...widthdrwal, deposit_address: e.target.value })} placeholder="input your wallet adress" className="p-1  rounded-2xl w-full no-border primary" />
-                    </div>
-                    <div className="greybg rounded-2xl green w-20 items-center justify-center flex flex-row ">
+                        <input
+                            value={pastedText}
+                            type="text"
+                            onChange={handleInputChange}
+                            placeholder="Input your wallet address"
+                            className="p-1 rounded-2xl w-full no-border primary"
+                        />                    </div>
+                    <div onClick={pasteFromClipboard} className="greybg rounded-2xl green w-20 items-center justify-center flex flex-row ">
                         <p className="flex items-center">Paste <BiPaste /></p>
                     </div>
                 </div>
@@ -419,7 +440,7 @@ const DepositForm = () => {
             </div>
 
             <p className="grey flex m-1 mt-2 flex-row items-center gap-1">
-                Transfer Details <SlQuestion color="green" />
+                3- OMAYA Exchange Payment Details
             </p>
             <div
                 style={{
@@ -430,9 +451,7 @@ const DepositForm = () => {
             >
                 <div>
                     <p className="flex flex-row gao-2 items-center">
-                        <Checkbox
-                            className="border border-green-700 green checkbox"
-                            {...label} />
+
 
                         Please SEND the Funds to the preferred Payment Method below </p>
                 </div>
@@ -442,14 +461,7 @@ const DepositForm = () => {
                         <div className="primary p-1 small wrap pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
                             <div className="  flex flex-row items-center gap-1 w-full">
                                 <img className="h-6 rounded-full" src="https://res.cloudinary.com/pitz/image/upload/v1721025707/Icon_cr4c7m.png" alt="" />
-                                {/* <select onChange={(e) => setWidthdrwal({ ...widthdrwal, payment_method: e.target.value })} className="p-2 primary no-border w-full" >
-                                    <option value="">Payment method</option>
-                                    {payments.map((i) => (
-                                        <option key={i.provider_method} className="white" value={i.provider_method}>
-                                            {i.provider_method}
-                                        </option>
-                                    ))}
-                                </select> */}
+
                                 <select onChange={(e) => setWidthdrwal({ ...widthdrwal, payment_method: e.target.value })} className="p-2 primary no-border w-full" >
                                     <option value="">Payment provider</option>
                                     {payments.map((i) => {
@@ -490,10 +502,10 @@ const DepositForm = () => {
                         <div className=" p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
                             <div className=" border border-green-700 mr-3  p-1 rounded-2xl flex flex-row items-center gap-1 w-full">
                                 <Dot color="green" />
-                                <p className="green">Omaya Exchange</p>
+                                <p className="green">{name}</p>
                             </div>
-                            <div className="greybg rounded-2xl green p-2 w-20 items-center justify-center flex flex-row ">
-                                <p className="flex items-center gap-1">Copy <Copy size={16} /></p>
+                            <div onClick={() => copyToClipboard(name)} className="greybg  cursor-pointer rounded-2xl green p-2 w-20 items-center justify-center flex flex-row ">
+                                <p className="flex items-center cursor-pointer gap-1">Copy <Copy size={16} /></p>
                             </div>
                         </div>
                     </div>
@@ -502,30 +514,33 @@ const DepositForm = () => {
                         <div className=" p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
                             <div className=" border border-green-700 mr-3  p-1 rounded-2xl flex flex-row items-center gap-1 w-full">
                                 <Dot color="green" />
-                                <p className="green">2427526242</p>
+                                <p className="green">{num}</p>
                             </div>
-                            <div className="greybg rounded-2xl green p-2 w-20 items-center justify-center flex flex-row ">
-                                <p className="flex items-center gap-1">Copy <Copy size={15} /></p>
+                            <div onClick={() => copyToClipboard(num)} className="greybg rounded-2xl cursor-pointer green p-2 w-20 items-center justify-center flex flex-row ">
+                                <p className="flex items-center cursor-pointer gap-1">Copy <Copy size={15} /></p>
                             </div>
                         </div>
                     </div>
 
                 </div>
                 <li className="flex items-center mt-3 gap-1">
-                    <Dot size={30} color="green" /> Please send the money from your
+                    <Dot size={45} color="green" /> Please send the money from your
                     own account Only
                 </li>
                 <li className="flex items-center gap-1">
-                    <Dot size={30} color="green" /> Put transaction ID in the
+                    <Dot size={45} color="green" /> Put transaction ID in the
                     description field of the bank
                 </li>
                 <li className="flex items-center gap-1">
-                    <Dot size={30} color="green" /> Please note, If you do not follow
+                    <Dot size={45} color="green" /> Please note, If you do not follow
                     above conditions, we will reject your transaction and send you
                     back your money.
                 </li>
 
             </div>
+            <p className="grey flex m-1 mt-2 flex-row items-center gap-1">
+                4- Additional Info
+            </p>
             <div className="flex flex-col mb-3 items-start border mt-3 secondary  border-slate-700 rounded-2xl p-2">
                 <div className="p-2 pr-2 small rounded-2xl w-full flex mt-3 flex-col gap-3 ">
                     <div className="flex flex-row items-center gap-2">
@@ -535,7 +550,6 @@ const DepositForm = () => {
                                 className="greenbg p-1 w-12 flex justify-center items-center text-center rounded-lg"
                                 onClick={() => {
                                     document.getElementById("file-upload").click();
-                                    toast.success('picked successfully')
                                 }
 
                                 }
@@ -548,7 +562,12 @@ const DepositForm = () => {
                             type="file"
                             className="hidden"
 
-                            onChange={(e) => setWidthdrwal({ ...widthdrwal, screenshot: e.target.files[0] })}
+                            onChange={(e) => {
+                                setWidthdrwal({ ...widthdrwal, screenshot: e.target.files[0] })
+                                toast.success('picked successfully')
+                            }
+
+                            }
                         />
                     </div>
                     <p className="g ">

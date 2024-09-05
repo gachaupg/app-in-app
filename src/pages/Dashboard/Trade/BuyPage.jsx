@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 import { AttachFile } from "@mui/icons-material";
-import { CircularProgress, Typography } from "@mui/material";
+import { CircularProgress, Rating, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -167,12 +167,12 @@ const BuyPage = (props) => {
           { headers }
         );
         setComplete(res.data);
-        console.log('new data ',res.data);
-        
+        console.log('new data ', res.data);
+
         setLoading1(false);
         if (res.data.status === 'completed') {
           setOpen1(true);
-          navigate('/dashboard')
+          // navigate('/dashboard')
 
         }
       } catch (error) {
@@ -194,6 +194,9 @@ const BuyPage = (props) => {
   const [open1, setOpen1] = useState(false);
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
+  const [open2, setOpen2] = useState(false);
+  const handleOpen2 = () => setOpen2(true);
+  const handleClose2 = () => setOpen2(false)
   useEffect(() => {
     const fetchData = async () => {
       const token = user?.access;
@@ -213,14 +216,14 @@ const BuyPage = (props) => {
       try {
         const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`,
           { headers }
-        );  
+        );
         setStatus(res.data);
         setLoading1(false);
         console.log('paymentse55rre', res.data);
         localStorage.setItem('id', JSON.stringify(res.data.id));
         if (res.data.status === 'completed') {
           setOpen1(true);
-          navigate('/dashboard')
+          // navigate('/dashboard')
 
         }
       } catch (error) {
@@ -255,7 +258,7 @@ const BuyPage = (props) => {
       };
 
       try {
-        console.log("Sending request with headers:", buy); // Debugging line
+        console.log("Sending request with headers:", buy);
         console.log(
           "Sending request to endpoint:",
           `${endpoint}/trading_engine/p2p/trades/${status.id}/confirm/`
@@ -307,13 +310,53 @@ const BuyPage = (props) => {
     p: 4,
   };
 
-  //   useEffect(()=>{
-  // if (status.status === 'completed' ) {
-  //   navigate('/dashboard')
-  // }
-  //   },[status])
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success('Text copied to clipboard!');
+    }).catch((err) => {
+      console.error('Failed to copy text: ', err);
+      toast.error('Failed to copy text.');
+    });
+  };
   return (
     <div className="white primary flex justify-between  pt-10  wrap small pr-40 pl-40 ">
+      <Modal
+        open={open2}
+        // onClose={handleClose1}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box className="flex flex-col primary items-center" sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            <IoCheckmarkCircleSharp className="green" size={40} />
+          </Typography>
+          <Typography className="white">
+            Rate your experience with the Merchant            </Typography>
+          <Typography style={{
+            fontSize: '13px'
+          }} className="g">
+            <Rating color="white" className="white mb-2 mt-1" name="no-value" value={null} />
+
+            <div className="flex rounded-lg flex-col items-center justify-center border border-slate-700 p-2">
+              <p className="g">Leave the comment (optional)</p>
+
+              <input type="text" className="h-40 primary no-border w-full " />
+            </div>
+          </Typography>
+          <button onClick={() => {
+            navigate('/dashboard')
+            window.scrollTo(0, 0);
+
+          }}
+            className="w-full small mt-3 p-1 white border border-slate-700 rounded-2xl">
+            Cancel</button>
+          <button onClick={() => {
+            // handleOpen2()
+          }}
+            className="w-full small mt-3 p-1 white greenbg rounded-2xl">
+            Submit</button>
+        </Box>
+      </Modal>
       <div
         style={{
           width: "65%",
@@ -331,28 +374,31 @@ const BuyPage = (props) => {
               <IoCheckmarkCircleSharp className="green" size={40} />
             </Typography>
             <Typography className="white">
-              Successfully Published
+              Successfully Bought
             </Typography>
             <Typography style={{
               fontSize: '13px'
             }} className="g">
-              I will receive {payments?.amount}
+              I will receive {fromDashboard} USDT
             </Typography>
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2">
               <button onClick={() => {
-                handleClose1()
+                handleClose1();
+                navigate('/dashboard')
+                window.scrollTo(0, 0);
+
               }}
                 className="w-full small mt-3 p-1 white greenbg rounded-2xl">
                 Cancel
               </button>
               <button
                 style={{
-                  width: '13rem'
+                  // width: '16rem'
                 }}
                 onClick={() => {
-                  navigate('/dashboard')
+                  handleOpen2()
                 }}
-                className=" w-72 small mt-3 p-1 white greenbg rounded-2xl">
+                className=" w-80 small mt-3 p-1 white greenbg rounded-2xl">
                 Provide feedback
               </button>
             </div>
@@ -413,16 +459,16 @@ const BuyPage = (props) => {
                   style={{
                     fontSize: "10px",
                   }}
-                  className="gap-1 g flex  items-center"
+                  className="gap-1 g flex justify-center  items-center"
                 >
                   Rating{" "}
                   <span className="text-green-600 gap-1 flex flex-row items-center">
                     <SlLike /> 95%
                   </span>
-                  Commission :{" "}
-                  <span className="text-green-600">
-                    {payments?.commission_rate}%
-                  </span>
+                  <p className="flex flex-row items-center">Commission: <span className="text-green-600">
+                    {/* {payments.commission_rate!= null || "" ? payments.commission_rate : 0.0}% */}
+                  </span></p>
+
                 </p>
               </p>
             </div>
@@ -482,7 +528,7 @@ const BuyPage = (props) => {
               alt=""
             />{" "}
             Order Number :{" "}
-            <span className="text-green-600 flex flex-row items-center gap-1 ml-3">
+            <span onClick={() => copyToClipboard(payments?.id)} className="cursor-pointer text-green-600 flex flex-row items-center gap-1 ml-3">
               {payments?.id} <Copy size={17} />
             </span>
           </p>
@@ -508,7 +554,7 @@ const BuyPage = (props) => {
                   src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
                   alt=""
                 />{" "}
-                {(fromDashboard - 0.5)}
+                {/* {fromDashboard * payments.commission_rate ?? 0.0} */}
                 <span className="white">USDT</span>
               </p>
             </div>
@@ -517,7 +563,7 @@ const BuyPage = (props) => {
             <p className="g">Commission</p>
             <div className="flex g  justify-between items-center rounded-lg w-56  gap-1 p-1 border border-slate-700 items-">
               <p className="green flex p-1 justify-center items-center gap-1">
-                <DollarSign /> {payments?.commission_rate}%
+                <DollarSign />
               </p>
               <p>USD</p>
             </div>
@@ -548,7 +594,7 @@ const BuyPage = (props) => {
                   <p className="border flex items-center w-full greybg border-green-600 rounded-2xl p-1">
                     <Dot /> <p> {payments?.account_name}</p>
                   </p>
-                  <p className="text-green-600 flex items-center">
+                  <p onClick={() => copyToClipboard(payments?.account_name)} className="cursor-pointer text-green-600 flex items-center">
                     {" "}
                     Copy <Copy size={16} />
                   </p>
@@ -561,7 +607,7 @@ const BuyPage = (props) => {
                     <Dot color="green" />{" "}
                     <p>{payments?.account_number}</p>
                   </p>
-                  <p className="text-green-600 flex items-center">
+                  <p onClick={() => copyToClipboard(payments?.account_number)} className="cursor-pointer text-green-600 flex items-center">
                     {" "}
                     Copy <Copy size={16} />
                   </p>
@@ -573,7 +619,7 @@ const BuyPage = (props) => {
                   <p className="border  text-green-6 flex items-center w-full greybg border-green-600 rounded-2xl p-1">
                     <Dot /> <p>{payments?.id}</p>
                   </p>
-                  <p className="text-green-600 flex items-center">
+                  <p onClick={() => copyToClipboard(payments?.id)} className="cursor-pointer text-green-600 flex items-center">
                     {" "}
                     Copy <Copy size={16} />
                   </p>

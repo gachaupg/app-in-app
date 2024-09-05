@@ -41,7 +41,7 @@ function OrdersTable() {
 
     try {
       const res = await axios.get(
-        `https://omayaexchangebackend.onrender.com/trading_engine/p2p/deposit/`,
+        `${endpoint}/trading_engine/p2p/deposit/`,
         { headers }
       );
       setPayments(res.data);
@@ -204,7 +204,7 @@ function OrdersTable() {
             <tbody className="flex w-full items-center justify-center">
               <tr>
                 <td colSpan="7 w-full">
-                  <p className="white w-full">No orders yet</p>
+                  <p className="white w-full">No orders yetddd</p>
                 </td>
               </tr>
             </tbody>

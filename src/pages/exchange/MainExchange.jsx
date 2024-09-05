@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Table } from "@mui/joy";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
@@ -9,23 +8,23 @@ import { Copy, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { GoArrowDownLeft } from "react-icons/go";
 import { LiaStarSolid } from "react-icons/lia";
-import { MdArrowOutward, MdOutlineArrowBackIosNew, MdOutlineArrowDropUp, MdOutlineArrowForwardIos, MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { MdArrowOutward, MdOutlineArrowBackIosNew, MdOutlineArrowDropUp, MdOutlineArrowForwardIos } from "react-icons/md";
 import { RxAvatar } from "react-icons/rx";
 import { TiArrowUnsorted } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useKyc } from "../../utils/context/KycContext";
+import { endpoint } from "../../utils/APIRoutes";
+import MainProfilePage from "../Auth/MainProfilePage";
+import ExchangeTable from "../Dashboard/DashboardTabs/Exchange";
 import SideDash from "../Dashboard/DashboardTabs/SideDash";
 import Center from "../Dashboard/Trade/Center";
 import Orders from "../Dashboard/Trade/Orders";
 import Market from "../p2p/Market";
 import Deposit from "./forms/Deposit";
-import Widthform from "./forms/Width";
 import ForexWidth from "./forms/ForexWidth";
-import MainProfilePage from "../Auth/MainProfilePage";
-import ExchangeTable from "../Dashboard/DashboardTabs/Exchange";
-import { endpoint } from "../../utils/APIRoutes";
+import Widthform from "./forms/Width";
+import EXDash from "../Dashboard/DashboardTabs/ExSide";
 
 const style = {
   position: 'absolute',
@@ -106,9 +105,9 @@ const MainExchange = () => {
     },
   ];
   const [graph, setGraph] = useState('sells')
-const handlClick=()=>{
-  setShow('P2P')
-}
+  const handlClick = () => {
+    setShow('P2P')
+  }
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -122,40 +121,39 @@ const handlClick=()=>{
 
   // https://omayaexchangebackend.onrender.com/api/kyc/status/
   useEffect(() => {
-    fetchKyc()
-  }, [user])
-  async function fetchKyc() {
-    const token = user.access;
+    const fetchData = async () => {
+      const token = user?.access;
 
-    if (!token) {
-      toast.error("Authentication token is missing. Please log in again.");
-      navigate("/login");
-      setLoading1(false);
-      return;
-    }
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+      }
 
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+        const res = await axios.get(
+          `${endpoint}/api/kyc/status/`,
+          { headers }
+        );
+        setKyc(res.data);
+        setLoading1(false);
+
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
     };
 
-    try {
-      const res = await axios.get(
-        `${endpoint}/api/kyc/status/`,
-        { headers }
-      );
-      setKyc(res.data);
-      setLoading1(false);
-      if (res.data.is_verified === false) {
-        setOpen(true)
-      } else {
-        setOpen(false)
-      }
-    } catch (error) {
-      console.log(error);
-      setLoading1(false);
-    }
-  }
+    fetchData();
+    const interval = setInterval(fetchData, 5000);
+    return () => clearInterval(interval);
+  }, [user?.access, navigate]);
 
 
 
@@ -291,6 +289,97 @@ const handlClick=()=>{
 
     }
   }
+
+  const handleVerify = () => {
+    if (kyc.is_verified) {
+      setShow("Deposit")
+    } else {
+      setOpen(true)
+
+    }
+  }
+  const handleVerify4 = () => {
+    if (kyc.is_verified) {
+      setShow("Withdraw")
+
+    } else {
+      setOpen(true)
+
+    }
+  }
+  const [loadingKy, setLoadingKyc] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading1(true);
+
+    try {
+      const token = user?.access;
+
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        return;
+      }
+
+      if (!data.document_type || !data.document_number) {
+        toast.error("Invalid code");
+        return;
+      }
+
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const formData = new FormData();
+      formData.append('document_type', data.document_type);
+      formData.append('document_number', data.document_number);
+      if (data.document_image) {
+        formData.append('document_image', data.document_image);
+      }
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+      }
+      const response = await fetch(`${endpoint}/api/kyc/submit/`, {
+        method: "PATCH",
+        headers: headers,
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log(response);
+
+        toast.success("Request sent successfully!");
+        setLoadingKyc(true);
+        setOpen1(false);
+      } else {
+        if (result.code === "token_not_valid") {
+          toast.error("Your session has expired. Please log in again.");
+          navigate("/login");
+        } else {
+          toast.error(`Verification failed: ${result.error || "Unknown error"}`);
+        }
+      }
+    } catch (error) {
+      toast.error(`Error: ${error.message || "An unknown error occurred."}`);
+      console.error("Error:", error);
+    } finally {
+      setLoading1(false);
+    }
+  };
+  const name = 'Omaya Exchange';
+  const num = '13242542';
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+    }).catch((err) => {
+      console.error('Failed to copy text: ', err);
+    });
+  };
+  const [network, setNetWork] = useState('USDT')
+
   return (
     <>
       <div>
@@ -351,70 +440,28 @@ const handlClick=()=>{
                 <div className="flex flex-row items-center mt-10 justify-between p-2 w-full gap-6 wrap small">
                   <Button
                     className="white txt border p-1 border-slate"
-                    onClick={handleClose}
+                    onClick={handleClose1}
                   >
                     Close
                   </Button>
-                  <Button
-                    className="white txt1 border p-1 border-slate"
-                    onClick={handleClose}
-                  >
-                    Submit
-                  </Button>
+                  {
+                    loading1 ?
+                      <div className="flex items-center justify-center">
+                        <CircularProgress />
+                      </div>
+                      : <Button
+                        onClick={handleSubmit}
+                        className="white txt1 border p-1 border-slate"
+                      >
+                        Submit
+                      </Button>
+                  }
                 </div>
               </div>
             </Box>
           </Modal>
         </div>
       </div>
-      {/* {activeTab1 === "Market" && (
-        <div className="w-full">
-          <img
-            className="h-28 object-cover w-full"
-            src="https://res.cloudinary.com/pitz/image/upload/v1721737603/Frame_35585_zzkxkx.png"
-            alt=""
-          />
-        </div>
-      )} */}
-      {/* <div
-          style={{ width: "18%", color: "#727272", fontSize: "15px" }}
-          className="small dash-side  flex flex-col gap-6 pt-12"
-        >
-          {tabs.map((tab) => (
-            <Link className="" key={tab.name} to={`/${tab.link}`}>
-              <div
-                className={`flex w-full flex-row pl-20 items-center rounded-tr-lg rounded-br-lg gap-4 p-2 transition-all duration-300 
-          ${activeTab === tab.name ? "bg-[#303038]" : "hover:bg-[#404048]"}
-        `}
-                style={{
-                  cursor: "pointer",
-                }}
-                onClick={() => setActiveTab(tab.name)}
-              >
-                <img
-                  className={`${tab.name === "Buy Crypto" ? "h-5" : "h-6"}`}
-                  src={tab.icon}
-                  alt={tab.name}
-                />
-                <div
-                  style={{
-                    fontSize: tab.name === "Buy Crypto" ? "15.5px" : "h-6",
-                  }}
-                  className={`flex items-center justify-between ml-5 w-full 
-            ${activeTab === tab.name ? "text-white" : "hover:text-white"}
-          `}
-                >
-                  {tab.name}
-                  {tab.name === "Account" && (
-                    <MdOutlineKeyboardArrowDown className="ml-2" />
-                  )}
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div> */}
-
-
       <div
         style={{ width: "83%" }}
         className="small p-2 pt-12 flex pr-36 pl-24 flex-col gap-4"
@@ -432,11 +479,22 @@ const handlClick=()=>{
               <Typography id="modal-modal-title" variant="h6" component="h2">
                 Verify Account
               </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                <button onClick={handleOpen1} className="p-2 greenbg rounded-lg w-32 white mt-3">
-                  Verify Now
-                </button>
-              </Typography>
+              <div className="flex flex-row items-center justify-between w-full">
+
+                {loadingKy ? 'Account will be verified soon!, It may take upto 24 hrs' : (
+                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    <button onClick={handleOpen1} className="p-2 greenbg rounded-lg w-32 white mt-3">
+                      Verify Now
+                    </button>
+                  </Typography>
+                )}
+
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                  <button onClick={handleClose} className="p-2 border border-slate-700 rounded-lg w-32 white mt-3">
+                    Cancel
+                  </button>
+                </Typography>
+              </div>
             </Box>
           </Modal>
         </div>
@@ -458,6 +516,29 @@ const handlClick=()=>{
 
               </div>
             }
+            {show === 'depo' &&
+              <div className="flex flex-row items-center gap-5 w-full justify-between">
+                <div>
+                  <p className="white">Deposit</p>
+                  <div className="flex flex-row border gap-2 rounded-lg border-green-700 w-32 p-1">
+                    <button onClick={() => setCrypto('crypto')} className={`${crypto === 'crypto' ? 'greenbg' : ''} rounded-lg p-1 white`}>Crypto</button>
+                    <button onClick={() => setCrypto('forex')} className={`${crypto === 'forex' ? 'greenbg' : ''} rounded-lg p-1  white`}>Forex</button>
+                  </div>
+                </div>
+                <div>
+                  <p className="white">  Transaction Type</p>
+                  <div className=" w-full p-2 flex flex-row items-center justify-center gap-5 small">
+                    <button onClick={handleVerify} className={`white gap-3 flex items-center justify-center border border-green-700  w-36 ${show === 'Deposit' ? 'greenbg' : ''} p-1 rounded-3xl`}>
+                      <MdArrowOutward color="white" />  Deposit
+                    </button>
+                    <button onClick={handleVerify4} className={`border gap-3 white w-36 flex items-center white justify-center border-red-700 ${show === 'Withdraw' ? 'bg-red-700' : ''} p-1 rounded-3xl`}>
+                      <GoArrowDownLeft color="white" />   Withdraw
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            }
             {show === 'Deposit' || show === 'Withdraw' &&
               <div className="flex flex-row items-center gap-5 w-full justify-between">
                 <div>
@@ -470,10 +551,10 @@ const handlClick=()=>{
                 <div>
                   <p className="white">  Transaction Type</p>
                   <div className=" w-full p-2 flex flex-row items-center justify-center gap-5 small">
-                    <button onClick={handleVerify2} className={`white gap-3 flex items-center justify-center border border-green-700  w-36 ${show === 'Deposit' ? 'greenbg' : ''} p-1 rounded-3xl`}>
+                    <button onClick={handleVerify} className={`white gap-3 flex items-center justify-center border border-green-700  w-36 ${show === 'Deposit' ? 'greenbg' : ''} p-1 rounded-3xl`}>
                       <MdArrowOutward color="white" />  Deposit
                     </button>
-                    <button onClick={handleVerify3} className={`border gap-3 white w-36 flex items-center white justify-center border-red-700 ${show === 'Withdraw' ? 'bg-red-700' : ''} p-1 rounded-3xl`}>
+                    <button onClick={handleVerify4} className={`border gap-3 white w-36 flex items-center white justify-center border-red-700 ${show === 'Withdraw' ? 'bg-red-700' : ''} p-1 rounded-3xl`}>
                       <GoArrowDownLeft color="white" />   Withdraw
                     </button>
                   </div>
@@ -481,9 +562,9 @@ const handlClick=()=>{
               </div>
 
             }
-            {show != 'Withdraw' && <p className="white">Exchnage Dashboard
-            </p>}
 
+            {show != 'depo' && <p className="white">Exchange Dashboard
+            </p>}
 
             {show === 'Deposit' &&
               <div className="flex small wrap flex-row flex-wrap items-center gap-5 w-full justify-between">
@@ -497,7 +578,7 @@ const handlClick=()=>{
                 <div>
                   <p className="white">  Transaction Type</p>
                   <div className=" w-full small wrap p-2 flex flex-row items-center justify-center gap-5 small">
-                    <button onClick={() => setShow("Deposit")} className={`white flex items-center justify-center border border-green-700  w-36 ${show === 'Deposit' ? 'greenbg' : ''} p-1 rounded-3xl`}>
+                    <button onClick={() => setShow("Deposit")} className={`white flex items-center justify-center border border-green-700  w-36 ${show === 'Deposit' || show === 'depo' ? 'greenbg' : ''} p-1 rounded-3xl`}>
                       <MdArrowOutward color="white" />  Deposit
                     </button>
                     <button onClick={() => setShow("Withdraw")} className={`border white w-36 flex items-center white justify-center border-red-700 ${show === 'Withdraw' ? 'bg-red-700' : ''} p-1 rounded-3xl`}>
@@ -540,13 +621,13 @@ const handlClick=()=>{
                         <RxAvatar className="text-slate-500" size={40} />
                         <div>
                           <p style={{ fontSize: "16px" }} className="white capitalize">
-                            Hello, {user?.user?.username}!
+                            Hello, {user?.user?.first_name}!
                           </p>
                           <p
-                            style={{ fontSize: "12px", color: "#F79330" }}
+                            style={{ fontSize: "12px", color: "red" }}
                             className=" flex flex-row items-center gap-1 "
                           >
-                            {kyc.is_verified ? <p className="green">Verified</p> : 'Unerified account'} {" "}
+                            {kyc.is_verified ? <p className="green">Verified</p> : 'Unverified account'} {" "}
 
                             <img
                               className="h-4"
@@ -561,7 +642,7 @@ const handlClick=()=>{
                           Use ID
                         </p>
                         <p className="white  cursor-pointer flex flex-row items-center gap-1">
-                          {user?.user?.id} <Copy size={16} style={{ color: "#F79330" }} />
+                          {user?.user?.id} <Copy onClick={() => copyToClipboard(user?.user?.id)} size={16} style={{ color: "#F79330" }} />
                         </p>
                       </div>
                       <div className="flex flex-col gap-2">
@@ -739,16 +820,7 @@ const handlClick=()=>{
                       </>
                     )}
                     <ExchangeTable />
-                    {/* <div className="flex items-center justify-center">
-                        <img
-                          style={{
-                            width: "40%",
-                            objectFit: "contain",
-                          }}
-                          src="https://res.cloudinary.com/pitz/image/upload/v1721386689/Group_164058_cybkz7.png"
-                          alt=""
-                        />
-                      </div> */}
+
                   </div>
                   <div
                     className="ml-10 small wrap "
@@ -757,15 +829,15 @@ const handlClick=()=>{
                     }}
                   >
                     <div className="secondary w-full rounded-2xl p-2 flex flex-row items-center justify-center gap-2 h-24 small border border-slate-700">
-                      <button onClick={() => setShow("Deposit")} className="border white flex items-center justify-center w-28 border-green-600 p-1 rounded-3xl">
+                      <button onClick={handleVerify} className="border white flex items-center justify-center w-28 border-green-600 p-1 rounded-3xl">
                         <MdArrowOutward color="green" />  Deposit
                       </button>
-                      <button onClick={() => setShow("Withdraw")} className="border white w-28 flex items-center justify-center border-red-600 p-1 rounded-3xl">
+                      <button onClick={handleVerify3} className="border white w-28 flex items-center justify-center border-red-600 p-1 rounded-3xl">
                         <GoArrowDownLeft color="red" />   Withdraw
                       </button>
                     </div>
                     <p className="white">Overview Total</p>
-                    <SideDash />
+                    <EXDash />
                   </div>
                 </div>{" "}
               </>
@@ -777,7 +849,7 @@ const handlClick=()=>{
             )}
             {show === "Withdraw" && crypto === 'crypto' && (
               <>
-                <Widthform   setShow={handlClick}/>
+                <Widthform setShow={handlClick} setShow1={setShow} />
               </>
             )}
             {show === "Withdraw" && crypto === 'forex' && (
@@ -787,7 +859,7 @@ const handlClick=()=>{
             )}
             {show === 'depo' && (
               <>
-                <Deposit />
+                <Deposit setShow={setShow} network={network} />
               </>
             )}
             {show === "Deposit" && (
@@ -795,7 +867,7 @@ const handlClick=()=>{
                 <div>
                   <div className="flex w-full flex-row items-center justify-between">
 
-                    <p style={{ width: '60%' }} className="g">
+                    <p style={{ fontSize: '14px', width: '60%' }} className="g mb-3">
                       To deposit funds, please select your transaction type: Crypto or Forex.
                       Choose from the cryptocurrencies or Forex brokers listed below to proceed.
                     </p>
@@ -812,8 +884,12 @@ const handlClick=()=>{
                             <p className="flex-1 flex flex-row items-center gap-2 justify-center">Favorite</p>
                           </div>
 
-                          <div onClick={() => setShow('depo')} className="border cursor-pointer small size mt-5 wrap border-slate-700 gback w-full p-1 items-center flex flex-row justify-between">
-                            <div className="flex-1 flex flex-row cursor-pointer items-center gap-2">
+                          <div onClick={() => {
+                            setNetWork('USDT')
+                            setShow('depo')
+                          }
+                          } className="border hover1 cursor-pointer small size mt-3 wrap border-slate-700 gback w-full p-1 items-center flex flex-row justify-between">
+                            <div className="flex-1  flex flex-row cursor-pointer items-center gap-2">
                               <img className="h-10" src="https://res.cloudinary.com/pitz/image/upload/v1721628835/TRC20_j1e6si.png" alt="USDT TRC20" />
                               <div>
                                 <p className="white">USDT TRC20</p>
@@ -826,7 +902,10 @@ const handlClick=()=>{
                               <LiaStarSolid />
                             </p>
                           </div>
-                          <div className="border small size wrap border-slate-700  w-full p-1 items-center flex flex-row justify-between">
+                          <div onClick={() => {
+                            setNetWork('ETH')
+                            setShow('depo')
+                          }} className="border hover1 small size cursor-pointer wrap border-slate-700  w-full p-1 items-center flex flex-row justify-between">
                             <div className="flex-1 flex flex-row items-center gap-2">
                               <img className="h-10" src="https://res.cloudinary.com/pitz/image/upload/v1724012530/Group_34041_1_usw7t0.png" alt="USDT TRC20" />
                               <div>
@@ -840,7 +919,10 @@ const handlClick=()=>{
                               <LiaStarSolid />
                             </p>
                           </div>
-                          <div className="border small size wrap border-slate-700  w-full p-1 items-center flex flex-row justify-between">
+                          <div onClick={() => {
+                            setNetWork('BTC')
+                            setShow('depo')
+                           }} className="border hover1 small size wrap cursor-pointer border-slate-700  w-full p-1 items-center flex flex-row justify-between">
                             <div className="flex-1 flex flex-row items-center gap-2">
                               <img className="h-10" src="https://res.cloudinary.com/pitz/image/upload/v1721374473/87496d50-2408-43e1-ad4c-78b47b448a6a.png_aoj8i3.png" alt="USDT TRC20" />
                               <div>
@@ -855,11 +937,14 @@ const handlClick=()=>{
                             </p>
                           </div>
 
-                          <div className="border small size wrap border-slate-700  w-full p-1 items-center flex flex-row justify-between">
+                          <div onClick={() => {
+                            setNetWork('TRC20')
+                            setShow('depo')
+                          }} className="border hover1 small cursor-pointer size wrap border-slate-700  w-full p-1 items-center flex flex-row justify-between">
                             <div className="flex-1 flex flex-row items-center gap-2">
                               <img className="h-10" src="https://res.cloudinary.com/pitz/image/upload/v1721374473/87496d50-2408-43e1-ad4c-78b47b448a6a.png_aoj8i3.png" alt="USDT TRC20" />
                               <div>
-                                <p className="white">TRX</p>
+                                <p className="white hover1">TRX</p>
                                 <p className="g text-ms">Tron</p>
                               </div>
                             </div>
@@ -883,7 +968,10 @@ const handlClick=()=>{
                           <p className="flex-1 flex flex-row items-center gap-2 justify-center">More </p>
                         </div>
 
-                        <div className="border small size mt-1 wrap border-slate-700 gback w-full p-1 items-center flex flex-row justify-between">
+                        <div onClick={() => {
+                            setNetWork('FXPRTIMUS')
+                            setShow('depo')
+                          }} className="border hover1 cursor-pointer small size mt-1 wrap border-slate-700 gback w-full p-1 items-center flex flex-row justify-between">
                           <div className="flex-1 flex flex-row items-center gap-2">
                             <img className="h-10" src="https://res.cloudinary.com/pitz/image/upload/v1724056975/FX_msvvv4.png" alt="USDT TRC20" />
                             <div>
@@ -895,7 +983,10 @@ const handlClick=()=>{
                             <LiaStarSolid />
                           </p>
                         </div>
-                        <div className="border small size wrap border-slate-700  w-full p-1 items-center flex flex-row justify-between">
+                        <div onClick={() => {
+                            setNetWork('ICM')
+                            setShow('depo')
+                          }} className="border hover1 cursor-pointer small size wrap border-slate-700  w-full p-1 items-center flex flex-row justify-between">
                           <div className="flex-1 flex flex-row items-center gap-2">
                             <img className="h-10" src="https://res.cloudinary.com/pitz/image/upload/v1724056992/ICM_eboxhq.png" alt="USDT TRC20" />
                             <div>

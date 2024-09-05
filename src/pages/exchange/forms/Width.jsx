@@ -18,18 +18,7 @@ import { endpoint } from "../../../utils/APIRoutes";
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.black",
-    border: "none",
-    borderRadius: "7px",
-    boxShadow: 24,
-    p: 4,
-};
+
 
 const initialState = {
 
@@ -42,7 +31,7 @@ const initialState = {
     additional_info: ""
 };
 
-const Widthform = ({ setShow }) => {
+const Widthform = ({ setShow1 }) => {
 
 
     const [files, setFile] = useState('');
@@ -96,7 +85,7 @@ const Widthform = ({ setShow }) => {
                 Authorization: `Bearer ${token}`,
             };
             const amount = parseFloat(widthdrwal.amount) || 0; // Ensure amount is a valid number
-            const totalAmount = (amount - (amount * 0.003) - (amount * 0.002)).toFixed(2); // Amount including total fees
+            const totalAmount = (amount + 2).toFixed(2); // Amount including total fees
             console.log('amountsss', totalAmount);
             const formData = new FormData();
             formData.append('amount', totalAmount);
@@ -123,8 +112,9 @@ const Widthform = ({ setShow }) => {
 
                 const data = await response.json();
                 if (response.ok) {
-                    toast.success("Withdrwal  successfully!");
-                    window.location.reload();
+                    toast.success("Request sent successfully and its under review! ");
+                    setShow1('P2P')
+                    window.scrollTo(0, 0);
                 } else if (data.code === "token_not_valid") {
                     toast.error("Your session has expired. Please log in again.");
                     navigate("/login");
@@ -280,11 +270,49 @@ const Widthform = ({ setShow }) => {
             setLoading1(false);
         }
     }
+    const [image, setScreenshot] = useState(null);
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setScreenshot(URL.createObjectURL(file));
+            toast.success('Picked successfully');
+        }
+    };
+    console.log(widthdrwal.screenshot);
+
+    const name = 'Omaya Exchange';
+    const num = '13242542';
+
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text).then(() => {
+            toast.success('Text copied to clipboard!');
+        }).catch((err) => {
+            console.error('Failed to copy text: ', err);
+        });
+    };
+
+    const [pastedText, setPastedText] = useState('');
+
+    const pasteFromClipboard = () => {
+        navigator.clipboard.readText().then((text) => {
+            setPastedText(text);
+        }).catch((err) => {
+            console.error('Failed to read text from clipboard: ', err);
+        });
+    };
+    const handleInputChange = (e) => {
+        const value = e.target.value;
+        setPastedText(value);
+        setWidthdrwal({ ...widthdrwal, deposit_address: value });
+    };
+
 
 
     return (
-        <div className="text-white mt-2">
-            {/* <button onClick={handleOpen}>uuu</button> */}
+        <div style={{
+            fontSize: '14px'
+        }} className="text-white mt-2">
             <Modal
                 // open={open}
                 // onClose={handleClose}
@@ -301,7 +329,7 @@ const Widthform = ({ setShow }) => {
                     </Link>
                 </Box>
             </Modal>
-            <p className="g">Transaction Info</p>
+            <p className="g">1- Transaction Info</p>
             <div
                 style={{ width: "100%" }}
                 className="border small size border-gray-700 wrap secondary w-full rounded-2xl p-3    flex flex-col justify-between"
@@ -320,11 +348,17 @@ const Widthform = ({ setShow }) => {
                                     alt=""
                                 />
 
-                                <p>
-                                    TRC
-                                </p>
+                                <select onChange={(e) => { setWidthdrwal({ ...widthdrwal, currency: e.target.value }) }} className="primary no-border flex flex-row items-center gap-1 w-full" name="" id="">
+                                    {
+                                        ['TRON', 'ETH', 'BTC', 'TRC20'].sort((a, b) => {
+                                        }).map(option => (
+                                            <option key={option} value={option}>
+                                                {option}
+                                            </option>
+                                        ))
+                                    }
+                                </select>
                             </div>
-                            <IoMdArrowDropdown color="white" />
                         </div>
                     </div>
                     <div
@@ -349,7 +383,7 @@ const Widthform = ({ setShow }) => {
                                     alt=""
                                 />
                                 <p>
-                                    {widthdrwal.amount != "" ? widthdrwal.amount : '00'} USDT
+                                    {widthdrwal.amount != "" ? widthdrwal.amount : '00'} {widthdrwal.currency}
                                     <span
                                         style={{
                                             fontSize: "12px",
@@ -375,7 +409,7 @@ const Widthform = ({ setShow }) => {
                     >
                         <DollarSign />
                         {widthdrwal.amount !== null
-                            ? `${((Number(widthdrwal.amount) - Number(widthdrwal.amount) * 0.003) - Number(widthdrwal.amount) * 0.002).toFixed(2)}`
+                            ? `${((Number(widthdrwal.amount) + 2)).toFixed(2)}`
                             : "0.0"}
                     </span>
 
@@ -385,7 +419,7 @@ const Widthform = ({ setShow }) => {
                     <p className="flex small wrap flex-row items-center gap-2"><span style={{
                         background: '#35353E'
                     }} className="p-1 rounded-2xl  flex flex-row gap-2 text-white bg-green-300">
-                        <Dot />    Commision 0%
+                        <Dot />    Commision 1%
                     </span> <span className="green">$ 1</span></p>
                     <p className="flex small wrap flex-row items-center gap-2"><span style={{
                         background: '#35353E'
@@ -398,11 +432,9 @@ const Widthform = ({ setShow }) => {
                     }} className="p-1 rounded-2xl  flex flex-row gap-2 text-white bg-green-300">
                         <Dot />  Total fees
                     </span> <span className="yellowT">$
-                            {widthdrwal.amount !== null
-                                ? `${((Number(widthdrwal.amount) - Number(widthdrwal.amount) * 0.003) - Number(widthdrwal.amount) * 0.002).toFixed(2)}`
-                                : "0.0"}                         
-                                </span>
-                                </p>
+                        3
+                        </span>
+                    </p>
                 </button>
                 {/* <div className="flex w-full flex-row gap-10 wrap items-center ">
                     <div
@@ -432,7 +464,7 @@ const Widthform = ({ setShow }) => {
 
 
             </div>
-            <p className="g">Your Wallet Address</p>
+            <p className="g">2- Your Wallet Address</p>
             <div className="flex flex-col small wrap items-start border secondary  border-slate-700 rounded-2xl p-2">
                 <p className="g"> Address</p>
                 <div className="flex w-full flex-row small wrap items gap-5">
@@ -441,12 +473,12 @@ const Widthform = ({ setShow }) => {
                         width: '100%'
                     }} className="w-full flex flex-row justify-between p-1 rounded-2xl items-center primary">
                         <p className="flex items-center gap-3green"> <Dot size={34} color="green" />
-                            <p>2534534525242</p>
+                            <p>{num}</p>
                         </p>
                         <img src="https://res.cloudinary.com/pitz/image/upload/v1724067026/tabler_qrcode_yvf2ly.png" alt="" />
                     </div>
-                    <div className="greybg rounded-2xl green w-20 items-center justify-center flex flex-row ">
-                        <p className="flex items-center">Copy <Copy /></p>
+                    <div onClick={() => copyToClipboard(num)} className="greybg cursor-pointer rounded-2xl green w-20 items-center justify-center flex flex-row ">
+                        <p className="flex items-center">Copy <Copy className="cu cursor-pointer" /></p>
                     </div>
                 </div>
                 <p className="flex flex-row items-center gap-2"> <LiaExclamationCircleSolid className="yellowT" />
@@ -455,7 +487,7 @@ const Widthform = ({ setShow }) => {
             </div>
 
             <p className="grey flex m-1 mt-2 flex-row items-center gap-1">
-                Transfer Details <SlQuestion color="green" />
+                3- Transfer Details <SlQuestion color="green" />
             </p>
             <div
                 style={{
@@ -516,7 +548,7 @@ const Widthform = ({ setShow }) => {
 
                 <div className="flex secondary small wrap flex-row justify-between gap-6 w-full items-center">
                     <div className=" flex flex-col mb-3 w-full">
-                        <p className="grey mb-1"> Account Namsse</p>
+                        <p className="grey mb-1"> Account Name</p>
 
                         {
                             details.map((i) => {
@@ -551,27 +583,36 @@ const Widthform = ({ setShow }) => {
                     </div>
                     <div className=" flex flex-col mb-3 w-full">
                         <p className="grey mb-1"> Account Number</p>
+
                         {
                             details.map((i) => {
                                 return (
-                                    <>
-                                        <div className=" p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
+                                    <><div className=" p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
 
-                                            <div className="  primary mr-3  p-1 rounded-3xl flex flex-row  items-center gap-1 w-full">
-                                                {i.payment_provider_name === widthdrwal.payment_provider && (
-                                                    <>
-                                                        <div className=" p-1 pl-3  border-slate-700 primary flex flex-row items-center justify-between  w-full  ">
-                                                            <p className="w-full p-1 no-border  text-white custom-placeholder">
-                                                                {i.account_number}
-                                                            </p>
-                                                        </div>
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
+                                        {i.payment_provider_name === widthdrwal.payment_provider && (
+                                            <>
+                                                <div className=" border border-green-700 mr-3  p-1 rounded-3xl flex flex-row items-center gap-1 w-full">
+
+                                                    <div className=" p-1 pl-3 rounded-3xl  flex flex-row items-center justify-between  w-full secondary ">
+
+                                                        <p
+
+                                                            className="w-full p-1 no-border secondary text-white custom-placeholder"
+
+                                                        >
+                                                            {i.account_number}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        )}
+
+
+                                    </div>
                                     </>
                                 )
-                            })}
+                            })
+                        }
 
                     </div>
 
@@ -591,6 +632,7 @@ const Widthform = ({ setShow }) => {
                 </li>
 
             </div>
+            <p className="g">4- Additional Info</p>
             <div className="flex flex-col mb-3 items-start border mt-3 secondary  border-slate-700 rounded-2xl p-2">
                 <div className="p-2 pr-2 small rounded-2xl w-full flex mt-3 flex-col gap-3 ">
                     <div className="flex flex-row items-center gap-2">
@@ -600,7 +642,6 @@ const Widthform = ({ setShow }) => {
                                 className="greenbg p-1 w-12 flex justify-center items-center text-center rounded-lg"
                                 onClick={() => {
                                     document.getElementById("file-upload").click();
-                                    toast.success('picked successfully')
                                 }}
                             >
                                 <FiUpload className="text-white" />
@@ -611,8 +652,17 @@ const Widthform = ({ setShow }) => {
                             type="file"
                             className="hidden"
 
-                            onChange={(e) => setWidthdrwal({ ...widthdrwal, screenshot: e.target.files[0] })}
+                            onChange={(e) => {
+                                setWidthdrwal({ ...widthdrwal, screenshot: e.target.files[0] })
+                                handleFileChange()
+                                toast.success('picked successfully')
+
+                            }
+                            }
                         />
+                        <p>{image}</p>
+                        {image && <img src={image} alt="Screenshot" style={{ maxWidth: "200px" }} />}
+
                     </div>
                     <p className="g ">
                         Please upload the screenshot of your payment here.

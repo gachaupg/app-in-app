@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import axios from "axios";
 import { ArrowDown } from "lucide-react";
@@ -9,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../utils/APIRoutes";
 
-const SideDash = () => {
+const SideDash = ({ activeTab }) => {
   const { user } = useSelector((state) => ({ ...state.auth }));
   const navigate = useNavigate();
 
@@ -107,6 +108,7 @@ const SideDash = () => {
             <p className="white">00.00 USD</p>
           </div>
         </div>
+
         <div className="w-full flex flex-col gap-4">
           <div className="w-full flex flex-row items-center justify-between  p-1">
             <div className="flex flex-row items-center gap-1">

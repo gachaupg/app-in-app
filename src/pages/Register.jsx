@@ -341,8 +341,8 @@ console.log(user);
                 alt=""
               />
             </div>
-            <div className="btn-submit white mt-5 flex greenbg p-2 rounded-3xl justify-center">
-              <button type="submit" className="submit-btn">
+            <div onClick={handleSubmit} className="btn-submit cursor-pointer white  mt-5 flex greenbg p-2 rounded-3xl justify-center">
+              <button onClick={handleSubmit} type="submit" className="submit-btn">
                 {loading ? <CircularProgress size={24} /> : "Register"}
               </button>
             </div>
@@ -573,6 +573,7 @@ console.log(user);
                   />
                   {showConfirmPassword ? (
                     <FaRegEyeSlash
+                    size={30}
                       color="green"
                       className="input-icon1 cursor-pointer"
                       onClick={toggleConfirmPasswordVisibility}

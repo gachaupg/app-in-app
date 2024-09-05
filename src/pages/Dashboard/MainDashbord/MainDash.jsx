@@ -10,7 +10,7 @@ import { GoArrowDownLeft } from "react-icons/go";
 import { MdArrowOutward, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { RxAvatar } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Btn from "../../../components/Button";
 import { getWallets } from "../../../redux/features/answerSlice";
@@ -25,8 +25,14 @@ import Table from "../DashboardTabs/Table";
 import Center from "../Trade/Center";
 import Market from "../Trade/Market";
 import Orders from "../Trade/Orders";
+import UserDashboard from "../UserDashboard/UserDashboard";
 import DepositForm from "./DepositForm";
 import Widthdrwal from "./Widthdrwal";
+import { IoIosArrowDown } from "react-icons/io";
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+
+
 
 const style = {
   position: 'absolute',
@@ -45,7 +51,13 @@ const initialState = {
   document_image: ""
 }
 const MainDash = () => {
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [date, setDate] = useState(new Date());
 
+  const handleDateChange = (newDate) => {
+    setDate(newDate);
+    setShowCalendar(false); // Hide the calendar after selecting a date
+  };
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [data, setdata] = useState(initialState)
@@ -70,7 +82,7 @@ const MainDash = () => {
     {
       name: "Dashboard",
       icon: "https://res.cloudinary.com/pitz/image/upload/v1721367990/svgexport-54_1_ww7fdx.png",
-      link: "dashboard"
+      link: "user-dashboard"
     },
     {
       name: "Exchange",
@@ -133,8 +145,14 @@ const MainDash = () => {
   // }
   // },[kyc]);
 
-
-
+  const location = useLocation()
+  const p2pcenter = location.state;
+  console.log('data', p2pcenter);
+  useEffect(() => {
+    if (p2pcenter != null) {
+      setActiveTab1('Center')
+    }
+  }, [p2pcenter])
 
   // https://omayaexchangebackend.onrender.com/api/kyc/status/
 
@@ -168,9 +186,9 @@ const MainDash = () => {
       }
     };
 
-    fetchData(); 
-    const interval = setInterval(fetchData, 5000); 
-    return () => clearInterval(interval); 
+    fetchData();
+    const interval = setInterval(fetchData, 5000);
+    return () => clearInterval(interval);
   }, [user?.access, navigate]);
 
   useEffect(() => {
@@ -203,11 +221,11 @@ const MainDash = () => {
       }
     };
 
-    fetchData(); // Initial fetch
+    fetchData();
 
-    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+    const interval = setInterval(fetchData, 5000);
 
-    return () => clearInterval(interval); // Clean up interval on unmount
+    return () => clearInterval(interval);
   }, [user?.access, navigate]);
 
 
@@ -409,11 +427,12 @@ const MainDash = () => {
       return (num / 1e9).toFixed(2) + 'B';
     } else if (num >= 1e6) {
       return (num / 1e6).toFixed(2) + 'M';
+    } else if (num >= 1e3) {
+      return (num / 1e3).toFixed(2) + 'K';
     } else {
       return num.toFixed(2);
     }
   }
-
   const token = user.access
   const { wallet, loading, error } = useSelector((state) => state.deposits);
   // console.log('depositddds',match);
@@ -454,6 +473,21 @@ const MainDash = () => {
 
     }
   }
+
+  // const name = 'Omaya Exchange';
+  // const num = '13242542';
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success('Text copied to clipboard!');
+    }).catch((err) => {
+      console.error('Failed to copy text: ', err);
+      toast.error('Failed to copy text.');
+    });
+  };
+  const [network, setNetWork] = useState('USDT')
+
+
   return (
     <>
       <div>
@@ -604,8 +638,12 @@ const MainDash = () => {
                         Verify Account
                       </Typography>
                       <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        <p onClick={handleOpen1} className="w-full">
-                          {loadingKy ? 'Account will be verified soon!, It may take upto 24 hrs' : 'Verify Now'}
+                        <p className="w-full ">
+                          {loadingKy ? 'Account will be verified soon!, It may take upto 24 hrs' : (
+                            <button onClick={handleOpen1} className="flex white p-1 rounded-lg w-full greenbg">
+                              Verify Now
+                            </button>
+                          )}
                         </p>
                       </Typography>
                       <button onClick={() => setOpen(false)} className="flex p-1 items-center justify-center mt-3 w-full border border-slate-700 rounded-lg">Cancel</button>
@@ -705,7 +743,7 @@ const MainDash = () => {
                           Use ID
                         </p>
                         <p className="white  cursor-pointer flex flex-row items-center gap-1">
-                          {user?.user?.id} <Copy size={16} style={{ color: "#F79330" }} />
+                          {user?.user?.id} <Copy onClick={() => copyToClipboard(user?.user?.id)} size={16} style={{ color: "#F79330" }} />
                         </p>
                       </div>
                       <div className="flex flex-col gap-2">
@@ -846,7 +884,18 @@ const MainDash = () => {
                                       alt=""
                                     />
                                   </div>
-                                  <p className="white mr-10">0.00</p>
+                                  <p className="white mr-10">
+
+                                    {
+                                      payments.map((balance) => {
+                                        return (
+                                          <p key={balance.id}>
+                                            {typeof balance.balance === 'string' ? formatBalance(balance.balance) : 'N/A'}
+                                          </p>
+                                        )
+                                      })
+                                    }
+                                  </p>
                                   <p className="white mr-6">0.00</p>
                                 </div>
                               </div>
@@ -864,13 +913,24 @@ const MainDash = () => {
                                   Buys
                                 </button>
                               </div>
-                              {/* <BasicArea/> */}
-
                               <div>
-                                <img
-                                  src="https://res.cloudinary.com/pitz/image/upload/v1721374243/Frame_34636_mplpeh.png"
-                                  alt=""
-                                />
+                                <div
+                                  className="flex flex-row items-center  justify-center gap-1 cursor-pointer"
+                                  onClick={() => setShowCalendar(!showCalendar)}
+                                >
+                                  <p className="g cursor-pointer">Month </p>
+                                  <p className="cur cursor-pointer"><IoIosArrowDown className="g"/></p>
+                                </div>
+
+                                {showCalendar && (
+                                  <div className="calendar-container">
+                                    <Calendar
+                                      onChange={handleDateChange}
+                                      value={date}
+                                      view="month" // Show only months
+                                    />
+                                  </div>
+                                )}
                               </div>
                             </div>
                             {graph === 'sells' && (
@@ -925,7 +985,7 @@ const MainDash = () => {
                             }}
                           >
                             <p className="white">Overview Total</p>
-                            <SideDash />
+                            <SideDash activeTab={activeTab} />
                           </div>
                         </div>{" "}
                       </>
@@ -1059,6 +1119,7 @@ const MainDash = () => {
             </>
           )
         }
+
         {activeTab === "Buy Crypto" && (
           <>
             <BuyCrypto />
@@ -1079,7 +1140,11 @@ const MainDash = () => {
             <Settings />
           </>
         )}
-
+        {activeTab === "Dashboard" && (
+          <>
+            <UserDashboard />
+          </>
+        )}
         {activeTab === "Account" && (
           <>
             <MainProfilePage />

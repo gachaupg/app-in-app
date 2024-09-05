@@ -13,6 +13,7 @@ import { endpoint } from "../../../utils/APIRoutes";
 
 function ExchangeTable() {
   const [payments, setPayments] = useState([]);
+  const [payments1, setPayments1] = useState([]);
   const [loading1, setLoading1] = useState(true);
   const { user } = useSelector((state) => ({ ...state.auth }));
   const navigate = useNavigate();
@@ -40,35 +41,121 @@ function ExchangeTable() {
     };
 
     try {
-        const res = await axios.get(
-            `https://omayaexchangebackend.onrender.com/trading_engine/all-transactions/`,
-            { headers }
-          );
-      
-          // Filter transactions by "withdrawal"
-          const filteredData = 
-          res.data.transactions.filter(transaction => transaction.user_email === user.user.email);
-      
-      setPayments(filteredData);
+      const res = await axios.get(
+        `${endpoint}/trading_engine/all-transactions/`,
+        { headers }
+      );
+      const filteredData =
+        res.data.transactions.filter(transaction => transaction.transaction_type === "deposit");
+
+      setPayments1(res.data);
       setLoading1(false);
-      console.log('payments', res.data);
+      console.log('payments exchange', res.data);
 
     } catch (error) {
       console.log(error);
       setLoading1(false);
     }
   }
+  console.log('hello', payments1);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = user?.access;
+
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+      }
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+        const res = await axios.get(
+          `${endpoint}/trading_engine/wallets/`,
+          { headers }
+        );
+        setPayments(res.data);
+        setLoading1(false);
+        console.log('payments', res.data);
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
+    };
+
+    fetchData(); // Initial fetch
+
+    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+
+    return () => clearInterval(interval); // Clean up interval on unmount
+  }, [user?.access, navigate]);
+
+
+
+
+
+
+  const [match, setMatch] = useState([]);
+  const [loadingStates, setLoadingStates] = useState({}); // Track loading states by transaction ID
+  const [transactions, setTransactions] = useState([]);
+  const [id, setId] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = user?.access;
+
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+      }
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+        const res = await axios.get(
+          `${endpoint}/trading_engine/all-transactions/`,
+          { headers }
+        );
+
+        const filteredData = res.data.transactions.filter(transaction => transaction.user_email === user.user.email);
+
+        setMatch(filteredData);
+        console.log('Filtered Transactions:', res.data);
+
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 5000);
+    return () => clearInterval(interval);
+  }, [user?.access, navigate]);
+
+  console.log('match', match);
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
-  const paginatedPayments = payments.slice(
+  const paginatedPayments = match.slice(
     (currentPage - 1) * rowsPerPage,
     currentPage * rowsPerPage
   );
 
-  const totalPages = Math.ceil(payments.length / rowsPerPage);
+  const totalPages = Math.ceil(match.length / rowsPerPage);
+
 
   return (
     <div style={{ width: "100%", overflowX: "auto" }} className="Table">
@@ -205,7 +292,7 @@ function ExchangeTable() {
                   </tr>
                 ))}
             </tbody>
-          ) : payments.length === 0 ? (
+          ) : match.length === 0 ? (
             <tbody className="flex w-full items-center justify-center">
               <tr>
                 <td colSpan="7 w-full">
@@ -223,7 +310,7 @@ function ExchangeTable() {
                 >
                   <td className="flex flex-row items-center gap-1">
                     <img
-                      className="h-10"
+                      className="h-7"
                       src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
                       alt=""
                     />{" "}
@@ -231,14 +318,14 @@ function ExchangeTable() {
                   </td>
                   <td
                     className={`g
-                      } ml-4 pl-6`}
+                      } `}
                   >
-                    {row.transaction_id}
+                    {row.transaction_id.substring(0, 20)}
                   </td>
                   <td
                     className={`${row.transaction_type === "deposit"
-                        ? "text-green-700"
-                        : "text-red-700"
+                      ? "text-green-700"
+                      : "text-red-700"
                       }`}
                   >
                     {row.transaction_type === "deposit" ? "Deposit" : "Withdrawal"}
@@ -257,8 +344,8 @@ function ExchangeTable() {
                   <td className="grey">
                     {new Date(row.created_on).toLocaleDateString()}
                   </td> */}
-                  <td className="grey">{row.approved?'Complete':'Pending'}</td>
-                  <td className="flex flex-row items-center gap-2">
+                  <td className="grey">{row.status}</td>
+                  <td className="flex flex-row mt-2 items-center gap-2">
                     <Eye color="green" />
                   </td>
                   <td>

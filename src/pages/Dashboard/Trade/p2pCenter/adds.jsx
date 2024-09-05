@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { CheckBox } from "@mui/icons-material";
+import { Cancel, CheckBox } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -120,7 +120,7 @@ const Adds = () => {
         completion_time: "10",
         completion_rate: "0.98",
         exchange_rate: "0.8",
-        asset: "TRON",
+        asset: "TRC20",
         limit: sell.limit,
         commission_rate: sell.commission_rate,
         auto_reply: sell.auto_reply,
@@ -251,8 +251,7 @@ const Adds = () => {
         headers,
       });
       setLoading1(false);
-      setProvider(res.data); // Assuming the response data is what you need to set
-      // console.log("hello", res.data);
+      setProvider(res.data);
     } catch (error) {
       console.log(error);
       setLoading1(false);
@@ -264,9 +263,7 @@ const Adds = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading1(true);
-    // console.log('hell datao', sell);
 
-    // Assuming user.user.access is available in your component's state or context
     const token = user.access;
 
     if (!token) {
@@ -342,12 +339,12 @@ const Adds = () => {
   const [open2, setOpen2] = useState(false);
   const handleOpen2 = () => setOpen2(true);
   const handleClose2 = () => setOpen2(false);
-
+  const [open3, setOpen3] = useState(false);
+  const handleOpen3 = () => setOpen3(true);
+  const handleClose3 = () => setOpen3(false);
   const handleSubmit1 = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    // Assuming user.user.access is available in your component's state or context
     const token = user.access;
 
     if (!token) {
@@ -364,15 +361,15 @@ const Adds = () => {
       };
 
       try {
-        console.log("Sending request with headers:", headers); // Debugging line
+        console.log("Sending request with headers:", headers);
         console.log(
           "Sending request to endpoint:",
-          `${endpoint}/trading_engine/user-payment-details/`,); // Debugging line
+          `${endpoint}/trading_engine/user-payment-details/`,);
         const response = await fetch(
           `${endpoint}/trading_engine/user-payment-details/`, {
           method: "POST",
           headers: headers,
-          body: JSON.stringify(form1), // Make sure "withdrawal" is defined in your component
+          body: JSON.stringify(form1),
         }
         );
         const data = await response.json();
@@ -383,7 +380,7 @@ const Adds = () => {
           fetchData();
         } else if (data.code === "token_not_valid") {
           toast.error("Your session has expired. Please log in again.");
-          navigate("/login"); // Redirect to login page or handle re-authentication
+          navigate("/login");
         } else {
           toast.error(`Save bank details failed: ${data || data}`);
           console.log(data);
@@ -399,11 +396,76 @@ const Adds = () => {
       }
     } else {
       toast.error("Invalid code");
-      setLoading(false); // Ensure loading state is reset in case of invalid code
+      setLoading(false);
     }
   };
   return (
     <>
+      <Modal
+        open={open3}
+        onClose={handleClose3}
+        aria-labelledby="child-modal-title"
+        aria-describedby="child-modal-description"
+      >
+        <Box className="primary w-full border border-slate-700 g" sx={{ ...style, width: 500 }}>
+          <div className="flex flex-row items-center justify-between">
+            <h2 id="child-modal-title">Confirm Details</h2>
+            <Cancel color="white" onClick={handleClose3} />
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+
+            <p>Advertisers Username:</p>
+
+            <p>{user.user.email}</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Order Type:</p>
+            <p>{sell.order_type}</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Asset:</p>
+            <p>{sell.asset}</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Currency:</p>
+            <p>{sell.currency}</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Rate:</p>
+            <p>{sell.commission_rate}%</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Amount:</p>
+            <p>{sell.amount} USDT</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Order Min:</p>
+            <p>{sell.min_order_amount} USDT</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Order Max:</p>
+            <p>{sell.max_order_amount} USDT</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Time Limit:</p>
+            <p>{sell.limit} min</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Account number:</p>
+            <p>{sell.account_number}</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Account name:</p>
+            <p>{sell.account_name}</p>
+          </div>
+          {loading1 ? <div className="flex items-center justify-center">
+            <CircularProgress /> </div> :
+            <button onClick={handleSubmit} className="p-1 white mt-2 rounded-2xl greenbg w-full">
+              Confirm
+            </button>}
+        </Box>
+      </Modal>
+
       {activeTab1 === "Market" && (
         <div className="w-full">
           <img
@@ -423,9 +485,9 @@ const Adds = () => {
           <Box className="primary border border-slate-700 g" sx={{ ...style, width: 500 }}>
             <h2 id="child-modal-title">You have no payments Details</h2>
             <h2>To proceed add payments details on the profile page</h2>
-              <button onClick={handleOpen2} className="p-1 white mt-2 rounded-2xl greenbg w-full">
-                Add Payments Details
-                </button>
+            <button onClick={handleOpen2} className="p-1 white mt-2 rounded-2xl greenbg w-full">
+              Add Payments Details
+            </button>
           </Box>
         </Modal>
         <div
@@ -617,7 +679,9 @@ const Adds = () => {
                 </Typography>
                 <button
                   onClick={() => {
-                    navigate('/dashboard')
+                    navigate('/dashboard', { state: { center: 'Center' } })
+                    window.scrollTo(0, 0);
+
                   }}
                   className="w-full mt-3 p-1 white greenbg rounded-2xl"
                 >
@@ -644,14 +708,13 @@ const Adds = () => {
                     name=""
                     id=""
                   >
-                    <option value="">Select your asset</option>
                     <option value="TRC20">Tether USDT (TRC20)</option>
                   </select>
                 </p>
               </div>
             </div>
             <div className="flex flex-col w-full gap-1">
-              <p className="g">Commission</p>
+              <p className="g">Rate</p>
               <div className="border p-1 pl-2 rounded-3xl border-slate-700 flex flex-row justify-between  w-full primary ">
                 <p className="flex w-full flex-row items-center gap-2">
                   <img
@@ -977,7 +1040,7 @@ const Adds = () => {
                 <CircularProgress />
               </div> :
                 <button
-                  onClick={handleSubmit}
+                  onClick={handleOpen3}
                   className={` ${active === "sell" ? "bg-red-700" : "greenbg"}  p-2 w-full rounded-2xl p-1 white`}
                 >
                   Post Ad
@@ -985,7 +1048,7 @@ const Adds = () => {
             </div>
           </div>
         </div>
-      </div>{" "}
+      </div > {" "}
     </>
   );
 };

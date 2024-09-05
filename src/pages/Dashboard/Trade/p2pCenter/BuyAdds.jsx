@@ -1,20 +1,17 @@
 /* eslint-disable no-unused-vars */
 import { CheckBox } from "@mui/icons-material";
-import { current } from "@reduxjs/toolkit";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
 import axios from "axios";
-import { Clock, Copy, DollarSign, Plus } from "lucide-react";
+import { DollarSign, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { IoIosArrowDown, IoMdArrowDropdown } from "react-icons/io";
+import { IoIosArrowDown } from "react-icons/io";
+import { IoCheckmarkCircleSharp } from "react-icons/io5";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { CircularProgress } from "@mui/material";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import { IoCheckmarkCircleSharp } from "react-icons/io5";
 import { endpoint } from "../../../../utils/APIRoutes";
 const initialState = {
   order_type: "",
@@ -205,11 +202,11 @@ const Adds = () => {
         console.log("Sending request with headers:", headers); // Debugging line
         console.log(
           "Sending request to endpoint:",
-          `https://omayaexchangebackend.onrender.com/trading_engine/p2p/orders/`
+          `${endpoint}/trading_engine/p2p/orders/`
         ); // Debugging line
 
         const response = await fetch(
-          `https://omayaexchangebackend.onrender.com/trading_engine/p2p/orders/`,
+          `${endpoint}/trading_engine/p2p/orders/`,
           {
             method: "POST",
             headers: headers,

@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 import { AttachFile, DocumentScannerOutlined } from "@mui/icons-material";
-import { CircularProgress, Typography } from "@mui/material";
+import { CircularProgress, Rating, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -38,6 +38,7 @@ const BuyPage = (props) => {
     const [open, setOpen] = React.useState(false);
     const location = useLocation()
     const fromDashboard = location.state;
+    console.log('fromDashboard', fromDashboard);
 
     const params = useParams();
     const { id } = params;
@@ -124,7 +125,6 @@ const BuyPage = (props) => {
                 );
                 setPayments(res.data);
                 setLoading1(false);
-                console.log('payments', res.data);
             } catch (error) {
                 console.log(error);
                 setLoading1(false);
@@ -140,7 +140,9 @@ const BuyPage = (props) => {
     const [open1, setOpen1] = useState(false);
     const handleOpen1 = () => setOpen1(true);
     const handleClose1 = () => setOpen1(false);
-
+    const [open2, setOpen2] = useState(false);
+    const handleOpen2 = () => setOpen2(true);
+    const handleClose2 = () => setOpen2(false)
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading1(true);
@@ -284,7 +286,7 @@ const BuyPage = (props) => {
                 console.log('payments', res.data);
                 if (res.data.status === 'completed') {
                     setOpen1(true);
-                    navigate('/dashboard')
+                    // navigate('/dashboard')
 
                 }
             } catch (error) {
@@ -316,6 +318,43 @@ const BuyPage = (props) => {
     };
     return (
         <div className="white primary flex justify-between  pt-10  wrap small pr-40 pl-40 ">
+            <Modal
+                open={open2}
+                // onClose={handleClose1}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box className="flex flex-col primary items-center" sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        <IoCheckmarkCircleSharp className="green" size={40} />
+                    </Typography>
+                    <Typography className="white">
+                        Rate your experience with the Merchant            </Typography>
+                    <Typography style={{
+                        fontSize: '13px'
+                    }} className="g">
+                        <Rating color="white" className="white mb-2 mt-1" name="no-value" value={null} />
+
+                        <div className="flex rounded-lg flex-col items-center justify-center border border-slate-700 p-2">
+                            <p className="g">Leave the comment (optional)</p>
+
+                            <input type="text" className="h-40 primary no-border w-full " />
+                        </div>
+                    </Typography>
+                    <button onClick={() => {
+                        navigate('/dashboard')
+                        window.scrollTo(0, 0);
+
+                    }}
+                        className="w-full small mt-3 p-1 white border border-slate-700 rounded-2xl">
+                        Cancel</button>
+                    <button onClick={() => {
+                        // handleOpen2()
+                    }}
+                        className="w-full small mt-3 p-1 white greenbg rounded-2xl">
+                        Submit</button>
+                </Box>
+            </Modal>
             <div
                 style={{
                     width: "65%",
@@ -333,20 +372,31 @@ const BuyPage = (props) => {
                             <IoCheckmarkCircleSharp className="green" size={40} />
                         </Typography>
                         <Typography className="white">
-                            Successfully Published
+                            Successfully Sold
                         </Typography>
                         <Typography style={{
                             fontSize: '13px'
                         }} className="g">
-                            I will receive {payments?.amount}
+                            I will receive {fromDashboard.amount} USD
                         </Typography>
-                        <button onClick={() => {
-                            navigate('/dashboard')
+                        <div>
+                            <button onClick={() => {
+                                navigate('/dashboard');
+                                window.scrollTo(0, 0);
 
-                        }
-
-
-                        } className="w-full small mt-3 p-1 white greenbg rounded-2xl">Provide feedback</button>
+                            }
+                            } className="w-full small mt-3 p-1 white border border-slate-700 rounded-2xl">Cancel</button>
+                            <button
+                                style={{
+                                    // width: '16rem'
+                                }}
+                                onClick={() => {
+                                    handleOpen2()
+                                }}
+                                className=" w-80 small mt-3 p-1 white greenbg rounded-2xl">
+                                Provide feedback
+                            </button>
+                        </div>
                     </Box>
                 </Modal>
                 <p>Verify  payment</p>
@@ -379,7 +429,7 @@ const BuyPage = (props) => {
                             <div className="flex w-full flex-col">
                                 <p className="g text-sm">Commision</p>
                                 <div className="greybg w-full rounded-2xl p-1 flex flex-row items-center justify-between ">
-                                    <p className="flex items-center" ><DollarSign className="green" />1%</p>
+                                    <p className="flex items-center" ><DollarSign className="green" />{fromDashboard.commission_rate}%</p>
                                     <p>USD</p>
                                 </div>
                             </div>
