@@ -28,6 +28,7 @@ import Orders from "../Trade/Orders";
 import UserDashboard from "../UserDashboard/UserDashboard";
 import DepositForm from "./DepositForm";
 import Widthdrwal from "./Widthdrwal";
+
 import { IoIosArrowDown } from "react-icons/io";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -74,7 +75,7 @@ const MainDash = () => {
     }
   }, [user]);
 
-  const [activeTab, setActiveTab] = useState("P2P Trading");
+  const [activeTab, setActiveTab] = useState("Dashboard");
   const [Verified, setVerified] = useState(false);
   const [activeTab1, setActiveTab1] = useState("Dashboard");
   const [show, setShow] = useState("P2P");
@@ -1123,6 +1124,11 @@ const MainDash = () => {
         {activeTab === "Buy Crypto" && (
           <>
             <BuyCrypto />
+          </>
+        )}
+         {activeTab === "Dashboard" && (
+          <>
+            <UserDashboard />
           </>
         )}
         {activeTab === "Exchange" && (
