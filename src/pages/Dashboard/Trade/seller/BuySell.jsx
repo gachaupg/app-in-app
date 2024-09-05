@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 import { AttachFile } from "@mui/icons-material";
-import { CircularProgress, Typography } from "@mui/material";
+import { CircularProgress, Rating, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -42,7 +42,7 @@ const BuyPage = (props) => {
     const navigate = useNavigate();
     const { user } = useSelector((state) => ({ ...state.auth }));
 
-    const [show, setShow] = useState("Buy");
+    const [show, setShow] = useState([]);
     const [payments, setPayments] = useState(null);
     const [loading1, setLoading1] = useState(false);
     const [status, setStatus] = useState([])
@@ -62,11 +62,48 @@ const BuyPage = (props) => {
         auto_reply: payments?.auto_reply || "",
         terms_and_conditions: payments?.terms_and_conditions || "",
     };
-    console.log("hello", status);
+    console.log("hello", show);
 
     const [buy, setBuy] = useState(initialState);
 
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const token = user?.access;
+
+            if (!token) {
+                toast.error("Authentication token is missing. Please log in again.");
+                navigate("/login");
+                setLoading1(false);
+                return;
+            }
+
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            };
+
+            try {
+                const res = await axios.get(
+                    `${endpoint}/trading_engine/p2porders/${status.buy_order}/`,
+                    { headers }
+                );
+                setShow(res.data);
+                setLoading1(false);
+                console.log('paymentssasssss', res.data);
+
+            } catch (error) {
+                console.log(error);
+                setLoading1(false);
+            }
+        };
+
+        fetchData(); // Initial fetch
+
+        const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+
+        return () => clearInterval(interval); // Clean up interval on unmount
+    }, [user?.access, navigate]);
 
 
     useEffect(() => {
@@ -101,45 +138,47 @@ const BuyPage = (props) => {
 
     useEffect(() => {
         const fetchData = async () => {
-          const token = user?.access;
-      
-          if (!token) {
-            toast.error("Authentication token is missing. Please log in again.");
-            navigate("/login");
-            setLoading1(false);
-            return;
-          }
-      
-          const headers = {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          };
-      
-          try {
-            
-              const res = await axios.get(
-                `${endpoint}/trading_engine/p2porders/${id}/`,
-                { headers }
-            );
-            setPayments(res.data);
-            setLoading1(false);
-            console.log('payments', res.data);
-          } catch (error) {
-            console.log(error);
-            setLoading1(false);
-          }
+            const token = user?.access;
+
+            if (!token) {
+                toast.error("Authentication token is missing. Please log in again.");
+                navigate("/login");
+                setLoading1(false);
+                return;
+            }
+
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            };
+
+            try {
+
+                const res = await axios.get(
+                    `${endpoint}/trading_engine/p2porders/${id}/`,
+                    { headers }
+                );
+                setPayments(res.data);
+                setLoading1(false);
+                console.log('paymentsrrrr', res.data);
+            } catch (error) {
+                console.log(error);
+                setLoading1(false);
+            }
         };
-      
+
         fetchData(); // Initial fetch
-      
+
         const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
-      
+
         return () => clearInterval(interval); // Clean up interval on unmount
-      }, [user?.access, navigate]);
+    }, [user?.access, navigate]);
     const [open1, setOpen1] = useState(false);
     const handleOpen1 = () => setOpen1(true);
     const handleClose1 = () => setOpen1(false);
-
+    const [open2, setOpen2] = useState(false);
+    const handleOpen2 = () => setOpen2(true);
+    const handleClose2 = () => setOpen2(false)
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading1(true);
@@ -228,7 +267,7 @@ const BuyPage = (props) => {
             setStatus(res.data); // Assuming the response data is what you need to set
             if (res.data.status === 'completed') {
                 setOpen1(true);
-            
+
             }
         } catch (error) {
             console.log(error);
@@ -254,49 +293,49 @@ const BuyPage = (props) => {
 
     useEffect(() => {
         const fetchData = async () => {
-          const token = user?.access;
-      
-          if (!token) {
-            toast.error("Authentication token is missing. Please log in again.");
-            navigate("/login");
-            setLoading1(false);
-            return;
-          }
-      
-          const headers = {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          };
-      
-          try {
-            
-              const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, 
-                { headers }
-            );
-            setStatus(res.data);
-            setMatch(res.data);
-            setLoading1(false);
-            console.log('payments', res.data);
-            if (res.data.status === 'completed') {
-              setOpen1(true);
-                navigate('/dashboard')
-              
+            const token = user?.access;
+
+            if (!token) {
+                toast.error("Authentication token is missing. Please log in again.");
+                navigate("/login");
+                setLoading1(false);
+                return;
             }
-          } catch (error) {
-            console.log(error);
-            setLoading1(false);
-          }
+
+            const headers = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            };
+
+            try {
+
+                const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`,
+                    { headers }
+                );
+                setStatus(res.data);
+                setMatch(res.data);
+                setLoading1(false);
+                console.log('paymentsdddd', res.data);
+                if (res.data.status === 'completed') {
+                    setOpen1(true);
+                    // navigate('/dashboard')
+
+                }
+            } catch (error) {
+                console.log(error);
+                setLoading1(false);
+            }
         };
-      
+
         fetchData(); // Initial fetch
-      
+
         const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
-      
+
         return () => clearInterval(interval); // Clean up interval on unmount
-      }, [user?.access, navigate]);
+    }, [user?.access, navigate]);
 
     // useEffect(()=>{
-       
+
     //       },[match])
 
 
@@ -315,6 +354,45 @@ const BuyPage = (props) => {
     };
     return (
         <div className="white primary flex justify-between  pt-10  wrap small pr-40 pl-40 ">
+
+            <Modal
+                open={open2}
+                // onClose={handleClose1}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box className="flex flex-col primary items-center" sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        <IoCheckmarkCircleSharp className="green" size={40} />
+                    </Typography>
+                    <Typography className="white">
+                        Rate your experience with the Merchant            </Typography>
+                    <Typography style={{
+                        fontSize: '13px'
+                    }} className="g">
+                        <Rating color="white" className="white mb-2 mt-1" name="no-value" value={null} />
+
+                        <div className="flex rounded-lg flex-col items-center justify-center border border-slate-700 p-2">
+                            <p className="g">Leave the comment (optional)</p>
+
+                            <input type="text" className="h-40 primary no-border w-full " />
+                        </div>
+                    </Typography>
+                    <button onClick={() => {
+                        navigate('/dashboard')
+                        window.scrollTo(0, 0);
+
+                    }}
+                        className="w-full small mt-3 p-1 white border border-slate-700 rounded-2xl">
+                        Cancel</button>
+                    <button onClick={() => {
+                        // handleOpen2()
+                    }}
+                        className="w-full small mt-3 p-1 white greenbg rounded-2xl">
+                        Submit</button>
+                </Box>
+            </Modal>
+
             <div
                 style={{
                     width: "65%",
@@ -332,20 +410,24 @@ const BuyPage = (props) => {
                             <IoCheckmarkCircleSharp className="green" size={40} />
                         </Typography>
                         <Typography className="white">
-                            Successfully Published
+                            Successfully Sold
                         </Typography>
                         <Typography style={{
                             fontSize: '13px'
                         }} className="g">
-                            I will receive {payments?.amount}
+                            I will receive {fromDashboard.amount} USDT
                         </Typography>
                         <button onClick={() => {
-                            navigate('/dashboard')
-
-                        }
-
-
-                        } className="w-full small mt-3 p-1 white greenbg rounded-2xl">Provide feedback</button>
+                            navigate('/dashboard');
+                            window.scrollTo(0, 0);
+                        }}
+                            className="w-full small mt-3 p-1 white border border-slate-700
+                             rounded-2xl">Cancel</button>
+                        <button onClick={() => {
+                            handleOpen2()
+                        }}
+                            className="w-full small mt-3 p-1 white greenbg
+                             rounded-2xl">Provide feedback</button>
                     </Box>
                 </Modal>
                 <p>Verify  payment</p>
@@ -366,19 +448,19 @@ const BuyPage = (props) => {
 
                         <div className="border border-slate-700 p-2 gap-4 rounded-2xl flex flex-row items-center justify-between">
                             <div className="flex w-full flex-col">
-                                <p className="g text-sm">Fiat USD</p>
+                                <p className="g text-sm">Fiat USDT</p>
                                 <div className="greybg w-full rounded-2xl p-1 flex flex-row items-center justify-between yellowT">
                                     <p className="flex items-center">
                                         <DollarSign className="green" />
                                         {Number(fromDashboard.amount).toFixed(2)}
                                     </p>
-                                    <p>USD</p>
+                                    <p>USDT</p>
                                 </div>
                             </div>
                             <div className="flex w-full flex-col">
-                                <p className="g text-sm">Commision</p>
+                                <p className="g text-sm">Commission</p>
                                 <div className="greybg w-full rounded-2xl p-1 flex flex-row items-center justify-between ">
-                                    <p className="flex items-center" ><DollarSign className="green" />1%</p>
+                                    <p className="flex items-center" ><DollarSign className="green" />{show.commission_rate}%</p>
                                     <p>USD</p>
                                 </div>
                             </div>
@@ -420,7 +502,7 @@ const BuyPage = (props) => {
                                     <div className="w-full flex items-center wrap flex-row ">
                                         <p className="g w-36">Account Name</p>
                                         <p className="border w-full flex items-center w-full greybg border-green-600 rounded-2xl p-1">
-                                            <Dot /> <p> {payments?.account_provider_name}</p>
+                                            <Dot /> <p> {show?.account_name}</p>
                                         </p>
 
                                     </div>
@@ -429,7 +511,7 @@ const BuyPage = (props) => {
                                         <div className="flex flex-row gap-2 justify-between  w-full">
                                             <p className="border text-green-600 flex items-center w-full greybg border-green-600 rounded-2xl p-1">
                                                 <Dot color="green" />{" "}
-                                                <p>{payments?.account_provider_number}</p>
+                                                <p>{show?.account_number}</p>
                                             </p>
                                         </div>
                                     </div>
@@ -442,7 +524,7 @@ const BuyPage = (props) => {
                                 }}
                                 className="flex rounded-lg mt-8 flex-row pl-6 p-3 pr-6 justify-between items-center wrap small gap-2 border border-yellow-600"
                             ><p className="yellowT">
-                                    Buyer's Name
+                                    Advertisers's Name
                                 </p>
                                 <p className="white flex flex-row items-center">
                                     <Dot size={30} />

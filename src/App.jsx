@@ -65,7 +65,13 @@ function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const users = JSON.parse(localStorage.getItem("profile"));
-
+  useEffect(() => {
+    const hasVisited = localStorage.getItem('hasVisited');
+    if (!hasVisited) {
+      navigate('/login');
+      localStorage.setItem('hasVisited', 'true');
+    }
+  }, [navigate]);
   useEffect(() => {
     dispatch(setUser(users));
   }, []);
@@ -73,15 +79,15 @@ function App() {
   const { user } = useSelector((state) => ({ ...state.auth }));
   const [loading1, setLoading1] = useState(false);
   const [status, setStatus] = useState([]);
-  console.log('user',user);
-  
-    // useEffect(() => {
-    //   if (user?.access) {
-    //     navigate("/dashboard");
-    //   } else {
-    //     navigate("/")
-    //   }
-    // }, [user]);
+  console.log('user', user);
+
+  // useEffect(() => {
+  //   if (user?.access) {
+  //     navigate("/dashboard");
+  //   } else {
+  //     navigate("/")
+  //   }
+  // }, [user]);
   useEffect(() => {
     if (!modalShown) {
       fetchData1();
@@ -150,19 +156,19 @@ function App() {
         </Box>
       </Modal>
       <Navbar />
-      <ToastContainer /> 
+      <ToastContainer />
       <Routes>
 
-      <Route  path="/admin" element={<Admin />} />
-      <Route  path="/kyc" element={<Kyc />} />
-      <Route  path="/p2pdeposit" element={<P2pDeposit/>} />
-      <Route  path="/p2pwithdraw" element={<P2pWithdrawal/>} />
-      <Route  path="/exchangewithdraw" element={<ExchangeWithdrawal/>} />
-      <Route  path="/exchangedeposit" element={<ExchangeDeposit/>} />
-      <Route  path="/appeal" element={<Appeal/>} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/kyc" element={<Kyc />} />
+        <Route path="/p2pdeposit" element={<P2pDeposit />} />
+        <Route path="/p2pwithdraw" element={<P2pWithdrawal />} />
+        <Route path="/exchangewithdraw" element={<ExchangeWithdrawal />} />
+        <Route path="/exchangedeposit" element={<ExchangeDeposit />} />
+        <Route path="/appeal" element={<Appeal />} />
 
 
-       <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route index path="/" element={<HomePage />} />
 
         <Route path="/exchange" element={<MainExchange />} />
@@ -187,9 +193,9 @@ function App() {
         <Route path="/chats" element={<DoughnutChart />} />
         <Route path="/buy-adds" element={<Adds1 />} />
         <Route path="/notifications" element={<Notifications />} />
-        <Route path="/buysell/:id" element={<BuySell />} /> 
+        <Route path="/buysell/:id" element={<BuySell />} />
       </Routes>
-     <Footer />
+      <Footer />
     </div>
   );
 }

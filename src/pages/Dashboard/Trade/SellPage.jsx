@@ -7,6 +7,7 @@ import { CircularProgress, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
+import Rating from '@mui/material/Rating';
 import axios from "axios";
 import { Copy, DollarSign, Dot } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -18,7 +19,6 @@ import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../utils/APIRoutes";
-
 
 const style = {
   position: "absolute",
@@ -37,9 +37,8 @@ const BuyPage = (props) => {
   const [open, setOpen] = React.useState(false);
   const location = useLocation()
   const fromDashboard = location.state;
-  console.log('====================================');
-  console.log(fromDashboard);
-  console.log('====================================');
+  const [value, setValue] = React.useState(2);
+
   const params = useParams();
   const { id } = params;
   const navigate = useNavigate();
@@ -65,13 +64,13 @@ const BuyPage = (props) => {
     auto_reply: payments?.auto_reply || "",
     terms_and_conditions: payments?.terms_and_conditions || "",
   };
-  console.log("hello", status);
+  console.log("hello", id);
 
   const [buy, setBuy] = useState(initialState);
   console.log("====================================");
   // console.log("buyddd", payments);
   console.log("====================================");
-  
+
 
   useEffect(() => {
 
@@ -146,7 +145,9 @@ const BuyPage = (props) => {
   const [open1, setOpen1] = useState(false);
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
-
+  const [open2, setOpen2] = useState(false);
+  const handleOpen2 = () => setOpen2(true);
+  const handleClose2 = () => setOpen2(false)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading1(true);
@@ -182,13 +183,13 @@ const BuyPage = (props) => {
         const data = await response.json();
 
         if (response.ok) {
-          
+
           toast.success("USDT transferred successfully!");
           // fetchData3();
           setOpen1(true);
-          navigate('/dashboard')
+          // navigate('/dashboard')
           // if (status.status==='completed') {
-            
+
           //   
           // }else{
           //   setOpen1(false)
@@ -215,23 +216,23 @@ const BuyPage = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       const token = user?.access;
-  
+
       if (!token) {
         toast.error("Authentication token is missing. Please log in again.");
         navigate("/login");
         setLoading1(false);
         return;
       }
-  
+
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       };
-  
+
       try {
-        
-          const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`, 
-            { headers }
+
+        const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`,
+          { headers }
         );
         setStatus(res.data);
         setMatch(res.data);
@@ -244,11 +245,11 @@ const BuyPage = (props) => {
         setLoading1(false);
       }
     };
-  
+
     fetchData(); // Initial fetch
-  
+
     const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
-  
+
     return () => clearInterval(interval); // Clean up interval on unmount
   }, [user?.access, navigate]);
 
@@ -279,8 +280,8 @@ const BuyPage = (props) => {
           { headers }
         );
         setComplete(res.data);
-        console.log('new data ',res.data);
-        
+        console.log('new data ', res.data);
+
         setLoading1(false);
         if (res.data.status === 'completed') {
           setOpen1(true);
@@ -299,6 +300,7 @@ const BuyPage = (props) => {
 
     return () => clearInterval(interval); // Clean up interval on unmount
   }, [user?.access, navigate]);
+
 
 
   const style = {
@@ -324,6 +326,50 @@ const BuyPage = (props) => {
         }}
         className="flex flex-col small w-full  gap-6"
       >
+
+
+
+        <Modal
+          open={open2}
+          // onClose={handleClose1}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box className="flex flex-col primary items-center" sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              <IoCheckmarkCircleSharp className="green" size={40} />
+            </Typography>
+            <Typography className="white">
+              Rate your experience with the Merchant            </Typography>
+            <Typography style={{
+              fontSize: '13px'
+            }} className="g">
+              <Rating name="no-value" value={null} />
+
+              <div className="flex flex-col items-center justify-center border border-slate-700 p-2">
+                <p className="g">Leave the comment (optional)</p>
+
+                <input type="text" className="h-40 no-border w-full " />
+              </div>
+            </Typography>
+            <button onClick={() => {
+              navigate('/dashboard')
+              window.scrollTo(0, 0);
+
+            }}
+              className="w-full small mt-3 p-1 white greenbg rounded-2xl">
+              Cancel</button>
+            <button onClick={() => {
+              // handleOpen2()
+            }}
+              className="w-full small mt-3 p-1 white greenbg rounded-2xl">
+              Submit</button>
+          </Box>
+        </Modal>
+
+
+
+
         <Modal
           open={open1}
           onClose={handleClose1}
@@ -335,20 +381,25 @@ const BuyPage = (props) => {
               <IoCheckmarkCircleSharp className="green" size={40} />
             </Typography>
             <Typography className="white">
-              Successfully Published
+              Successfully Sold
             </Typography>
             <Typography style={{
               fontSize: '13px'
             }} className="g">
-              I will receive {payments?.amount}
+              I will receive {fromDashboard} USD
             </Typography>
             <button onClick={() => {
-              handleClose1()
+              navigate('/dashboard')
+              window.scrollTo(0, 0);
 
-            }
-
-
-            } className="w-full small mt-3 p-1 white greenbg rounded-2xl">Provide feedback</button>
+            }}
+              className="w-full small mt-3 p-1 white greenbg rounded-2xl">
+              Cancel</button>
+            <button onClick={() => {
+              handleOpen2()
+            }}
+              className="w-full small mt-3 p-1 white greenbg rounded-2xl">
+              Provide feedback</button>
           </Box>
         </Modal>
         <p>Advertisers Info</p>
@@ -482,14 +533,14 @@ const BuyPage = (props) => {
         </div>
         <div className="flex gap-10 justify-around p-1 w-full small wrap rounded-lg border border-slate-700 items-center">
           <div className="flex flex-col gap-1 p-1  ">
-            <p className="g">I want to Send</p>
+            <p className="g">I want to Sell</p>
             <div className="flex flex-row  justify-between items-center rounded-lg   gap-1 p-2 border border-slate-700 items-center">
               <p className="green flex justify-around ">
                 <DollarSign />{" "}
                 {fromDashboard}
               </p>
               <p className="flex flex-row  items-center">
-                USD <IoIosArrowDown className="g" />
+                USDT <IoIosArrowDown className="g" />
               </p>
             </div>
           </div>
@@ -501,8 +552,8 @@ const BuyPage = (props) => {
                   src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png"
                   alt=""
                 />{" "}
-                {fromDashboard - 0.5}
-                <span className="white">USDT</span>
+                {fromDashboard}
+                <span className="white">USD</span>
               </p>
             </div>
           </div>
@@ -609,8 +660,8 @@ const BuyPage = (props) => {
             </button>
             <button
               onClick={handleSubmit}
-              className={`w-full  rounded-lg p-2 ${ status.status==="matched" ? 'gback cursor-not-allowed' : 'bg-red-700'}`}
-              disabled={ status.status==="matched" }
+              className={`w-full  rounded-lg p-2 ${status.status === "matched" ? 'gback cursor-not-allowed' : 'bg-red-700'}`}
+              disabled={status.status === "matched"}
             >
               {loading1 ? <CircularProgress /> : "Payment received notify the buyer"}
             </button>

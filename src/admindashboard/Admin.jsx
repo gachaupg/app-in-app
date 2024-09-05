@@ -420,14 +420,14 @@ async function fetchData4() {
                             }
                             {
                               user.kyc_status === "approved" && (
-                                <button onClick={
+                                <p onClick={
                                   () => {
                                     setId(user.id);
                                     handleSubmit();
                                   }
-                                } className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-500">
+                                } className="text-green-600">
                                   Approved
-                                </button>
+                                </p>
                               )
                             }
                             {

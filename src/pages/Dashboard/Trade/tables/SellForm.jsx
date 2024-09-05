@@ -10,8 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../../utils/APIRoutes";
 
-const BuyForm = ({ id, buy, setBuy, handleClose, setId,verified,setOpen }) => {
-  const [show, setShow] = useState("");
+const BuyForm = ({ id, buy, setBuy, handleClose, setId, verified, setOpen, payments1 }) => {
+  const [show, setShow] = useState('');
   const [payments, setPayments] = useState([]);
   const [loading1, setLoading1] = useState(false);
   const { user } = useSelector((state) => ({ ...state.auth }));
@@ -35,6 +35,7 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId,verified,setOpen }) => {
   };
 
   const [order, setOrder] = useState(initialState);
+  console.log('order', order);
 
   useEffect(() => {
     fetchData();
@@ -43,24 +44,24 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId,verified,setOpen }) => {
   useEffect(() => {
     if (payments) {
       const
-      calculatedAmount = show !== ""
-      ? parseFloat(show) + (parseFloat(show) * (payments.commission_rate / 100))
-      : 0;      setOrder((prevOrder) => ({
-        ...prevOrder,
-        currency: payments.currency,
-        commission_rate: payments.commission_rate,
-        exchange_rate: payments.exchange_rate,
-        payment_method: payments.payment_method,
-        payment_provider: payments.payment_provider,
-        limit: 10.00,
-        terms_and_conditions: payments.terms_and_conditions,
-        completion_time: payments.completion_time,
-        completion_rate: payments.completion_rate,
-        asset: payments.asset,
-        advertiser_name: payments.advertiser_name,
-        auto_reply: payments.auto_reply,
-        amount: calculatedAmount.toFixed(2),
-      }));
+        calculatedAmount = show !== ""
+          ? parseFloat(show) + (parseFloat(show) * (payments.commission_rate / 100))
+          : 0; setOrder((prevOrder) => ({
+            ...prevOrder,
+            currency: payments.currency,
+            commission_rate: payments.commission_rate,
+            exchange_rate: payments.exchange_rate,
+            payment_method: payments.payment_method,
+            payment_provider: payments.payment_provider,
+            limit: 10.00,
+            terms_and_conditions: payments.terms_and_conditions,
+            completion_time: payments.completion_time,
+            completion_rate: payments.completion_rate,
+            asset: payments.asset,
+            advertiser_name: payments.advertiser_name,
+            auto_reply: payments.auto_reply,
+            amount: show,
+          }));
     }
   }, [payments, show]);
 
@@ -113,7 +114,7 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId,verified,setOpen }) => {
     }
   };
 
- 
+
 
   async function fetchData() {
     const token = user.access;
@@ -145,22 +146,22 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId,verified,setOpen }) => {
     if (verified) {
       e.preventDefault();
       setLoading1(true);
-  
+
       const token = user.access;
-  
+
       if (!token) {
         toast.error("Authentication token is missing. Please log in again.");
         navigate("/login");
         setLoading1(false);
         return;
       }
-  
+
       if (order.order_type === "sell") {
         const headers = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         };
-  
+
         try {
           const response = await fetch(
             `${endpoint}/trading_engine/p2p/orders/${id}/match/`,
@@ -171,7 +172,7 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId,verified,setOpen }) => {
             }
           );
           const data = await response.json();
-  
+
           if (response.ok) {
             toast.success("Bought successfully!");
             navigate(`/sell/${id}`, { state: order.amount });
@@ -191,10 +192,39 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId,verified,setOpen }) => {
       }
     } else {
       setOpen(true)
+      toast.error('Verify account first');
 
     }
   }
+  const [receive, setReceive] = useState('');
+  const [limCheck, setLim] = useState(false);
+  console.log('recieve', receive);
+  console.log('show', show);
 
+  const commissionRate = payments.commission_rate;
+
+  const handleShowChange = (e) => {
+    const value = e.target.value;
+    setShow(value === '' ? 0.0 : value);
+    const calculatedReceive = (commissionRate) * (parseFloat(value)).toFixed(2);
+    setReceive(calculatedReceive);
+  };
+
+  const handleReceiveChange = (e) => {
+    const value = e.target.value;
+    setReceive(value === '' ? 0.0 : value);
+    const calculatedShow = (parseFloat(value) / (commissionRate)).toFixed(2);
+    setShow(calculatedShow);
+  };
+  useEffect(() => {
+    const minOrderAmount = Number(payments.max_order_amount - payments.min_order_amount).toFixed(2);
+    const receive1 = Number(receive).toFixed(2);
+    const show1 = Number(show).toFixed(2);
+
+    if (show1 || receive1 !== minOrderAmount) {
+      setLim(true);
+    }
+  }, [show, payments.min_order_amount, receive, payments.max_order_amount]);
 
   return (
     <div className="flex items-center justify-center">
@@ -206,104 +236,104 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId,verified,setOpen }) => {
       >
         <div
 
-className="flex flex-col p-1  items-start "
->
+          className="flex flex-col p-1  items-start "
+        >
 
-<div className="flex flex-row w-full gap-5 justify-spa  items-center">
-  <p className=" bg-green-600 h-full w-10 rounded-lg flex text-center justify-center items-center p-1 text-white">
-    <span
-      style={{
-        fontSize: "16px",
-      }}
-      className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
-    >
-      {payments?.advertiser_name?.substring(0, 2).toUpperCase()}
-    </span>
-  </p>
-  <div className="flex flex-col  ">
-    <p
-      style={{
-        fontSize: "14px",
-      }}
-      className="flex flex-row items-center  capitalize gap-1 text-white"
-    >
-      {payments.advertiser_name?.split('@')[0]}
-      <img
-        src="https://res.cloudinary.com/pitz/image/upload/v1721730938/Frame_34214_gjn30n.png"
-        alt=""
-      />
-    </p>
-    <p>
-      <p
-        style={{
-          fontSize: "10px",
-        }}
-        className="flex g flex-row items-center gap-1"
-      >
-        <span className="text-green-600">120</span> Orders
-        <span className="text-green-600">
-          {" "}
-          {payments.completion_rate * 100}%
-        </span>{" "}
-        Completion
-        <span className="text-green-600 flex flex-row justify-between items-center">
-          <SlLike /> 95%
-        </span>
-      </p>
-    </p>
-  </div>
-</div>
-<div className="flex flex-row gap-10 mt-5 w-full">
-  <div className="flex flex-col items-center justify-center gap-1">
-    <p className="white">{payments.limit_duration}minutes</p>
-    <p
-      style={{
-        fontSize: "13px",
-      }}
-      className="g"
-    >
-      Time limit
-    </p>
-  </div>
-  <div className="flex flex-col items-center justify-center gap-1">
-    <p className="white">2 minutes</p>
-    <p
-      style={{
-        fontSize: "13px",
-      }}
-      className="g"
-    >
-      Average release time
-    </p>
-  </div>
-  <div className="flex flex-col items-center justify-center gap-1">
-    <p className="white"> {payments.amount !== undefined && payments.amount !== null
-      ? Number(payments.amount).toFixed(2)
-      : "0.00"} USDT</p>
-    <p
-      style={{
-        fontSize: "13px",
-      }}
-      className="g"
-    >
-      Available assets
-    </p>
-  </div>
-</div>
-<div className="flex flex-col border rounded-lg h- border-slate-700 primary p-2 h-52 mt-5 w-full">
-  <p className="flex flex-row items-center white gap-1">
-    <img
-      src="https://res.cloudinary.com/pitz/image/upload/v1721821790/alert-circle_qykxiy.png"
-      alt=""
-    />
-    <p>
-      Advertiser's Terms{" "}
-      <span className="text-red-600">(Please read carefully)</span>
-    </p>
-  </p>
-  <p className="g">{payments.terms_and_conditions}</p>
-</div>
-</div>
+          <div className="flex flex-row w-full gap-5 justify-spa  items-center">
+            <p className=" bg-green-600 h-full w-10 rounded-lg flex text-center justify-center items-center p-1 text-white">
+              <span
+                style={{
+                  fontSize: "16px",
+                }}
+                className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
+              >
+                {payments?.advertiser_name?.substring(0, 2).toUpperCase()}
+              </span>
+            </p>
+            <div className="flex flex-col  ">
+              <p
+                style={{
+                  fontSize: "14px",
+                }}
+                className="flex flex-row items-center  capitalize gap-1 text-white"
+              >
+                {payments.advertiser_name?.split('@')[0]}
+                <img
+                  src="https://res.cloudinary.com/pitz/image/upload/v1721730938/Frame_34214_gjn30n.png"
+                  alt=""
+                />
+              </p>
+              <p>
+                <p
+                  style={{
+                    fontSize: "10px",
+                  }}
+                  className="flex g flex-row items-center gap-1"
+                >
+                  <span className="text-green-600">120</span> Orders
+                  <span className="text-green-600">
+                    {" "}
+                    {payments.completion_rate * 100}%
+                  </span>{" "}
+                  Completion
+                  <span className="text-green-600 flex flex-row justify-between items-center">
+                    <SlLike /> 95%
+                  </span>
+                </p>
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-row gap-10 mt-5 w-full">
+            <div className="flex flex-col items-center justify-center gap-1">
+              <p className="white">{payments.limit_duration}minutes</p>
+              <p
+                style={{
+                  fontSize: "13px",
+                }}
+                className="g"
+              >
+                Time limit
+              </p>
+            </div>
+            <div className="flex flex-col items-center justify-center gap-1">
+              <p className="white">2 minutes</p>
+              <p
+                style={{
+                  fontSize: "13px",
+                }}
+                className="g"
+              >
+                Average release time
+              </p>
+            </div>
+            <div className="flex flex-col items-center justify-center gap-1">
+              <p className="white"> {payments.amount !== undefined && payments.amount !== null
+                ? Number(payments.amount).toFixed(2)
+                : "0.00"} USDT</p>
+              <p
+                style={{
+                  fontSize: "13px",
+                }}
+                className="g"
+              >
+                Available assets
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col border rounded-lg h- border-slate-700 primary p-2 h-52 mt-5 w-full">
+            <p className="flex flex-row items-center white gap-1">
+              <img
+                src="https://res.cloudinary.com/pitz/image/upload/v1721821790/alert-circle_qykxiy.png"
+                alt=""
+              />
+              <p>
+                Advertiser's Terms{" "}
+                <span className="text-red-600">(Please read carefully)</span>
+              </p>
+            </p>
+            <p className="g">{payments.terms_and_conditions}</p>
+          </div>
+        </div>
         <div
           className="flex flex-col p-1 mr-20 gap-2 items-start"
           style={{
@@ -311,18 +341,40 @@ className="flex flex-col p-1  items-start "
           }}
         >
           <p className="white">
-            Commission <span className="green">{payments.commission_rate}</span>
+            Rate <span className="green">{payments.commission_rate}</span>
+          </p>
+          <p className="text-yellow-600">
+            Processing Fee <span className="green">0.00</span>
           </p>
           <div className="border primary border-slate-700 rounded-2xl w-full p-3 flex flex-row justify-between gap-2">
             <div className="flex flex-col gap-3">
               <p className="g">I want to {show} send</p>
-              <input
-                required
-                onChange={(e) => setShow(e.target.value)}
-                placeholder="220 USD"
-                type="text"
-                className="w-full p-1 primary no-border white place"
-              />
+              <div className="flex flex-row items-center w-full justify-between">
+                <input
+                  required
+                  value={show}
+                  onChange={handleShowChange}
+                  placeholder="220 USDT"
+                  type="text"
+                  className="w-full p-1 primary no-border white place"
+                />
+                <p className="g"> {
+                  payments1.map((i) => {
+                    return (
+                      <>
+
+                        <span onClick={() => {
+                          setShow((isNaN(parseFloat(i.balance)) ? 0.00 : parseFloat(i.balance)).toFixed(2));
+                          setReceive((isNaN(parseFloat(i.balance)) ? 0.00 : parseFloat(i.balance)).toFixed(2) * commissionRate)
+                        }} className="text-yellow-500 mr-2 cursor-pointer">
+                          ALL
+                        </span>
+                      </>
+                    )
+                  })
+                }
+                  USDT</p>
+              </div>
             </div>
           </div>
           <div className="border primary border-slate-700 rounded-2xl w-full p-3 flex flex-row justify-between gap-2">
@@ -334,12 +386,20 @@ className="flex flex-col p-1  items-start "
                   alt=""
                 />
                 <p>
-                  <p className="white">{order.amount}</p>
+                  <input
+                    required
+                    value={receive}
+                    onChange={handleReceiveChange}
+                    placeholder="220 USDT"
+                    type="text"
+                    className="w-full p-1 primary no-border white place"
+                  />
                 </p>
-                <span className="g">USDT</span>
+                <span className="g">USD</span>
               </p>
             </div>
           </div>
+
           {/* Payment method selection */}
           <div className="border primary border-slate-700 rounded-2xl w-full p-3 flex flex-row justify-between gap-2">
             <select className="primary no-border w-full g">

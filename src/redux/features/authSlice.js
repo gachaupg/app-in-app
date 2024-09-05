@@ -30,12 +30,14 @@ export const register = createAsyncThunk(
       // return response.data;
       if (response.data.code===500) {
         console.log(response.data);
+        console.log( "Error Try Again later!!",response.error);
+
       }
     } catch (err) {
       console.log(err.message);
       console.log( "Error Try Again later!!",err);
       console.log('====================================');
-      toast.error(err.response.data.error);
+      toast.error('error try again invalid credeantials',err);
     }
   }
 );

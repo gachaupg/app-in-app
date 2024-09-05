@@ -198,6 +198,14 @@ input[type="number"] {
   background-color: #35353E;
   
 }
+.hover1{
+  cursor: pointer !important;
+}
+.hover1:hover{
+background: #35353a !important;
+
+cursor: pointer !important;
+}
 .hover{
   cursor: pointer !important;
 }

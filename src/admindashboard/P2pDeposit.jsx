@@ -5,8 +5,8 @@ import { FaCashRegister, FaExclamationCircle, FaHome, FaLifeRing, FaUserShield, 
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import './Admin.css';
 import { endpoint } from '../utils/APIRoutes';
+import './Admin.css';
 // https://omayaexchangebackend.onrender.com/trading_engine/p2p/deposit/
 const P2pDeposit = () => {
   const navigate = useNavigate();
@@ -189,12 +189,12 @@ const P2pDeposit = () => {
                           <td className="px-6 py-4 flex space-x-2">
                             {
                               deposit.approved ? (
-                                <button
-                                  className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-500">
+                                <p
+                                  className="text-green-600 ">
 
                                   Approved
 
-                                </button>
+                                </p>
                               ) : (
                                 <button
                                   onClick={() => handleSubmit(deposit.id)} // Pass deposit.id to handleSubmit
@@ -205,10 +205,12 @@ const P2pDeposit = () => {
 
                               )
                             }
-                            <button className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-500">Reject</button>
+                            {
+                              deposit.approved ? "" : <button className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-500">Reject</button>
+
+                            }
                           </td>
                         </tr>
-                        {/* More rows */}
                       </tbody>
                     </>
                   )

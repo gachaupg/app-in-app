@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { CheckBox } from "@mui/icons-material";
+import { Cancel, CheckBox } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -50,7 +50,7 @@ const Adds = () => {
     transform: "translate(-50%, -50%)",
     // width: 250,
     bgcolor: "background.black",
-    border: "1px solid green",
+    border: "none",
     borderRadius: 3,
     boxShadow: 24,
     p: 4,
@@ -123,7 +123,7 @@ const Adds = () => {
         completion_time: "10",
         completion_rate: "0.98",
         exchange_rate: "0.8",
-        asset: "TRON",
+        asset: "TRC20",
         limit: sell.limit,
         commission_rate: sell.commission_rate,
         auto_reply: sell.auto_reply,
@@ -161,8 +161,7 @@ const Adds = () => {
         headers,
       });
       setLoading1(false);
-      setdetails(res.data); // Assuming the response data is what you need to set
-      console.log("hello", res.data);
+      setdetails(res.data);
     } catch (error) {
       console.log(error);
       setLoading1(false);
@@ -224,14 +223,14 @@ const Adds = () => {
         headers,
       });
       setLoading1(false);
-      setPayments(res.data); // Assuming the response data is what you need to set
-      // console.log("hello", res.data);
+      setPayments(res.data);
+      console.log("helloaa", res.data);
     } catch (error) {
       console.log(error);
       setLoading1(false);
     }
   }
-
+  const [choice, setChoice] = useState('')
   useEffect(() => {
     fetchData2();
   }, [user.access]);
@@ -251,33 +250,33 @@ const Adds = () => {
     };
 
     try {
-      const res = await axios.get(`${endpoint}/trading_engine/payment-providers/Bank/`, {
+      const res = await axios.get(`${endpoint}/trading_engine/payment-providers/${sell.payment_method_name}/`, {
         headers,
       });
       setLoading1(false);
-      setProvider(res.data); // Assuming the response data is what you need to set
-      // console.log("hello", res.data);
+      setProvider(res.data);
+      console.log("hellossdsd", res.data);
     } catch (error) {
       console.log(error);
       setLoading1(false);
     }
   }
   const [errors1, setErrors1] = useState('');
-console.log('errors',errors1);
+  console.log('errors', errors1);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-            // setLoading1(true);
+    // setLoading1(true);
 
-            let validationErrors = {};
-            if (sell.commission_rate==="" || null ||sell.amount==="" || null ||
-              sell.max_order_amount==="" || null ||sell.min_order_amount==="" || null||sell.limit==="" || null
-            ) {
-              setErrors1( "Field can't be empty") ;
+    let validationErrors = {};
+    if (sell.commission_rate === "" || null || sell.amount === "" || null ||
+      sell.max_order_amount === "" || null || sell.min_order_amount === "" || null || sell.limit === "" || null
+    ) {
+      setErrors1("Field can't be empty");
 
-            }
-            
-            
+    }
+
+
     // Assuming user.user.access is available in your component's state or context
     const token = user.access;
 
@@ -350,6 +349,9 @@ console.log('errors',errors1);
   const [open2, setOpen2] = useState(false);
   const handleOpen2 = () => setOpen2(true);
   const handleClose2 = () => setOpen2(false);
+  const [open3, setOpen3] = useState(false);
+  const handleOpen3 = () => setOpen3(true);
+  const handleClose3 = () => setOpen3(false);
   const [err, setErr] = useState('')
   const handleSubmit1 = async (e) => {
     e.preventDefault();
@@ -373,20 +375,20 @@ console.log('errors',errors1);
       };
 
       try {
-        console.log("Sending request with headers:", headers); // Debugging line
+        console.log("Sending request with headers:", headers);
         console.log(
           "Sending request to endpoint:",
-          `${endpoint}/trading_engine/user-payment-details/`,); // Debugging line
+          `${endpoint}/trading_engine/user-payment-details/`,);
         const response = await fetch(
           `${endpoint}/trading_engine/user-payment-details/`, {
           method: "POST",
           headers: headers,
-          body: JSON.stringify(form1), // Make sure "withdrawal" is defined in your component
+          body: JSON.stringify(form1),
         }
         );
         const data = await response.json();
         if (response.ok) {
-          toast.success("Added successful!");
+          // toast.success("Added successful!");
           handleClose2()
           handleClose()
           fetchData();
@@ -408,11 +410,92 @@ console.log('errors',errors1);
       }
     } else {
       toast.error("Invalid code");
-      setLoading(false); // Ensure loading state is reset in case of invalid code
+      setLoading(false);
     }
   };
+
+  const [com, setCom] = useState('');
+
+  useEffect(() => {
+    if (sell.commission_rate >= 0.9 && sell.commission_rate <= 1) {
+      setCom('0.9 and 1');
+
+    } else {
+      setCom('0.9 and 1');
+    }
+  }, [sell.commission_rate]);
+
   return (
     <>
+      <Modal
+        open={open3}
+        onClose={handleClose3}
+        aria-labelledby="child-modal-title"
+        aria-describedby="child-modal-description"
+      >
+        <Box className="primary w-full border border-slate-700 g" sx={{ ...style, width: 500 }}>
+          <div className="flex flex-row items-center justify-between">
+            <h2 id="child-modal-title">Confirm Details</h2>
+            <Cancel color="white" onClick={handleClose3} />
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+
+            <p>Advertisers Username:</p>
+
+            <p>{user.user.email}</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Order Type:</p>
+            <p>{sell.order_type}</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Asset:</p>
+            <p>{sell.asset}</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Currency:</p>
+            <p>{sell.currency}</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>rate:</p>
+            <p>{sell.commission_rate}%</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Amount:</p>
+            <p>{sell.amount} USDT</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Order Min:</p>
+            <p>{sell.min_order_amount} USDT</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Order Max:</p>
+            <p>{sell.max_order_amount} USDT</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Time Limit:</p>
+            <p>{sell.limit} min</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Account number:</p>
+            <p>{sell.account_number}</p>
+          </div>
+          <div className="flex w-full items-center mb-2 mt-3 justify-between">
+            <p>Account name:</p>
+            <p>{sell.account_name}</p>
+          </div>
+          {loading1 ? <div className="flex items-center justify-center">
+            <CircularProgress /> </div> :
+            <button onClick={handleSubmit} className="p-1 white mt-2 rounded-2xl greenbg w-full">
+              Confirm
+            </button>}
+        </Box>
+      </Modal>
+
+
+
+
+
       {activeTab1 === "Market" && (
         <div className="w-full">
           <img
@@ -425,7 +508,7 @@ console.log('errors',errors1);
       <div className="primary w-full  flex wrap small justify-between flex-row ">
         <Modal
           open={open1}
-          // onClose={handleClose}
+          onClose={handleClose}
           aria-labelledby="child-modal-title"
           aria-describedby="child-modal-description"
         >
@@ -470,12 +553,9 @@ console.log('errors',errors1);
                   id=""
                 >
                   <option value="">Provider</option>
-
-                  {" "}
-                  {/* {provider.map((i) => {
-                  return ( */}
                   <>
                     <option value='Salam'>Salam</option>{" "}
+                    <option value='EVC'>EVC</option>
                   </>
                   {/* );
                 })} */}
@@ -597,11 +677,13 @@ console.log('errors',errors1);
                   <IoCheckmarkCircleSharp className="green" size={40} />
                 </Typography>
                 <Typography className="white">
-                  Successfully Published
+                  Add Successfully Published
                 </Typography>
                 <button
                   onClick={() => {
-                    navigate('/dashboard')
+                    navigate('/dashboard', { state: { center: 'Center' } })
+                    window.scrollTo(0, 0);
+
                   }}
                   className="w-full mt-3 p-1 white greenbg rounded-2xl"
                 >
@@ -628,14 +710,13 @@ console.log('errors',errors1);
                     name=""
                     id=""
                   >
-                    <option value="">Select your asset</option>
                     <option value="TRC20">Tether USDT (TRC20)</option>
                   </select>
                 </p>
               </div>
             </div>
             <div className="flex flex-col w-full gap-1">
-              <p className="g">Commission</p>
+              <p className="g">Rate</p>
               <div className="border p-1 pl-2 rounded-3xl border-slate-700 flex flex-row justify-between  w-full primary ">
                 <p className="flex w-full flex-row items-center gap-2">
                   <img
@@ -658,8 +739,8 @@ console.log('errors',errors1);
                   className="green"
                 ></p>
               </div>
-              {errors1===null ?"": <p className="text-red-500">{errors1}</p>}
-
+              {errors1 === null ? "" : <p className="text-red-500">{errors1}</p>}
+              {sell.commission_rate >= 0.9 && sell.commission_rate <= 1 ? "" : <p className="text-red-700">0.9 - 1</p>}
 
             </div>
           </div>
@@ -668,7 +749,7 @@ console.log('errors',errors1);
             <div className="  small wrap p-3  w-full  flex flex-row gap-6 items-center">
               <div className="flex flex-col w-full gap-1">
                 <p style={{ fontSize: "14px" }} className="g">
-                  I want to sell
+                  I want to buy
                 </p>
                 <div className="border p-1 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full primary ">
                   <p className="flex w-full flex-row items-center gap-2">
@@ -691,7 +772,7 @@ console.log('errors',errors1);
                   </p>
                   {/* <IoMdArrowDropdown color="white" /> */}
                 </div>
-                {errors1===null ?"": <p className="text-red-500">{errors1}</p>}
+                {errors1 === null ? "" : <p className="text-red-500">{errors1}</p>}
 
               </div>
               <div className="flex flex-col w-full gap-1">
@@ -725,7 +806,7 @@ console.log('errors',errors1);
                     USD <IoIosArrowDown />
                   </p>
                 </div>
-                {errors1===null ?"": <p className="text-red-500">{errors1}</p>}
+                {errors1 === null ? "" : <p className="text-red-500">{errors1}</p>}
 
               </div>
               <div className="flex flex-col w-full gap-1">
@@ -759,7 +840,7 @@ console.log('errors',errors1);
                     USD <IoIosArrowDown />
                   </p>
                 </div>
-                {errors1===null ?"": <p className="text-red-500">{errors1}</p>}
+                {errors1 === null ? "" : <p className="text-red-500">{errors1}</p>}
 
               </div>
 
@@ -767,7 +848,7 @@ console.log('errors',errors1);
             <div className=" secondary  small wrap  w-full  flex flex-row gap-6 items-center">
               <div className="flex flex-col w-full gap-1">
                 <p style={{ fontSize: "14px" }} className="g">
-                  Payment Method
+                  Payment Method   {sell.payment_method_name}
                 </p>
                 <div className="border p-1 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full primary ">
                   <p className="flex flex-row w-full items-center gap-2">
@@ -828,17 +909,22 @@ console.log('errors',errors1);
                       <option value="">Provider</option>
 
                       {" "}
-                      {provider.map((i) => {
-                        return (
+
+
+                      <>
+                        {sell.payment_method_name === 'Bank' ? (
                           <>
-                            <option value={i.
+                            < option value="Salam">Salam</option>
+                          </>
+                        ) : <option value="EVC">EVC</option>}
+
+                        {/* <option value={i.
                               provider_name
                             }>{i.
                               provider_name
-                              }</option>{" "}
-                          </>
-                        );
-                      })}
+                              }</option>{" "} */}
+                      </>
+
                     </select>
 
                     {/* <p className="white flex items-center">Salam Bank </p>
@@ -881,10 +967,10 @@ console.log('errors',errors1);
                     </select>
                   </p>
                 </div>
-                {errors1===null ?"": <p className="text-red-500">{errors1}</p>}
+                {errors1 === null ? "" : <p className="text-red-500">{errors1}</p>}
 
               </div>
-              
+
             </div>
             <div className=" secondary small wrap  w-full  flex flex-row gap-6 items-center">
               <div className="flex flex-col w-full gap-1">
@@ -984,7 +1070,7 @@ console.log('errors',errors1);
                 <CircularProgress />
               </div> :
                 <button
-                  onClick={handleSubmit}
+                  onClick={handleOpen3}
                   className={` ${active === "sell" ? "bg-red-700" : "greenbg"}  p-2 w-full rounded-2xl p-1 white`}
                 >
                   Post Ad

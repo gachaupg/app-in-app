@@ -22,7 +22,7 @@ const Notifications = () => {
 
     return (
         <div style={{
-            fontSize:'12px'
+            fontSize: '12px'
         }} className="primary size w-full pr-48 pl-48">
             <p className="g">Notifications center</p>
             <div className="flex flex-row small wrap gap-6 justify-between small wrap">
@@ -37,7 +37,7 @@ const Notifications = () => {
                                                 <div className="g flex gap-2">
                                                     <RxAvatar size={34} />
                                                     <div>
-                                                   { i.order_type==='sell'?<p>{truncateBuyer(i.seller)} </p>:<p>{truncateBuyer(i.buyer)} </p>}   
+                                                        {i.order_type === 'sell' ? <p>{truncateBuyer(i.seller)} </p> : <p>{truncateBuyer(i.buyer)} </p>}
                                                         <p>{formatAmount(i.amount)} USD</p>
                                                     </div>
                                                 </div>
@@ -54,7 +54,7 @@ const Notifications = () => {
                                                     <p className="g">Order Id: {i.id}</p>
                                                 </div>
                                                 <div>
-                                                    <Link to={`/${i.order_type==='buy'?'rates':'buysell'}/${i.id}`} state={i}>
+                                                    <Link to={`/${i.order_type === 'buy' ? 'rates' : 'buysell'}/${i.id}`} state={i}>
                                                         <button className="flex white p-1 greenbg rounded-lg">
                                                             View Order
                                                         </button>

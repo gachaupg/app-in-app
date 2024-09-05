@@ -52,7 +52,7 @@ console.log(payments);
       setLoading1(false);
     }
   }
-  console.log('payments',payments);
+  console.log('payments orders',payments);
   
   const [order_type, setOrder_type] = useState('');
   const [paymentTypeFilter, setPaymentTypeFilter] = useState('');

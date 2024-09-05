@@ -44,7 +44,7 @@ export default function SignInSide() {
         setLoading(true);
         await dispatch(login({ user, navigate }));
       } catch (error) {
-        setErrors({ ...errors, form: "Error logging in" });
+        setErrors({ ...errors, form: "Error logging in invalid credentials" });
       } finally {
         setLoading(false);
       }

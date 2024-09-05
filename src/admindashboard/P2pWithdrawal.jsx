@@ -188,12 +188,12 @@ const P2pDeposit = () => {
                           <td className="px-6 py-4 flex space-x-2">
                             {
                               deposit.approved ? (
-                                <button
-                                  className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-500">
+                                <p
+                                  className="text-green-600 ">
 
                                   Approved
 
-                                </button>
+                                </p>
                               ) : (
                                 <button
                                   onClick={() => handleSubmit(deposit.id)} // Pass deposit.id to handleSubmit
@@ -204,7 +204,10 @@ const P2pDeposit = () => {
 
                               )
                             }
-                            <button className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-500">Reject</button>
+                          {
+                            deposit.approved?"":                            <button className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-500">Reject</button>
+
+                          }
                           </td>
                         </tr>
                         {/* More rows */}
