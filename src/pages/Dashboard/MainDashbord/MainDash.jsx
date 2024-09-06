@@ -77,7 +77,7 @@ const MainDash = () => {
 
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [Verified, setVerified] = useState(false);
-  const [activeTab1, setActiveTab1] = useState("Dashboard");
+  const [activeTab1, setActiveTab1] = useState("Market");
   const [show, setShow] = useState("P2P");
   const tabs = [
     {
@@ -1126,11 +1126,11 @@ const MainDash = () => {
             <BuyCrypto />
           </>
         )}
-         {activeTab === "Dashboard" && (
+         {/* {activeTab === "Dashboard" && (
           <>
             <UserDashboard />
           </>
-        )}
+        )} */}
         {activeTab === "Exchange" && (
           <>
             <MainExchange />
@@ -1148,7 +1148,11 @@ const MainDash = () => {
         )}
         {activeTab === "Dashboard" && (
           <>
+            <div style={{
+              width:'80%'
+            }} className="w-full">
             <UserDashboard />
+            </div>
           </>
         )}
         {activeTab === "Account" && (

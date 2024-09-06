@@ -26,13 +26,14 @@ function Table({ show, payments, isLoading, verified }) {
   const [bankFilter, setBankFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter payments based on selected filters
   const filteredData = payments.filter(payment => {
     const amountMatch = !amount || payment.amount.toString().includes(amount);
-    const selectFilter = !paymentTypeFilter || payment.payment_provider_name.toString().includes(paymentTypeFilter);
-    const bankMatch = !bankFilter || payment.payment_provider_name.toString().includes(bankFilter);
-    return amountMatch && selectFilter && bankMatch;
+    const paymentTypeMatch = !paymentTypeFilter || payment.payment_method_name === paymentTypeFilter;
+    const bankMatch = !bankFilter || payment.payment_provider_name === bankFilter;
+
+    return amountMatch && paymentTypeMatch && bankMatch;
   });
+
 
   const rowsPerPage = 14; // Each page has 8 rows
 
@@ -69,7 +70,6 @@ function Table({ show, payments, isLoading, verified }) {
 
   return (
     <div style={{ width: "100%", overflowX: "auto" }} className="Table">
-      {/* Filter UI */}
       <div style={{ overflowX: "auto" }}>
         <div className="flex mt-3 wrap mb-2 small flex-row gap-2 w-full justify-between p-1">
           <div style={{ width: "100%" }} className="w-full wrap small flex wrap small gap-12 flex-row p-1">
@@ -91,7 +91,7 @@ function Table({ show, payments, isLoading, verified }) {
 
                 className="secondary g no-border w-full "
                 onChange={(e) => setPaymentTypeFilter(e.target.value)}
-                value={bankFilter}
+                value={paymentTypeFilter}
               >
                 <option style={{
                   fontSize: '12px'
@@ -106,10 +106,10 @@ function Table({ show, payments, isLoading, verified }) {
               <select
                 className="secondary no-border w-full g"
                 onChange={(e) => setBankFilter(e.target.value)}
-                value={paymentTypeFilter}
+                value={bankFilter}
               >
                 <option value="">Select Bank</option>
-                <option value="Salam ">Salam Bank</option>
+                <option value="Salam">Salam Bank</option>
                 <option value="Primier">Primier money</option>
                 <option value="Amal">Amal Bank</option>
                 <option value="EVC">EVC Bank</option>
@@ -170,9 +170,12 @@ function Table({ show, payments, isLoading, verified }) {
           </div>
         </div>
 
-
-
-        <div style={{ width: "100%", overflowX: "auto" }} className="Table">
+        {filteredData.length === 0 ? (
+            <p className="g">No data found </p>
+          ):<>
+          
+        
+                <div style={{ width: "100%", overflowX: "auto" }} className="Table">
           <div style={{ overflowX: "auto" }}>
             <table
               className="styled-table rounded-2xl border secondary"
@@ -285,7 +288,7 @@ function Table({ show, payments, isLoading, verified }) {
             </table>
           </div>
         </div>
-        {/* Pagination */}
+        </> }
         <div className="mt-6 flex gap-5 items-center justify-center g p-2">
           <button
             className="bg-green-600 rounded-lg text-white p-2"

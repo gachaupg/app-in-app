@@ -27,15 +27,15 @@ function Table({ show, payments, isLoading, verified, setOpen }) {
   const [paymentTypeFilter, setPaymentTypeFilter] = useState('');
   const [bankFilter, setBankFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  console.log('hhhhhhhhhhh', bankFilter);
 
-  // Filter payments based on selected filters
   const filteredData = payments.filter(payment => {
     const amountMatch = !amount || payment.amount.toString().includes(amount);
-    const selectFilter = !paymentTypeFilter || payment.payment_provider_name.toString().includes(paymentTypeFilter);
-    const bankMatch = !bankFilter || payment.payment_method_name.toString().includes(bankFilter);
-    return amountMatch && selectFilter && bankMatch;
+    const paymentTypeMatch = !paymentTypeFilter || payment.payment_method_name === paymentTypeFilter;
+    const bankMatch = !bankFilter || payment.payment_provider_name === bankFilter;
+
+    return amountMatch && paymentTypeMatch && bankMatch;
   });
+
 
   const rowsPerPage = 14; // Each page has 8 rows
 
@@ -112,7 +112,7 @@ function Table({ show, payments, isLoading, verified, setOpen }) {
           <div style={{ width: "100%" }} className="w-full wrap small flex wrap small gap-12 flex-row p-1">
             <div className="secondary small w-56 flex h-9 border border-slate-700 p-2 rounded-lg">
               <input
-                className="secondary w-32 gfocus"
+                className="secondary no-border w-32 gfocus"
                 type="text"
                 placeholder="Enter amount"
                 onChange={(e) => setAmount(e.target.value)}
@@ -127,7 +127,7 @@ function Table({ show, payments, isLoading, verified, setOpen }) {
               <select
                 className="secondary no-border w-full g"
                 onChange={(e) => setPaymentTypeFilter(e.target.value)}
-                value={bankFilter}
+                value={paymentTypeFilter}
               >
                 <option value="">Select Payment Type</option>
                 <option value="Bank">Bank Payment</option>
@@ -135,15 +135,14 @@ function Table({ show, payments, isLoading, verified, setOpen }) {
                 <option value="Merchant">Merchant</option>
               </select>
             </div>
-
             <div className="secondary small w-56 flex h-9 border border-slate-700 p-2 rounded-lg">
               <select
                 className="secondary no-border w-full g"
                 onChange={(e) => setBankFilter(e.target.value)}
-                value={paymentTypeFilter}
+                value={bankFilter}
               >
                 <option value="">Select Bank</option>
-                <option value="Salam ">Salam Bank</option>
+                <option value="Salam">Salam Bank</option>
                 <option value="Primier">Primier money</option>
                 <option value="Amal">Amal Bank</option>
                 <option value="EVC">EVC Bank</option>
@@ -206,129 +205,141 @@ function Table({ show, payments, isLoading, verified, setOpen }) {
 
 
 
-        {/* Table */}
-        <div style={{ width: "100%", overflowX: "auto" }} className="Table">
-          <div style={{ overflowX: "auto" }}>
-            <table
-              className="styled-table rounded-2xl border secondary"
-              style={{ minWidth: "600px" }}
-            >          <thead style={{ background: "#35353E", borderTopLeftRadius: "12px", borderTopRightRadius: "12px", overflow: "hidden" }} className="greybg">
-                <tr className="p-3">
-                  <th><div style={{ color: "#788099" }} className="flex items-center g p-3">Advertiser <TiArrowUnsorted /></div></th>
-                  <th><div style={{ color: "#788099" }} className="flex items-center g">Commission <TiArrowUnsorted /></div></th>
-                  <th><div style={{ color: "#788099" }} className="flex items-center g">Available/Order Limit <TiArrowUnsorted /></div></th>
-                  <th><div style={{ color: "#788099" }} className="flex items-center g">Payment <TiArrowUnsorted /></div></th>
-                  <th><div style={{ color: "#788099" }} className="flex items-center g">Trade <TiArrowUnsorted /></div></th>
-                </tr>
-              </thead>
-              <tbody className="primary">
-                {isLoading
-                  ? [...Array(rowsPerPage)].map((_, index) => (
-                    <tr key={index} className="border-bottom" style={{ fontSize: "14px" }}>
-                      <td><Skeleton className="secondary" width={100} /></td>
-                      <td><Skeleton className="secondary" width={50} /></td>
-                      <td><Skeleton className="secondary" width={100} /></td>
-                      <td><Skeleton className="secondary" width={150} /></td>
-                      <td><Skeleton className="secondary" width={80} /></td>
-                    </tr>
-                  ))
-                  : paginatedPayments.map((row, index) => (
-                    <>
-                      {row.order_type === 'sell' && (
-                        <>
-                          <tr key={row.id} className="border-bottom" style={{ fontSize: "14px" }}>
-                            <td className="flex flex-col i gap-1">
-                              <div className="flex flex-row items-center gap-1">
-                                <p className=" greenbg h-8 w-8 rounded-lg flex text-center justify-center items-center p-1 text-white">
-                                  <span
-                                    style={{
-                                      fontSize: "14px",
-                                    }}
-                                    className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
-                                  >
-                                    {row?.advertiser_name?.substring(0, 2).toUpperCase()}
-                                  </span>
-                                </p>
-                                <p style={{ fontSize: "16px" }} className="flex flex-row items-center gap-1">
-                                  {row?.advertiser_name?.split('@')[0]}
-                                  <p className="capitalize"> {row.advertiser_name.username}</p>
-                                  <img src="https://res.cloudinary.com/pitz/image/upload/v1721730938/Frame_34214_gjn30n.png" alt="" />
-                                </p>
-                              </div>
-                              <p className="flex flex-row gap-1 g">
-                                <span className="green">120</span> Orders
-                                <span className="h-5 bg-slate-600" style={{ width: "1px" }}></span>
-                                <span className="green">98%</span> completion
-                              </p>
-                              <p className="flex flex-row gap-1 g">
-                                <p className="flex flex-row items-center">
-                                  <span className="green flex flex-row items-center"><GoThumbsup /> 98%</span>
-
-                                </p> <span className="h-5 bg-slate-600" style={{ width: "1px" }}></span>
-                                <p className="flex flex-row items-center">
-                                  <span className="green flex flex-row items-center"><Clock size={12} />20</span> Min</p>
-                              </p>
-                            </td>
-                            <td>{row?.commission_rate}</td>
-                            <td>
-                              <div className="flex flex-col gap-2">
-                                <p className="white">{Number(row.amount).toFixed(2)}</p>
-                                <p className=""><span className="g">{Number(row.min_order_amount).toFixed(2)}-{Number(row.max_order_amount).toFixed(2)}</span> USD</p>
-                              </div>
-                            </td>
-                            <td className="green capitalize">
-                              <p>{row.payment_provider_name}</p>
-                              <p className="secondary">{row.bank}</p>
-                            </td>
-                            <td>
-                              {
-                                payments1.map((balance) => {
-                                  return (
-                                    <>
-                                      <button
-                                        disabled={typeof balance.balance === 'string' ? formatBalance(balance.balance) < 1 : false}
-                                        onClick={() => {
-                                          setBuy((prevBuy) => (prevBuy === row.id ? false : row.id));
-                                          setId(row.id);
-                                        }}
-                                        className={`w-36 p-2 rounded-lg text-white border-none ${formatBalance(balance.balance) < 1 ? 'secondary' : 'bg-red-700'
-                                          }`}
-                                      >
-                                        SELL USDT
-                                      </button>
-                                    </>
-                                  )
-                                })
-                              }
-
-                            </td>
+        <div>
+          {filteredData.length === 0 ? (
+            <p className="g">No data found </p>
+          ) : (
+            <>
+              <div style={{ width: "100%", overflowX: "auto" }} className="Table">
+                <div style={{ overflowX: "auto" }}>
+                  <table
+                    className="styled-table rounded-2xl border secondary"
+                    style={{ minWidth: "600px" }}
+                  >          <thead style={{ background: "#35353E", borderTopLeftRadius: "12px", borderTopRightRadius: "12px", overflow: "hidden" }} className="greybg">
+                      <tr className="p-3">
+                        <th><div style={{ color: "#788099" }} className="flex items-center g p-3">Advertiser <TiArrowUnsorted /></div></th>
+                        <th><div style={{ color: "#788099" }} className="flex items-center g">Commission <TiArrowUnsorted /></div></th>
+                        <th><div style={{ color: "#788099" }} className="flex items-center g">Available/Order Limit <TiArrowUnsorted /></div></th>
+                        <th><div style={{ color: "#788099" }} className="flex items-center g">Payment <TiArrowUnsorted /></div></th>
+                        <th><div style={{ color: "#788099" }} className="flex items-center g">Trade <TiArrowUnsorted /></div></th>
+                      </tr>
+                    </thead>
+                    <tbody className="primary">
+                      {isLoading
+                        ? [...Array(rowsPerPage)].map((_, index) => (
+                          <tr key={index} className="border-bottom" style={{ fontSize: "14px" }}>
+                            <td><Skeleton className="secondary" width={100} /></td>
+                            <td><Skeleton className="secondary" width={50} /></td>
+                            <td><Skeleton className="secondary" width={100} /></td>
+                            <td><Skeleton className="secondary" width={150} /></td>
+                            <td><Skeleton className="secondary" width={80} /></td>
                           </tr>
-                        </>
-                      )}
+                        ))
+                        : paginatedPayments.map((row, index) => (
+                          <>
+                            {row.order_type === 'sell' && (
+                              <>
+                                <tr key={row.id} className="border-bottom" style={{ fontSize: "14px" }}>
+                                  <td className="flex flex-col i gap-1">
+                                    <div className="flex flex-row items-center gap-1">
+                                      <p className=" greenbg h-8 w-8 rounded-lg flex text-center justify-center items-center p-1 text-white">
+                                        <span
+                                          style={{
+                                            fontSize: "14px",
+                                          }}
+                                          className="h-7 text-center flex items-center capitalize justify-center w-8 p-1 bg-green-600 rounded-lg"
+                                        >
+                                          {row?.advertiser_name?.substring(0, 2).toUpperCase()}
+                                        </span>
+                                      </p>
+                                      <p style={{ fontSize: "16px" }} className="flex flex-row items-center gap-1">
+                                        {row?.advertiser_name?.split('@')[0]}
+                                        <p className="capitalize"> {row.advertiser_name.username}</p>
+                                        <img src="https://res.cloudinary.com/pitz/image/upload/v1721730938/Frame_34214_gjn30n.png" alt="" />
+                                      </p>
+                                    </div>
+                                    <p className="flex flex-row gap-1 g">
+                                      <span className="green">120</span> Orders
+                                      <span className="h-5 bg-slate-600" style={{ width: "1px" }}></span>
+                                      <span className="green">98%</span> completion
+                                    </p>
+                                    <p className="flex flex-row gap-1 g">
+                                      <p className="flex flex-row items-center">
+                                        <span className="green flex flex-row items-center"><GoThumbsup /> 98%</span>
 
-                      {buy === row.id && (
-                        <tr>
-                          <td colSpan="5">
-                            <SellForm id={id} buy={buy} setBuy={setBuy} payments1={payments1} setId={setId} setOpen={setOpen} verified={verified} />
-                          </td>
-                        </tr>
-                      )}
-                    </>
-                  ))
-                }
-              </tbody>
-            </table>
-          </div>
+                                      </p> <span className="h-5 bg-slate-600" style={{ width: "1px" }}></span>
+                                      <p className="flex flex-row items-center">
+                                        <span className="green flex flex-row items-center"><Clock size={12} />20</span> Min</p>
+                                    </p>
+                                  </td>
+                                  <td>{row?.commission_rate}</td>
+                                  <td>
+                                    <div className="flex flex-col gap-2">
+                                      <p className="white">{Number(row.amount).toFixed(2)}</p>
+                                      <p className=""><span className="g">{Number(row.min_order_amount).toFixed(2)}-{Number(row.max_order_amount).toFixed(2)}</span> USD</p>
+                                    </div>
+                                  </td>
+                                  <td className="green capitalize">
+                                    <p>{row.payment_provider_name}</p>
+                                    <p className="secondary">{row.bank}</p>
+                                  </td>
+                                  <td>
+                                    {
+                                      payments1.map((balance) => {
+                                        return (
+                                          <>
+                                            <button
+                                              disabled={typeof balance.balance === 'string' ? formatBalance(balance.balance) < 1 : false}
+                                              // onClick={() => {
+                                              //   setBuy((prevBuy) => (prevBuy === row.id ? false : row.id));
+                                              //   setId(row.id);
+                                              // }}
+                                              onClick={() => {
+                                                if (row?.advertiser_name === user.user.email) {
+                                                  toast.error('You cant trade your own USDT')
+                                                } else {
+                                                  setBuy((prevBuy) => prevBuy === row.id ? false : row.id);
+                                                  setId(row.id);
+                                                }
+                                              }}
+                                              className={`w-36 p-2 rounded-lg text-white border-none ${formatBalance(balance.balance) < 1 ? 'secondary' : 'bg-red-700'
+                                                }`}
+                                            >
+                                              SELL USDT
+                                            </button>
+                                          </>
+                                        )
+                                      })
+                                    }
+
+                                  </td>
+                                </tr>
+                              </>
+                            )}
+
+                            {buy === row.id && (
+                              <tr>
+                                <td colSpan="5">
+                                  <SellForm id={id} buy={buy} setBuy={setBuy} payments1={payments1} setId={setId} setOpen={setOpen} verified={verified} />
+                                </td>
+                              </tr>
+                            )}
+                          </>
+                        ))
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          )}
         </div>
-        {/* Pagination */}
+
         <div className="mt-6 flex gap-5 items-center justify-center g p-2">
           <button
             className="bg-green-600 rounded-lg text-white p-2"
-            onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)}
-          >
+            onClick={() => handlePageChange(currentPage > 1 ? currentPage - 1 : 1)}>
             <IoIosArrowBack className='white' />
-
-
           </button>
           <span>Page {currentPage} of {totalPages}</span>
           <button
