@@ -1,23 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { RxAvatar } from "react-icons/rx";
-import { useDispatch, useSelector } from "react-redux";
-import { Copy } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Copy } from "react-feather";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { RxAvatar } from "rx-avatar";
 import { toast } from "react-toastify";
-import { endpoint } from "../../../utils/APIRoutes";
-import TransactionCard from '../../../components/Transactions/TransactionCard';
-import axios from 'axios';
-import TopCards from '../../../components/UserDashboard/TopCards';
-import Stats from '../../../components/UserDashboard/stats';
-import OverView from '../../../components/UserDashboard/OverView';
-import Referral from '../../../components/UserDashboard/Referral';
-import ExchangeOverView from '../../../components/UserDashboard/ExchangeOverView';
-import P2PoOverview from '../../../components/UserDashboard/P2POverview';
+import axios from "axios";
 
-
-
-const UserDashboard = () => {
-  const { user } = useSelector((state) => ({ ...state.auth }));
+const ProfileSection = () => {  
+    const { user } = useSelector((state) => ({ ...state.auth }));
   const [kyc, setKyc] = useState([]);
   const [match, setMatch] = useState([]);
   const [loading1, setLoading1] = useState(true);
@@ -71,11 +61,8 @@ const UserDashboard = () => {
   const iconsStyles = {
     color: "white",
   }
-  return (
-    <div style={{
-      width: '83%'
-    }} className='primary w-full mt-12 ml-20 mr-32'>
-      <div className="secondary border rounded-2xl border-gray-700 w-full p-2 flex flex-col sm:flex-row justify-between items-center gap-4">
+    return (
+        <div className="secondary border rounded-2xl border-gray-700 w-full p-2 flex flex-col sm:flex-row justify-between items-center gap-4">
         {/* User Information Section */}
         <div className="flex flex-col sm:flex-row gap-6 items-center">
           <div className="flex flex-row items-center gap-2">
@@ -121,29 +108,6 @@ const UserDashboard = () => {
           </div>
         </div>
       </div>
-
-      <TopCards />
-      <Stats />
-
-
-      <div className="flex flex-col lg:flex-row gap-4 justify-between">
-       <ExchangeOverView/>
-       <P2PoOverview/>
-      </div>
-
-      <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center mt-8">
-        <OverView />
-        <Referral />
-      </div>
-
-
-      <TransactionCard />
-    </div>
-
-  );
-};
-
-
-export default UserDashboard;
-
-
+    );
+}
+export default ProfileSection;
