@@ -7,7 +7,10 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { endpoint } from "../../../utils/APIRoutes";
+import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import { Doughnut } from "react-chartjs-2";
 
+ChartJS.register(Title, Tooltip, Legend, ArcElement);
 const EXDash = ({ activeTab }) => {
     const { user } = useSelector((state) => ({ ...state.auth }));
     const navigate = useNavigate();
@@ -110,15 +113,61 @@ const EXDash = ({ activeTab }) => {
         return () => clearInterval(interval);
     }, [user?.access, navigate]);
 
+    const data_d1 = [
+       
+        totalDeposits,
+        totalWithdrawals,
+        totalDeposits+totalWithdrawals
+        
+      ]; 
+      const labels_d1 = ['Deposits', 'Withdrawals', 'Total'];
+      const chartData = {
+        labels: labels_d1,
+        datasets: [
+          {
+            data: data_d1,
+            backgroundColor: ['#FEC228', '#386AB5', '#1D8751', '#E23D3A'], // Yellow, Blue, Green, Red
+            borderColor: 'transparent',
+            borderWidth: 2,
+            borderRadius: 20,
+          },
+        ],
+      };
+    
+      const options = {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'left',
+            labels: {
+              boxWidth: 20,
+              padding: 15,
+              font: {
+                size: 12,
+              },
+              usePointStyle: true, // Use point style for legend
+            },
+            display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: function (tooltipItem) {
+                return `${tooltipItem.label}: ${tooltipItem.raw}`;
+              },
+            },
+          },
+        },
+        cutout: '87%',
+      };
+    
+
+
+
     return (
         <div className="w-full flex flex-col gap-4 small wrap">
             <div className="border border-gray-700 w-full secondary small wrap rounded-2xl p-2 mt-1 justify-center items-center flex flex-col justify-between">
                 <div className="relative w-64 h-64 flex items-center justify-center">
-                    <img
-                        className="w-48 h-48"
-                        src="https://res.cloudinary.com/pitz/image/upload/v1721369888/Group_34205_w3htkn.png"
-                        alt=""
-                    />
+                <Doughnut data={chartData} options={options} className="small-chart" />
                     <div className="absolute flex flex-col items-center">
                         <p className="white flex gap-1 text-center">{formatBalance(totalAmount)} USD</p>
                         <p style={{ fontSize: "12px" }} className="grey text-center">
@@ -152,7 +201,7 @@ const EXDash = ({ activeTab }) => {
                             <p className="h-3 w-3 rounded-sm bg-yellow-400"></p>
                             <p className="grey">In Progress</p>
                         </div>
-                        <p className="white">00.00 USD</p>
+                        <p className="white">{totalDeposits+totalWithdrawals} USD</p>
                     </div>
                 </div>
                 <p className="text-start white">Deposits</p>

@@ -9,47 +9,142 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../utils/APIRoutes";
+import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
+import { Doughnut } from "react-chartjs-2";
 
+ChartJS.register(Title, Tooltip, Legend, ArcElement);
 const SideDash = ({ activeTab }) => {
   const { user } = useSelector((state) => ({ ...state.auth }));
   const navigate = useNavigate();
 
   const [payments, setPayments] = useState([]);
-  const [match, setMatch] = useState([]);
+  const [deposit, setDeposit] = useState([]);
+  const [width, setWidth] = useState([]);
   const [loading1, setLoading1] = useState(false);
+  const [amount, setTotalAmount] = useState('')
+  const [widthamount, setWidthTotalAmount] = useState('')
   useEffect(() => {
-    fetchData()
-  }, [user?.access])
-  async function fetchData() {
-    const token = user.access;
+    const fetchData = async () => {
+      const token = user?.access;
 
-    if (!token) {
-      toast.error("Authentication token is missing. Please log in again.");
-      navigate("/login");
-      setLoading1(false);
-      return;
-    }
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+      }
 
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+        const res = await axios.get(
+          `${endpoint}/trading_engine/wallets/`,
+          { headers }
+        );
+        setPayments(res.data);
+        setLoading1(false);
+        console.log('payments', res.data);
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
     };
 
-    try {
-      const res = await axios.get(
-        `${endpoint}/trading_engine/wallets/`,
-        { headers }
-      );
-      setPayments(res.data);
-      setLoading1(false);
-      console.log('payments', res.data);
+    fetchData();
 
-    } catch (error) {
-      console.log(error);
-      setLoading1(false);
-    }
-  }
+    const interval = setInterval(fetchData, 5000);
 
+    return () => clearInterval(interval);
+  }, [user?.access, navigate]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = user?.access;
+
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+      }
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+        const res = await axios.get(`${endpoint}/trading_engine/p2p/deposit/`, { headers });
+
+        const depositData = res.data;
+        setDeposit(depositData);
+
+
+        const totalAmount = depositData.reduce((acc, item) => acc + item.amount, 0);
+        setTotalAmount(totalAmount);
+
+        setLoading1(false);
+        console.log('payments', depositData);
+        console.log('Total Amount:', totalAmount);
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
+    };
+
+    fetchData();
+
+    const interval = setInterval(fetchData, 5000);
+
+    return () => clearInterval(interval);
+  }, [user?.access, navigate]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = user?.access;
+
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+      }
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+        const res = await axios.get(`${endpoint}/trading_engine/p2p-withdraw/`, { headers });
+
+        const depositData = res.data;
+        setDeposit(depositData);
+
+
+        const totalAmount = depositData.reduce((acc, item) => acc + item.amount, 0);
+        setWidthTotalAmount(totalAmount);
+
+        setLoading1(false);
+
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
+    };
+
+    fetchData();
+
+    const interval = setInterval(fetchData, 5000);
+
+    return () => clearInterval(interval);
+  }, [user?.access, navigate]);
+
+
+  console.log('amount', deposit);
 
   function formatBalance(balance) {
     let num = parseFloat(balance);
@@ -63,15 +158,58 @@ const SideDash = ({ activeTab }) => {
     }
   }
 
+  const data_d1 = [
+   amount+widthamount,
+    amount,
+    widthamount,
+    0
+  ];
+  const labels_d1 = ['Deposits', 'Withdrawals', 'In Progress', 'P2P'];
+  const chartData = {
+    labels: labels_d1,
+    datasets: [
+      {
+        data: data_d1,
+        backgroundColor: ['#FEC228', '#386AB5', '#1D8751', '#E23D3A'], // Yellow, Blue, Green, Red
+        borderColor: 'transparent',
+        borderWidth: 2,
+        borderRadius: 20,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'left',
+        labels: {
+          boxWidth: 20,
+          padding: 15,
+          font: {
+            size: 12,
+          },
+          usePointStyle: true, // Use point style for legend
+        },
+        display: false,
+      },
+      tooltip: {
+        callbacks: {
+          label: function (tooltipItem) {
+            return `${tooltipItem.label}: ${tooltipItem.raw}`;
+          },
+        },
+      },
+    },
+    cutout: '87%',
+  };
+
+
   return (
     <div className="w-full flex flex-col gap-4 small wrap ">
       <div className="border border-gray-700 w-full secondary small wrap  rounded-2xl p-2  mt-1  justify-center items-center  flex flex-col justify-between">
         <div className="relative w-64 h-64 flex items-center justify-center">
-          <img
-            className="w-48 h-48"
-            src="https://res.cloudinary.com/pitz/image/upload/v1721369888/Group_34205_w3htkn.png"
-            alt=""
-          />
+          <Doughnut data={chartData} options={options} className="small-chart" />
           <div className="absolute flex flex-col items-center">
             <p className="white flex gap-1 text-center">  {
               payments.map((balance) => {
@@ -96,7 +234,7 @@ const SideDash = ({ activeTab }) => {
               <p className="h-3 w-3 rounded-sm bg-green-600"></p>
               <p className="grey">Deposits</p>
             </div>
-            <p className="white">00.00 USD</p>
+            <p className="white">{formatBalance(amount)} USD</p>
           </div>
         </div>
         <div className="w-full flex flex-col gap-4">
@@ -105,7 +243,7 @@ const SideDash = ({ activeTab }) => {
               <p className="h-3 w-3 rounded-sm bg-red-600"></p>
               <p className="grey">Withdrawals</p>
             </div>
-            <p className="white">00.00 USD</p>
+            <p className="white">{formatBalance(widthamount)} USD</p>
           </div>
         </div>
 
@@ -124,7 +262,16 @@ const SideDash = ({ activeTab }) => {
               <p className="h-3 w-3 rounded-sm bg-blue-600"></p>
               <p className="grey">P2P</p>
             </div>
-            <p className="white">00.00 USD</p>
+            <p className="white gap-1 flex"> {payments.map((balance) => {
+              return (
+                <p key={balance.id}>
+                  <p key={balance.id}>
+                    {typeof balance.balance === 'string' ? formatBalance(balance.balance) : 'N/A'}
+                  </p>
+                </p>
+              )
+            })
+            } USD</p>
           </div>
         </div>
       </div>

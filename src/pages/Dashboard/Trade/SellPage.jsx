@@ -12,7 +12,7 @@ import axios from "axios";
 import { Copy, DollarSign, Dot } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { BsExclamationCircle } from "react-icons/bs";
-import { IoIosArrowDown, IoMdArrowRoundForward } from "react-icons/io";
+import { IoIosArrowDown, IoIosThumbsDown, IoIosThumbsUp, IoMdArrowRoundForward } from "react-icons/io";
 import { IoCheckmarkCircleSharp } from "react-icons/io5";
 import { SlLike } from "react-icons/sl";
 import { useSelector } from "react-redux";
@@ -326,9 +326,6 @@ const BuyPage = (props) => {
         }}
         className="flex flex-col small w-full  gap-6"
       >
-
-
-
         <Modal
           open={open2}
           // onClose={handleClose1}
@@ -337,39 +334,57 @@ const BuyPage = (props) => {
         >
           <Box className="flex flex-col primary items-center" sx={style}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              <IoCheckmarkCircleSharp className="green" size={40} />
             </Typography>
-            <Typography className="white">
-              Rate your experience with the Merchant            </Typography>
+            <Typography style={{
+              fontSize: '12px'
+            }} className="white text text-xs">
+              Rate your experience with the Merchant
+            </Typography>
             <Typography style={{
               fontSize: '13px'
             }} className="g">
-              <Rating name="no-value" value={null} />
+              <div style={{
+              
+              }} className="flex flex-row items-center w-full gap-10 mb-3 justify-between">
+                <button
+                  style={{
+                  }}
+                  onClick={() => {
+                    handleOpen2()
+                  }}
+                  className="small mt-3 p-1 white greenbg rounded-lg flex gap-3 flex-row items-center">
+                  Positive <IoIosThumbsUp />
+                </button>
+                <button onClick={() => {
+                  window.scrollTo(0, 0);
+                }}
+                  className=" small mt-3 p-1 white secondary rounded-lg flex gap-3 flex-row items-center">
+                  Negative <IoIosThumbsDown color="red" />
+                </button>
 
-              <div className="flex flex-col items-center justify-center border border-slate-700 p-2">
+              </div>
+              <div className="flex rounded-lg flex-col items-center justify-center border border-slate-700 p-2">
                 <p className="g">Leave the comment (optional)</p>
 
-                <input type="text" className="h-40 no-border w-full " />
+                <input type="text" className="h-40 primary no-border w-full " />
               </div>
             </Typography>
-            <button onClick={() => {
-              navigate('/dashboard')
-              window.scrollTo(0, 0);
+            <div className="flex flex-row items-center w-full justify-between gap-10">
+              <button onClick={() => {
+                navigate('/dashboard')
+                window.scrollTo(0, 0);
 
-            }}
-              className="w-full small mt-3 p-1 white greenbg rounded-2xl">
-              Cancel</button>
-            <button onClick={() => {
-              // handleOpen2()
-            }}
-              className="w-full small mt-3 p-1 white greenbg rounded-2xl">
-              Submit</button>
+              }}
+                className="w-80 small mt-3 p-1 white border border-slate-700 rounded-2xl">
+                Cancel</button>
+              <button onClick={() => {
+                // handleOpen2()
+              }}
+                className="w-full small mt-3 p-1 white greenbg rounded-2xl">
+                Submit</button>
+            </div>
           </Box>
         </Modal>
-
-
-
-
         <Modal
           open={open1}
           onClose={handleClose1}

@@ -1,28 +1,42 @@
 
 
-const Stats = () => {
+const Stats = ({bal, amount, widthamount,totalWithdrawals,totalDeposits}) => {
+console.log(bal);
+
+const total=bal+amount+widthamount +totalDeposits+totalWithdrawals;
+function formatBalance(balance) {
+  let num = parseFloat(balance);
+
+  if (num >= 1e9) {
+    return (num / 1e9).toFixed(2) + 'B';
+  } else if (num >= 1e6) {
+    return (num / 1e6).toFixed(2) + 'M';
+  } else {
+    return num.toFixed(2);
+  }
+}
     const stats = [
         {
           title: "My Total Volume",
-          value: "10 M",
+          value:formatBalance(total) ,
         }
         ,
         {
           title: "Exchange",
-          value: "1 M",
+          value:formatBalance(totalWithdrawals+totalDeposits),
         }
         ,
         {
           title: "P2P Volume",
-          value: "1 M",
+          value: formatBalance(bal+widthamount+amount),
         },
         {
           title: "Swap",
-          value: "20 K",
+          value: "00",
         },
         {
           title: "Buy",
-          value: "20 K",
+          value: "00",
         }
       ]
     

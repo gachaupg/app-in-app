@@ -5,9 +5,9 @@ import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
-const Referral = () => {
+const Referral = ({totalWithdrawals,totalDeposits}) => {
     
-  const data_d2 = [20000, 3000]; // One segment is
+  const data_d2 = [totalDeposits, totalWithdrawals]; // One segment is
   const labels_d2 = ['Deposits', 'Withdrawals'];
 
 
@@ -69,14 +69,14 @@ const Referral = () => {
                 <div className="w-3 h-3 bg-[#1D8751] rounded-sm"></div>
                 <p>Deposits</p>
               </div>
-              <p className="text-white text-sm">30,000 USD</p>
+              <p className="text-white text-sm">{totalDeposits} USD</p>
             </div>
             <div className="depo text-sm flex flex-col gap-2">
               <div className="flex items-center gap-2 text-gray-400">
                 <div className="w-3 h-3 bg-[#E2303A] rounded-sm"></div>
                 <p>Withdrawals</p>
               </div>
-              <p className="text-white text-sm">5,000 USD</p>
+              <p className="text-white text-sm">{totalWithdrawals} USD</p>
             </div>
           </div>
           <div className="chart flex justify-center items-center w-full md:w-40 h-36">

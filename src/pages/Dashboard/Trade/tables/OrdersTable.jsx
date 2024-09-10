@@ -9,6 +9,7 @@ import Skeleton from "react-loading-skeleton";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { endpoint } from "../../../../utils/APIRoutes";
 
 function OrdersTable() {
   const [payments, setPayments] = useState([]);
@@ -19,12 +20,9 @@ function OrdersTable() {
   const navigate = useNavigate();
 console.log(payments);
 
-  useEffect(() => {
-    fetchData();
-  }, [user]);
-
-  async function fetchData() {
-    const token = user.access;
+useEffect(() => {
+  const fetchData = async () => {
+    const token = user?.access;
 
     if (!token) {
       toast.error("Authentication token is missing. Please log in again.");
@@ -41,17 +39,24 @@ console.log(payments);
     try {
       const res = await axios.get(
         `${endpoint}/trading_engine/p2p/all-orders/?my_orders=true/`,
-        // `https://omayaexchangebackend.onrender.com/trading_engine/p2p/trades/`,
         { headers }
       );
-      setLoading1(false);
-     
       setPayments(res.data);
+      setLoading1(false);
+      console.log('payments', res.data);
     } catch (error) {
       console.log(error);
       setLoading1(false);
     }
-  }
+  };
+
+  fetchData();
+
+  const interval = setInterval(fetchData, 5000);
+
+  return () => clearInterval(interval);
+}, [user?.access, navigate]);
+
   console.log('payments orders',payments);
   
   const [order_type, setOrder_type] = useState('');
@@ -372,7 +377,7 @@ console.log(payments);
                   </td>
                   <td className="grey">{row.status}</td>
                   <td className="flex flex-row items-center gap-2">
-                    Primear bank
+                    {row.payment_provider_name}
                   </td>
                 </tr>
               ))}

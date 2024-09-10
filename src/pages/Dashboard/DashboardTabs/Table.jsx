@@ -41,7 +41,7 @@ function OrdersTable() {
 
     try {
       const res = await axios.get(
-        `${endpoint}/trading_engine/p2p/deposit/`,
+        `${endpoint}/trading_engine/p2p/all-orders/?my_orders=true/`,
         { headers }
       );
       setPayments(res.data);

@@ -1,4 +1,4 @@
-const ExchangeOverView = () => {
+const ExchangeOverView = ({totalWithdrawals,totalDeposits}) => {
     return (
         <div className="bg-[#1D1D23] p-4 rounded-lg w-full max-w-lg border border-gray-800">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-2">

@@ -625,8 +625,7 @@ const MainDash = () => {
                 style={{ width: "83%" }}
                 className="small p-2 pt-10 flex pr-36 pl-24 flex-col gap-4"
               >
-
-                <div className="">
+ <div className="">
                   <Modal
                     className="no-border"
                     open={open}
@@ -635,19 +634,24 @@ const MainDash = () => {
                     aria-describedby="modal-modal-description"
                   >
                     <Box className="primary border no-border mr-20 flex flex-col items-center justify-center g 0" sx={style}>
-                      <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Verify Account
+                      <Typography className='flex flex-row items-center gap-1' id="modal-modal-title" variant="h6" component="h2">
+                       <img src="https://res.cloudinary.com/pitz/image/upload/v1725821568/alert-circle_dzpzh8.png" alt="" /> Verify Account
                       </Typography>
-                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        <p className="w-full ">
+                      <p  className="text-xs g">
+                      You need to submit your identity documents in order to perform transaction. KYC is available in the settings section
+                      </p>
+                     <div className='flex flex-row items-center justify-between  ml-4 mr-4'>
+                          <div style={{
+                            // width:'16rem'
+                          }} className="w-full ">
                           {loadingKy ? 'Account will be verified soon!, It may take upto 24 hrs' : (
-                            <button onClick={handleOpen1} className="flex white p-1 rounded-lg w-full greenbg">
+                            <button onClick={handleOpen1} className="flex p-1 text-white items-center justify-center mt-3 w-32 greenbg rounded-lg">
                               Verify Now
                             </button>
                           )}
-                        </p>
-                      </Typography>
-                      <button onClick={() => setOpen(false)} className="flex p-1 items-center justify-center mt-3 w-full border border-slate-700 rounded-lg">Cancel</button>
+                          </div>
+                      <button onClick={() => setOpen(false)} className="flex p-1 w-36 items-center justify-center mt-3  border border-slate-700 rounded-lg">Cancel</button>
+                     </div>
                     </Box>
                   </Modal>
                 </div>
@@ -986,7 +990,7 @@ const MainDash = () => {
                             }}
                           >
                             <p className="white">Overview Total</p>
-                            <SideDash activeTab={activeTab} />
+                            <SideDash activeTab={activeTab} payments={payments} />
                           </div>
                         </div>{" "}
                       </>
