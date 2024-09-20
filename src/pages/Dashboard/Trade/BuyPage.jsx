@@ -35,6 +35,12 @@ const style = {
 };
 const BuyPage = (props) => {
   const [open, setOpen] = React.useState(false);
+  const [open1, setOpen1] = useState(false);
+  const handleOpen1 = () => setOpen1(true);
+  const handleClose1 = () => setOpen1(false);
+  const [open2, setOpen2] = useState(false);
+  const handleOpen2 = () => setOpen2(true);
+  const handleClose2 = () => setOpen2(false)
   const location = useLocation()
   const fromDashboard = location.state;
   // console.log('====================================');
@@ -167,13 +173,11 @@ const BuyPage = (props) => {
           { headers }
         );
         setComplete(res.data);
-        console.log('new data ', res.data);
+        console.log('new data dgdggd ', res.data);
 
         setLoading1(false);
         if (res.data.status === 'completed') {
           setOpen1(true);
-          // navigate('/dashboard')
-
         }
       } catch (error) {
         console.log(error);
@@ -188,15 +192,6 @@ const BuyPage = (props) => {
     return () => clearInterval(interval); // Clean up interval on unmount
   }, [user?.access, navigate]);
 
-
-
-
-  const [open1, setOpen1] = useState(false);
-  const handleOpen1 = () => setOpen1(true);
-  const handleClose1 = () => setOpen1(false);
-  const [open2, setOpen2] = useState(false);
-  const handleOpen2 = () => setOpen2(true);
-  const handleClose2 = () => setOpen2(false)
   useEffect(() => {
     const fetchData = async () => {
       const token = user?.access;
@@ -221,11 +216,10 @@ const BuyPage = (props) => {
         setLoading1(false);
         console.log('paymentse55rre', res.data);
         localStorage.setItem('id', JSON.stringify(res.data.id));
-        if (res.data.status === 'completed') {
-          setOpen1(true);
-          // navigate('/dashboard')
+        // if (res.data.status === 'completed') {
+        //   setOpen1(true);
 
-        }
+        // }
       } catch (error) {
         console.log(error);
         setLoading1(false);
@@ -275,7 +269,7 @@ const BuyPage = (props) => {
         const data = await response.json();
 
         if (response.ok) {
-          toast.success("Buy Request sent!");
+          // toast.success("Buy Request sent!");
           // fetchData3();
 
         } else {
@@ -364,8 +358,8 @@ const BuyPage = (props) => {
           </Typography>
          <div className="flex flex-row items-center w-full justify-between gap-10">
          <button onClick={() => {
-            navigate('/dashboard')
-            window.scrollTo(0, 0);
+           navigate('/dashboard', { state: { data: 'Market' } })
+           window.scrollTo(0, 0);
 
           }}
             className="w-80 small mt-3 p-1 white border border-slate-700 rounded-2xl">
@@ -382,7 +376,7 @@ const BuyPage = (props) => {
         style={{
           width: "65%",
         }}
-        className="flex flex-col small w-full  gap-6"
+        className="flex flex-col small w-full wrap  gap-6"
       >
         <Modal
           open={open1}
@@ -405,8 +399,8 @@ const BuyPage = (props) => {
             <div className="flex flex-col gap-2">
               <button onClick={() => {
                 handleClose1();
-                navigate('/dashboard')
-                window.scrollTo(0, 0);
+              navigate('/dashboard', { state: { data: 'Market' } })
+           window.scrollTo(0, 0);
 
               }}
                 className="w-full small mt-3 p-1 white greenbg rounded-2xl">
@@ -537,7 +531,7 @@ const BuyPage = (props) => {
           </div>
         </div>
         <div></div>
-        <div className="flex  small wrapitems-center justify-between">
+        <div className="flex  small wrap items-center justify-between">
           <p> order Info</p>
           <p
             className="flex flex-row items-center gap-2

@@ -345,7 +345,7 @@ const DepositForm = ({ setShow, network }) => {
                         <div className="primary p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
                             <div className="  flex flex-row items-center gap-1 w-full">
                                 <DollarSign color="green" />
-                                <input type="number" onChange={(e) => setWidthdrwal({ ...widthdrwal, amount: e.target.value })} placeholder="100" className="p-1 primary no-border w-full" />
+                                <input value={widthdrwal.amount!='' ?widthdrwal.amount:""} type="number" onChange={(e) => setWidthdrwal({ ...widthdrwal, amount: e.target.value })} placeholder="100" className="p-1 primary no-border w-full" />
                             </div>
                             <IoMdArrowDropdown color="white" />
                         </div>
@@ -359,7 +359,7 @@ const DepositForm = ({ setShow, network }) => {
                                     alt=""
                                 />
                                 <p>
-                                    {widthdrwal.amount != "" ? widthdrwal.amount : '00'} {network}
+                                <input value={widthdrwal.amount!='' ?widthdrwal.amount:""} type="number" onChange={(e) => setWidthdrwal({ ...widthdrwal, amount: e.target.value })} placeholder="100" className="p-1 mainGrey no-border w-full" />
                                     <span
                                         style={{
                                             fontSize: "12px",
@@ -569,6 +569,7 @@ const DepositForm = ({ setShow, network }) => {
 
                             }
                         />
+                        <p>{widthdrwal.screenshot?.name}</p>
                     </div>
                     <p className="g ">
                         Please upload the screenshot of your payment here.

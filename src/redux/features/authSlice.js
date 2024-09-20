@@ -6,11 +6,10 @@ const api= 'https://www.pybreeze.com/api/'
 
 export const login = createAsyncThunk(
   "auth/login",
-  async ({ user, navigate, toast }, { rejectWithValue }) => {
+  async ({ user, navigate, toast ,handleOpen}, { rejectWithValue }) => {
     try {
       const response = await  axios.post(`${endpoint}/api/login/`,user);
-      // toast.success("Login Successfully");
-      navigate("/dashboard");
+      handleOpen()
       console.log(response.data);
       return response.data;
     } catch (err) {
@@ -22,22 +21,19 @@ export const login = createAsyncThunk(
 
 export const register = createAsyncThunk(
   "auth/register",
-  async ({ user, navigate, toast }, { rejectWithValue }) => {
+  async ({ user, navigate, toast,handleOpen  }, { rejectWithValue }) => {
     try {
       const response = await  axios.post(`${endpoint}/api/register/`,user);
-      toast.success("Register Successfully");
-      navigate("/login");
-      // return response.data;
+      handleOpen()
       if (response.data.code===500) {
         console.log(response.data);
         console.log( "Error Try Again later!!",response.error);
-
       }
     } catch (err) {
-      console.log(err.message);
+      console.log(err.error);
       console.log( "Error Try Again later!!",err);
       console.log('====================================');
-      toast.error('error try again invalid credeantials',err);
+      toast.error('error try again later',err.error);
     }
   }
 );

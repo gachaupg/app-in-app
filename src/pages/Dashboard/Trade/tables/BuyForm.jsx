@@ -227,19 +227,19 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId, verified, setOpen, payme
   }, [show, payments.min_order_amount, receive, payments.max_order_amount]);
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex wrap small items-center justify-center">
       <div
         style={{
           width: "100%",
         }}
-        className="secondary mt-10 flex gap-10 flex-row justify-between secondary border border-slate-700 p-2 rounded-lg"
+        className="secondary wrap small mt-10 flex gap-10 flex-row justify-between secondary border border-slate-700 p-2 rounded-lg"
       >
         <div
 
           className="flex flex-col p-1  items-start "
         >
 
-          <div className="flex flex-row w-full gap-5 justify-spa  items-center">
+          <div className="flex flex-row small wrap w-full gap-5 justify-spa  items-center">
             <p className=" bg-green-600 h-full w-10 rounded-lg flex text-center justify-center items-center p-1 text-white">
               <span
                 style={{
@@ -283,7 +283,7 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId, verified, setOpen, payme
               </p>
             </div>
           </div>
-          <div className="flex flex-row gap-10 mt-5 w-full">
+          <div className="flex small wrap flex-row gap-10 mt-5 w-full">
             <div className="flex flex-col items-center justify-center gap-1">
               <p className="white">{payments.limit_duration}minutes</p>
               <p
@@ -352,7 +352,7 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId, verified, setOpen, payme
               <div className="flex flex-row items-center w-full justify-between">
                 <input
                   required
-                  value={show}
+                  value={show!=""?show:""}
                   onChange={handleShowChange}
                   placeholder="220 USD"
                   type="text"
@@ -389,7 +389,7 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId, verified, setOpen, payme
                 <p>
                   <input
                     required
-                    value={receive}
+                    value={receive!=""?receive:""}
                     onChange={handleReceiveChange}
                     placeholder="220 USDT"
                     type="text"
@@ -430,7 +430,9 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId, verified, setOpen, payme
               <CircularProgress />
             ) : (
               <button
-                onClick={handleVerify2}
+                onClick={()=>{
+                  handleVerify2
+                }}
                 style={{
                   width: "45%",
                   fontSize: "15px",

@@ -3,7 +3,7 @@
 const Stats = ({bal, amount, widthamount,totalWithdrawals,totalDeposits}) => {
 console.log(bal);
 
-const total=bal+amount+widthamount +totalDeposits+totalWithdrawals;
+const total=bal + amount + widthamount + totalDeposits+totalWithdrawals;
 function formatBalance(balance) {
   let num = parseFloat(balance);
 

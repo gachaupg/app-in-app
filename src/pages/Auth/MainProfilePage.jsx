@@ -12,11 +12,12 @@ import SideDash from "../../components/SideDash";
 
 const MainProfilePage = () => {
   const [active, setActive] = useState("settings");
+  
   return (
 
 <div style={{
         width:'82%'
-    }} className='primary mt-14 pl-6 pr-20  flex flex-row gap-3'>
+    }} className='primary pl-20 mt-16'>
   
     
   

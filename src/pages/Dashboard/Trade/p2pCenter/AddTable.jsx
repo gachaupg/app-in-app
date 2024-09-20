@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../../utils/APIRoutes";
-
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 function AddTable() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [payments, setPayments] = useState([]);
@@ -40,13 +40,87 @@ function AddTable() {
         { headers }
       );
       setLoading1(false);
-      const data = res.data.filter((data) => data.advertiser_name.id?.split('-')[1] === user.user.username);
-      setPayments(res.data);
+
+      // Filter the data based on the condition
+      const filteredData = res.data.filter((data) =>
+        data.advertiser_name.id?.split('-')[1] === user.user.username
+      );
+
+      // Sort the filtered data by created_on in descending order
+      const sortedData = filteredData.sort((a, b) =>
+        new Date(b.created_on) - new Date(a.created_on)
+      );
+
+      // Set the sorted data
+      setPayments(sortedData);
+
     } catch (error) {
       console.log(error);
       setLoading1(false);
     }
   }
+
+  const [toggleStatus, setToggleStatus] = useState('');
+const [id, setId] = useState('');
+const [newStat, setNewStat] = useState('');
+
+
+
+const handleSubmit = async (id) => {
+  // Ensure newStat is updated before proceeding
+  if (toggleStatus === 'pending') {
+    setNewStat('offline');
+  } else {
+    setNewStat('pending');
+  }
+
+  setLoading1(true);
+  console.log('newStat',newStat);
+  
+  try {
+    const token = user?.access;
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      setLoading1(false);
+      return;
+    }
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    // Wait for the state to update before making the request
+    setTimeout(async () => {
+      console.log('newStat before submit:', newStat);
+
+      const response = await fetch(`${endpoint}/trading_engine/orders/${id}/toggle-status/`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify({
+          status: newStat,
+        }),
+      });
+
+      const result = await response.json();
+      console.log(result);
+
+      if (response.ok) {
+        toast.success("Status updated successfully!");
+        fetchData();
+      } else {
+        toast.error(`Update failed: ${result.error || "Unknown error"}`);
+      }
+
+      setLoading1(false);
+    }, 100); // Delay to allow newStat to update
+
+  } catch (error) {
+    toast.error(`Error: ${error.error || "An unknown error occurred."}`);
+    console.error("Error:", error);
+    setLoading1(false);
+  }
+};
 
   const handleDelete = async (id) => {
     const confirmed = window.confirm("Are you sure you want to delete this item?");
@@ -76,11 +150,27 @@ function AddTable() {
       }
     }
   };
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const rowsPerPage = 12;
 
   const toggleDropdown = (id) => {
     setActiveDropdown(activeDropdown === id ? null : id);
   };
   const label = { inputProps: { "aria-label": "Checkbox demo" } };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const paginatedPayments = payments.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
+
+  const totalPages = Math.ceil(payments.length / rowsPerPage);
+
+
 
   return (
     <div style={{ width: "100%", overflowX: "auto" }} className="Table">
@@ -154,14 +244,14 @@ function AddTable() {
                   </tr>
                 </thead>
                 <tbody className="primary">
-                  {payments.map((row) => (
+                  {paginatedPayments.map((row) => (
                     <tr key={row.id} className="border-bottom" style={{ fontSize: "14px" }}>
                       <td className="flex flex-row items-center gap-1">
                         <img className="h-6" src="https://res.cloudinary.com/pitz/image/upload/v1721628786/Group_20782_ktva9z.png" alt="" />
                         {row.asset}
                       </td>
                       <td className="grey pl-12">{row.id}</td>
-                      <td className="g pl-5">{row.order_type}</td>
+                      <td className={`text-red-700 pl-5 ${row.order_type === 'sell' ? 'text-red-700' : 'green'}`}>{row.order_type}</td>
                       <td className="g pr-4">{row.limit ? row.limit : "00.00"}</td>
                       <td className="grey">{row.amount != null ? Number(row.amount).toFixed(2) : "0.00"}</td>
                       <td className="grey pl-8">{row.commission_rate}</td>
@@ -170,7 +260,7 @@ function AddTable() {
                         {row?.payment_provider_name}
                       </td>
                       <td className="grey pl-7">{new Date(row.created_on).toLocaleDateString()}</td>
-                      <td className="text-green-700">{row.status}</td>
+                      <td className="text-green-700">{row.status === 'pending' ? 'Published' : row.status}</td>
                       <td className="pl-6" style={{ position: "relative" }}>
                         <p className="p-1 h-7 w-7  rounded-lg greenbg flex items-center justify-center">
                           <MoreVert onClick={() => toggleDropdown(row.id)} />
@@ -187,12 +277,30 @@ function AddTable() {
                               <li className="flex flex-row gap-3 items-center" style={{ padding: "5px 10px", cursor: "pointer" }}>
                                 <img className="o object-contain" src="https://res.cloudinary.com/pitz/image/upload/v1722240733/Icon_4_jklbdh.png" alt="" /> Edit
                               </li>
-                              <li className="flex flex-row gap-3 items-center" style={{ padding: "5px 10px", cursor: "pointer" }}>
-                                <img
-                                  src="https://res.cloudinary.com/pitz/image/upload/v1721930066/Rectangle_114_lbm9hq.png"
-                                  alt=""
-                                /> Offline
-                              </li>
+                              {
+                                row.status === 'pending' ?
+                                  <li onClick={() => {
+                                    handleSubmit(row.id)
+                                    setId(row.id)
+                                    setToggleStatus(row.status)
+                                    toggleDropdown(row.id)
+                                  }} className="flex flex-row gap-3 items-center" style={{ padding: "5px 10px", cursor: "pointer" }}>
+                                    <img
+                                      src="https://res.cloudinary.com/pitz/image/upload/v1721930066/Rectangle_114_lbm9hq.png"
+                                      alt=""
+                                    /> Offline
+                                  </li> : <li onClick={() => {
+                                    handleSubmit(row.id)
+                                    setId(row.id)
+                                    setToggleStatus(row.status)
+                                    toggleDropdown(row.id)
+                                  }} className="flex flex-row gap-3 items-center" style={{ padding: "5px 10px", cursor: "pointer" }}>
+                                    <img
+                                      src="https://res.cloudinary.com/pitz/image/upload/v1721930066/Rectangle_114_lbm9hq.png"
+                                      alt=""
+                                    /> Online
+                                  </li>
+                              }
                               <li onClick={() => handleDelete(row.id)} className="flex flex-row gap-3 items-center" style={{ padding: "5px 10px", cursor: "pointer" }}>
                                 <img className="o object-contain" src="https://res.cloudinary.com/pitz/image/upload/v1722240734/Icon_3_ahflka.png" alt="" /> Delete
                               </li>
@@ -208,6 +316,34 @@ function AddTable() {
             )}
           </>
         )}
+      </div>
+      <div className="pagination-controls flex justify-center items-center mt-4">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="pagination-btn mx-2 white"
+        >
+          <IoIosArrowBack />
+
+        </button>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePageChange(index + 1)}
+            className={`pagination-btn g mx-1 ${currentPage === index + 1 ? "active" : ""
+              }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="pagination-btn mx-2 g"
+        >
+          <IoIosArrowForward />
+
+        </button>
       </div>
     </div>
   );

@@ -9,9 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../utils/APIRoutes";
-
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
 import { CircularProgress } from "@mui/material";
 import { FiUpload } from "react-icons/fi";
+import { IoCheckmarkCircleSharp } from "react-icons/io5";
 
 const style = {
   position: "absolute",
@@ -32,10 +35,10 @@ const initialState = {
   wallet_type: "USDT",
   amount: "",
   currency: "USDT",
-  document:null,
+  document: null,
 };
 
-const DepositForm = ({setDeposit}) => {
+const DepositForm = ({ setDeposit }) => {
 
 
   const [files, setFile] = useState('');
@@ -54,25 +57,27 @@ const DepositForm = ({setDeposit}) => {
   const [codes, setCodes] = useState(Array(6).fill(""));
   const [timeLeft, setTimeLeft] = useState(60);
   const [verify, setVerify] = useState(true);
-
+  const [open2, setOpen2] = useState(false);
+  const handleOpen2 = () => setOpen2(true);
+  const handleClose2 = () => setOpen2(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     const token = user.access;
-  
+
     if (!token) {
       toast.error("Authentication token is missing. Please log in again.");
       navigate("/login");
       setLoading(false);
       return;
     }
-  
+
     if (verify === true) {
       const headers = {
         Authorization: `Bearer ${token}`,
       };
-  
+
       const formData = new FormData();
       formData.append('network', widthdrwal.network);
       formData.append('wallet_type', widthdrwal.wallet_type);
@@ -81,7 +86,7 @@ const DepositForm = ({setDeposit}) => {
       if (widthdrwal.document) {
         formData.append('document', widthdrwal.document);
       }
-  
+
       try {
         const response = await fetch(
           `${endpoint}/trading_engine/p2p/deposit/`,
@@ -91,11 +96,11 @@ const DepositForm = ({setDeposit}) => {
             body: formData, // Use FormData instead of JSON
           }
         );
-  
+
         const data = await response.json();
         if (response.ok) {
-          toast.success("Deposited successfully!");
-          setDeposit('P2P')
+        setOpen2(true)
+          // setDeposit('P2P')
         } else if (data.code === "token_not_valid") {
           toast.error("Your session has expired. Please log in again.");
           navigate("/login");
@@ -113,9 +118,43 @@ const DepositForm = ({setDeposit}) => {
       setLoading(false);
     }
   };
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success('Value copied to clipboard!');
+    }).catch((err) => {
+      console.error('Failed to copy text: ', err);
+    });
+  };
+  
   
   return (
     <div className="text-white mt-2">
+      <Modal
+        open={open2}
+        onClose={handleClose2}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box className="flex flex-col primary items-center" sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            <IoCheckmarkCircleSharp className="green" size={40} />
+          </Typography>
+          <Typography className="white">
+            Successfully Submitted
+          </Typography>
+          <p className="g">You will receive</p>
+          <p className="g">{widthdrwal.amount}USD</p>
+          <button
+            onClick={() => {
+              setDeposit('P2P')
+              window.scrollTo(0, 0);
+            }}
+            className="w-full mt-3 p-1 white greenbg rounded-2xl"
+          >
+            OK
+          </button>
+        </Box>
+      </Modal>
       <div
         style={{ width: "100%" }}
         className="border small size border-gray-700 wrap secondary w-full rounded-2xl p-3    flex flex-col justify-between"
@@ -192,9 +231,9 @@ const DepositForm = ({setDeposit}) => {
               </p>
             </p>
           </div>
-          <p className="text-green-600 flex flex-row items-center gap-1">
+          <p onClick={() => copyToClipboard('1543634364353553')} className="text-green-600 cursor-pointer flex flex-row items-center gap-1">
             {" "}
-            Copy <Copy size={14} className="h-15" color="green" />
+            Copy <Copy size={14} className="h-15 cursor-pointer" color="green" />
           </p>
         </div>
 
@@ -207,7 +246,7 @@ const DepositForm = ({setDeposit}) => {
             fontSize: "14px",
           }}
           className=" p-1 pr-2 rounded-2xl w-full flex  flex-row gap-3 justify-between border border-green-700 items-center"
-         >
+        >
           <ul>
             <li className="flex items-center gap-1">
               <Dot size={30} color="green" /> Please send the money from your
@@ -227,7 +266,7 @@ const DepositForm = ({setDeposit}) => {
         <div className="p-2 pr-2 small rounded-2xl w-full flex mt-3 flex-col gap-3 border border-yellow-700">
           <div className="flex flex-row items-center gap-2">
             <p style={{ fontSize: "14px" }}>Upload Documents</p>
-            <label htmlFor="file-upload" className="cursor-pointer">
+            <label htmlFor="file-upload" className="cursor-pointer flex  items-center gap-1">
               <button
                 className="bg-slate-100 p-1 w-12 flex justify-center items-center text-center rounded-lg"
                 onClick={() => {
@@ -236,19 +275,19 @@ const DepositForm = ({setDeposit}) => {
               >
                 <FiUpload className="text-yellow-700" />
               </button>
+              <p>{widthdrwal.document?.name}</p>
             </label>
             <input
               id="file-upload"
               type="file"
+             
               className="hidden"
-              
-              onChange={(e) =>
-                 {
-                  setWidthdrwal({ ...widthdrwal, document: e.target.files[0] });
-                 toast.success('Document picked successfully');
-                 }
+              onChange={(e) => {
+                setWidthdrwal({ ...widthdrwal, document: e.target.files[0] });
+                toast.success('Document picked successfully');
+              }
 
-                }
+              }
             />
           </div>
           <p style={{ fontSize: "14px", color: "#788099" }}>
@@ -274,8 +313,10 @@ const DepositForm = ({setDeposit}) => {
 
         <div className="flex mt-4 mb-4 flex-row items-center justify-center gap-20">
           <button
-            onClick={(e) => {
-              window.location.reload();
+              onClick={() => {
+                setDeposit('P2P')
+                window.scrollTo(0, 0);
+            
             }}
             className="border p-1 w-32 rounded-lg border-slate-700"
           >

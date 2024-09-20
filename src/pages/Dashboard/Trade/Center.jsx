@@ -34,11 +34,6 @@ const Center = () => {
   const navigate = useNavigate("");
   const [provider, setProvider] = useState([]);
 
-  // console.log(provider);
-
-
-
-
   const initialState = {
     provider_name: "",
     account_name: "",
@@ -116,23 +111,74 @@ const Center = () => {
       setLoading1(false);
     }
   }
+  const [id, setId] = useState('');
+  const [data1,setData1]=useState({})
+console.log('data1',data1);
 
-  // Add token to the dependency array
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleDelete = async (id) => {
     setLoading(true);
-
-    // Assuming user.user.access is available in your component's state or context
     const token = user.access;
-
+  
     if (!token) {
       toast.error("Authentication token is missing. Please log in again.");
       navigate("/login");
       setLoading(false);
       return;
     }
-
+  
+    if (id) {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+      console.log(id);
+  
+      try {
+        const response = await fetch(
+          `${endpoint}/trading_engine/user-payment-details/${id}/`,
+          {
+            method: "DELETE",
+            headers: headers,
+          }
+        );
+  
+        // Only attempt to parse JSON if the response is not empty
+        let data = null;
+        if (response.ok && response.headers.get("content-type")?.includes("application/json")) {
+          data = await response.json();
+        }
+  
+        if (response.ok) {
+          toast.success("Deleted successfully!");
+          fetchData();
+          fetchData3();
+        } else if (data && data.code === "token_not_valid") {
+          toast.success("Your session has expired. Please log in again.");
+          navigate("/login");
+        } else {
+          toast.success(`Success`);
+        }
+      } catch (error) {
+        toast.success(`Success`);
+        console.error("Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      toast.error("Invalid ID provided.");
+      setLoading(false);
+    }
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const token = user.access;
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading(false);
+      return;
+    }
     if (form.account_name) {
       const headers = {
         "Content-Type": "application/json",
@@ -444,15 +490,12 @@ const Center = () => {
           <p className="green float-left">P2P Balance</p>
           <p className="g w-full flex">
             <span className="white w-full flex">
-
-
               {
                 wallet.map((balance) => {
                   return (
                     <p key={balance.id}>
                       {typeof balance.balance === 'string' ? formatBalance(balance.balance) : 'N/A'}
                     </p>
-
                   )
                 })
               }
@@ -501,7 +544,16 @@ const Center = () => {
           </p>
         </div>
         <div className=" flex white flex-col">
-          00.00 USD
+          {
+            wallet.map((balance) => {
+              return (
+                <p className="flex gap-1" key={balance.id}>
+                  {typeof balance.balance === 'string' ? formatBalance(balance.balance) : 'N/A'}
+                  <p>USD</p>
+                </p>
+              )
+            })
+          }
           <p style={{ fontSize: "13px" }} className="g">
             Total volume
           </p>
@@ -516,7 +568,7 @@ const Center = () => {
           <button
             onClick={() => setShow("Payments")}
             style={{ fontSize: "13px" }}
-            className={`h-10 small w-40 ${show === "Payments" && "bg-green-600"} text-white rounded-3xl`}
+            className={`h-8 small w-44 ${show === "Payments" && "bg-green-600"} text-white rounded-3xl`}
           >
             Payment Methods
           </button>
@@ -539,7 +591,6 @@ const Center = () => {
             onClick={() => setShow("myAds")}
             style={{ fontSize: "13px" }}
             className={`h-10 small w-36 ${show === "myAds" && "bg-green-600"} text-white rounded-3xl`}
-
           >
             My Ads{" "}
             <span
@@ -553,9 +604,9 @@ const Center = () => {
           </button>
           <button
             style={{ fontSize: "13px" }}
-            className="p-2 h-10 small border w-36 border-green-600 text-green-600 rounded-3xl"
+            className="p-2 h-10 small border w-44 border-green-600 text-green-600 rounded-3xl"
           >
-            <Link to="/adds">+ Pos New Ad</Link>
+            <Link to="/buy-adds">+ Post New Ad</Link>
           </button>
         </div>
         <div className="flex flex-col  gap-1">
@@ -724,8 +775,22 @@ const Center = () => {
                             {payment.payment_provider_name}
                           </p>
                         </div>
-                        <Trash2Icon color="green" />
-                      </div>
+                        <div className="cursor-pointer" onClick={() => {
+                          setId(payment.id);
+                          setData1(payment)
+                          if (id === payment.id) {
+                            handleDelete(payment.id);
+                          }
+                        }}>
+                          {loading && id === payment.id ? (
+                            <CircularProgress />
+                          ) : (
+                            <Trash2Icon color="green" />
+                          )}
+                        </div>
+
+
+                      </div >
                       <div className="flex flex-row small wrap gap-6 items-center w-full">
                         <div className="flex flex-col w-full  gap-1">
                           <p className="g">Wallet Name</p>
@@ -751,8 +816,9 @@ const Center = () => {
             </button>
           </div>
         </>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 };
 

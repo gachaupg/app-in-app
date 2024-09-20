@@ -107,11 +107,13 @@ const Adds = () => {
   const [open1, setOpen1] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const handleClose1 = () => setOpen1(false);
   const [payments, setPayments] = useState([]);
   const [details, setdetails] = useState([]);
   const [provider, setProvider] = useState([]);
   const [loading1, setLoading1] = useState(false);
-  // console.log("payments", details);
+  const [test, setTest] = useState('');
+
   const navigate = useNavigate();
   const { user } = useSelector((state) => ({ ...state.auth }));
   const [payments1, setPayments1] = useState([]);
@@ -137,36 +139,70 @@ const Adds = () => {
   }, [payments]);
 
   console.log('hello', details);
-
-
   useEffect(() => {
-    fetchData3();
-  }, [user.access]);
-  async function fetchData3() {
-    const token = user.access;
-    if (!token) {
-      toast.error("Authentication token is missing. Please log in again.");
-      navigate("/login");
-      setLoading1(false);
-      return;
-    }
+    const fetchData = async () => {
+      const token = user?.access;
 
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+      }
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+
+      try {
+        const res = await axios.get(`${endpoint}/trading_engine/user-payment-details/`,
+          { headers }
+        );
+        setdetails(res.data);
+        setLoading1(false);
+        console.log('payments new data', res.data);
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
     };
 
-    try {
-      const res = await axios.get(`${endpoint}/trading_engine/user-payment-details/`, {
-        headers,
-      });
-      setLoading1(false);
-      setdetails(res.data);
-    } catch (error) {
-      console.log(error);
-      setLoading1(false);
-    }
-  }
+    fetchData();
+
+    const interval = setInterval(fetchData, 5000);
+
+    return () => clearInterval(interval);
+  }, [user?.access, navigate]);
+
+  // useEffect(() => {
+  //   fetchData3();
+  // }, [user.access]);
+  // async function fetchData3() {
+  //   const token = user.access;
+  //   if (!token) {
+  //     toast.error("Authentication token is missing. Please log in again.");
+  //     navigate("/login");
+  //     setLoading1(false);
+  //     return;
+  //   }
+
+  //   const headers = {
+  //     "Content-Type": "application/json",
+  //     Authorization: `Bearer ${token}`,
+  //   };
+
+  //   try {
+  //     const res = await axios.get(`${endpoint}/trading_engine/user-payment-details/`, {
+  //       headers,
+  //     });
+  //     setLoading1(false);
+  //     setdetails(res.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //     setLoading1(false);
+  //   }
+  // }
 
 
   useEffect(() => {
@@ -192,7 +228,7 @@ const Adds = () => {
         headers,
       });
       setLoading1(false);
-      setPayments1(res.data); // Assuming the response data is what you need to set
+      setPayments1(res.data);
       console.log("hello", res.data);
     } catch (error) {
       console.log(error);
@@ -315,7 +351,7 @@ const Adds = () => {
         const data = await response.json();
 
         if (response.ok) {
-          toast.success("Added successfully!");
+          // toast.success("Added successfully!");
           setOpen(true);
         } else {
           if (data.code === "token_not_valid") {
@@ -392,6 +428,15 @@ const Adds = () => {
           handleClose2()
           handleClose()
           fetchData();
+          const res = await axios.get(`${endpoint}/trading_engine/bank-details/`, {
+            headers,
+          });
+          setLoading1(false);
+          setPayments1(res.data);
+          console.log("hello", res.data);
+
+          sell.payment_method_name("")
+          sell.payment_provider_name("")
         } else if (data.code === "token_not_valid") {
           toast.error("Your session has expired. Please log in again.");
           navigate("/login"); // Redirect to login page or handle re-authentication
@@ -425,6 +470,14 @@ const Adds = () => {
     }
   }, [sell.commission_rate]);
 
+
+  const [selected, setSeleted] = useState([]);
+  const handleTab = (name) => {
+    navigate('/dashboard', { state: { data: 'Dashboard', tab: name } })
+
+  }
+  console.log('selected',selected);
+  
   return (
     <>
       <Modal
@@ -478,11 +531,11 @@ const Adds = () => {
           </div>
           <div className="flex w-full items-center mb-2 mt-3 justify-between">
             <p>Account number:</p>
-            <p>{sell.account_number}</p>
+            <p>{selected.number}</p>
           </div>
           <div className="flex w-full items-center mb-2 mt-3 justify-between">
             <p>Account name:</p>
-            <p>{sell.account_name}</p>
+            <p>{selected.name}</p>
           </div>
           {loading1 ? <div className="flex items-center justify-center">
             <CircularProgress /> </div> :
@@ -491,11 +544,6 @@ const Adds = () => {
             </button>}
         </Box>
       </Modal>
-
-
-
-
-
       {activeTab1 === "Market" && (
         <div className="w-full">
           <img
@@ -508,17 +556,24 @@ const Adds = () => {
       <div className="primary w-full  flex wrap small justify-between flex-row ">
         <Modal
           open={open1}
-          onClose={handleClose}
+          onClose={handleClose1}
           aria-labelledby="child-modal-title"
           aria-describedby="child-modal-description"
         >
-          <Box className="primary w-full border border-slate-700 g" sx={{ ...style, width: 700 }}>
+          <Box className="primary w-full border border-slate-700 g" sx={{ ...style, width: 500 }}>
             <h2 id="child-modal-title">You have no payments Details</h2>
-            <h2>To proceed add payments details on the profile page</h2>
+            <h2>To proceed add payments details </h2>
 
-            <button onClick={handleOpen2} className="p-1 white mt-2 rounded-2xl greenbg w-full">
-              Add Payments Details
-            </button>
+            <div className="flex flex-row items-center justify-between gap-6 w-full">
+              <button onClick={handleOpen2} className="p-1 white mt-2 rounded-2xl border border-slate-700 w-full">
+                Cancel
+              </button> <button onClick={() => {
+                handleOpen2()
+                handleClose1()
+              }} className="p-1 white mt-2 rounded-2xl greenbg w-full">
+                Add Payments Details
+              </button>
+            </div>
           </Box>
         </Modal>
 
@@ -535,12 +590,31 @@ const Adds = () => {
             <div
               className={` small   p-2  rounded-lg flex flex-col justify-between `}
             >
-              <p className="white flex flex-row w-64 p-1  rounded-3xl items-center gap-1">
+              <select
+                onChange={(e) =>
+                  setTest(
+                    e.target.value,
+                  )
+                }
+                className="secondary white p-1  cursor-pointer  w-64   no-border"
+                name=""
+                id=""
+              >
+                <option value="">Method</option>
+                <>
+                  <option value='Bank'>Bank</option>{" "}
+                  <option value='Mobile'>Mobile</option>
+                </>
+                {/* );
+                })} */}
+              </select>
+              <p className="white flex flex-row w-64 p-2  rounded-3xl items-center gap-1">
                 <img
                   className="rounded-full object-contain"
                   src="https://res.cloudinary.com/pitz/image/upload/v1721925032/492x0w_1_rw99fe.png"
                   alt=""
                 />{" "}
+
                 <select
                   onChange={(e) =>
                     setForm1({
@@ -548,14 +622,23 @@ const Adds = () => {
                       provider_name: e.target.value,
                     })
                   }
-                  className="secondary white p-1  cursor-pointer  w-64   no-border"
+                  className="secondary white p-1  cursor-pointer  w-full   no-border"
                   name=""
                   id=""
                 >
                   <option value="">Provider</option>
                   <>
-                    <option value='Salam'>Salam</option>{" "}
-                    <option value='EVC'>EVC</option>
+                    {
+                      test === 'Bank' && (
+                        <option value='Salam'>Salam</option>
+                      )
+                    }
+                    {
+                      test === 'Mobile' && (
+                        <option value='EVC'>EVC</option>
+                      )
+                    }
+
                   </>
                   {/* );
                 })} */}
@@ -566,7 +649,7 @@ const Adds = () => {
                   style={{
                     background: "#35353E                ",
                   }}
-                  className="secondary mt-2   rounded-3xl w-full p-2"
+                  className="secondary mt-2   rounded-3xl w-full p-1"
                 >
                   <input
                     onChange={(e) =>
@@ -584,7 +667,7 @@ const Adds = () => {
                 <div
                   style={{
                     background: "#35353E                ",
-                  }} className=" mt-2  rounded-3xl w-full p-2">
+                  }} className=" mt-2  rounded-3xl w-full p-1">
                   <input
                     onChange={(e) =>
                       setForm1({ ...form1, account_number: e.target.value })
@@ -621,9 +704,8 @@ const Adds = () => {
           className="small dash-side flex flex-col gap-6 pt-12"
         >
           {tabs.map((tab) => (
-            <Link key={tab.name} to={`/${tab.link}`}>
+            <div key={tab.name} onClick={() => handleTab(tab.name)}>
               <div
-
                 className={`flex w-full flex-row  pl-20 items-center rounded-tr-lg rounded-br-lg gap-4 p-2 `}
                 style={{
                   cursor: "pointer",
@@ -648,7 +730,7 @@ const Adds = () => {
                   )}
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
 
@@ -677,11 +759,11 @@ const Adds = () => {
                   <IoCheckmarkCircleSharp className="green" size={40} />
                 </Typography>
                 <Typography className="white">
-                  Add Successfully Published
+                  Ad Successfully Published
                 </Typography>
                 <button
                   onClick={() => {
-                    navigate('/dashboard', { state: { center: 'Center' } })
+                    navigate('/dashboard', { state: { data: 'Center' } })
                     window.scrollTo(0, 0);
 
                   }}
@@ -715,7 +797,7 @@ const Adds = () => {
                 </p>
               </div>
             </div>
-            <div className="flex flex-col w-full gap-1">
+            <div className="flex flex-col pt-7 w-full gap-1">
               <p className="g">Rate</p>
               <div className="border p-1 pl-2 rounded-3xl border-slate-700 flex flex-row justify-between  w-full primary ">
                 <p className="flex w-full flex-row items-center gap-2">
@@ -739,9 +821,8 @@ const Adds = () => {
                   className="green"
                 ></p>
               </div>
-              {errors1 === null ? "" : <p className="text-red-500">{errors1}</p>}
-              {sell.commission_rate >= 0.9 && sell.commission_rate <= 1 ? "" : <p className="text-red-700">0.9 - 1</p>}
-
+              <p>              {sell.commission_rate >= 0.9 && sell.commission_rate <= 1 ? "" : <p className="text-red-700">Rate 0.9 - 1</p>}
+              </p>
             </div>
           </div>
           <p className="g">Amount & Payment Method</p>
@@ -772,8 +853,10 @@ const Adds = () => {
                   </p>
                   {/* <IoMdArrowDropdown color="white" /> */}
                 </div>
-                {errors1 === null ? "" : <p className="text-red-500">{errors1}</p>}
+                <p>
+                  {errors1 === null ? "" : <p className="text-red-500">{errors1}</p>}
 
+                </p>
               </div>
               <div className="flex flex-col w-full gap-1">
                 <p style={{ fontSize: "14px" }} className="g">
@@ -848,7 +931,7 @@ const Adds = () => {
             <div className=" secondary  small wrap  w-full  flex flex-row gap-6 items-center">
               <div className="flex flex-col w-full gap-1">
                 <p style={{ fontSize: "14px" }} className="g">
-                  Payment Method   {sell.payment_method_name}
+                  Payment Method
                 </p>
                 <div className="border p-1 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full primary ">
                   <p className="flex flex-row w-full items-center gap-2">
@@ -858,8 +941,13 @@ const Adds = () => {
                     />
                     <Plus color="green" />{" "}
                     <select
-                      onChange={(e) =>
-                        setSell({ ...sell, payment_method_name: e.target.value })
+                      onChange={(e) => {
+                        if (details.length === 0) {
+                          setOpen1(true)
+                        } else {
+                          setSell({ ...sell, payment_method_name: e.target.value })
+                        }
+                      }
                       }
                       className="primary p-1 cursor-pointer w-full white no-border"
                       name=""
@@ -869,7 +957,6 @@ const Adds = () => {
                         {" "}
                         <Plus color="green" /> Add Method
                       </option>
-
                       {payments.map((i) => {
                         return (
                           <>
@@ -879,7 +966,6 @@ const Adds = () => {
                       })}
                     </select>
                   </p>
-                  {/* <IoMdArrowDropdown color="white" /> */}
                 </div>
               </div>
 
@@ -907,37 +993,16 @@ const Adds = () => {
                       id=""
                     >
                       <option value="">Provider</option>
-
-                      {" "}
-
-
                       <>
                         {sell.payment_method_name === 'Bank' ? (
                           <>
                             < option value="Salam">Salam</option>
                           </>
                         ) : <option value="EVC">EVC</option>}
-
-                        {/* <option value={i.
-                              provider_name
-                            }>{i.
-                              provider_name
-                              }</option>{" "} */}
                       </>
-
                     </select>
-
-                    {/* <p className="white flex items-center">Salam Bank </p>
-                    <p className="g"></p> */}
                   </p>
-                  {/* <p
-                    style={{
-                      fontSize: "13px",
-                    }}
-                    className="green flex items-center"
-                  >
-                    USD <IoIosArrowDown />
-                  </p> */}
+
                 </div>
               </div>
               <div className="flex flex-col 6 w-36 gap-1">
@@ -972,72 +1037,89 @@ const Adds = () => {
               </div>
 
             </div>
-            <div className=" secondary small wrap  w-full  flex flex-row gap-6 items-center">
-              <div className="flex flex-col w-full gap-1">
-                <p style={{ fontSize: "14px" }} className="g">
-                  Your Account
-                </p>
-                {details.map((i) => {
-                  return (
-                    <>
-                      {i.payment_provider_name === sell.payment_provider_name && (
-                        <>      <div className="border p-1 pl-3 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full secondary ">
-
-                          <p
-
-                            className="w-full p-1 no-border secondary text-white custom-placeholder"
-
-                          >
-                            {i.account_name}
-                          </p>
-                        </div> </>
-                      )}
-                    </>
-                  )
-                })}
-
-
-              </div>
-
-              <div className="flex flex-col w-full gap-1">
-                <p style={{ fontSize: "14px" }} className="g">
-                  Account Number
-                </p>
-
+            {
+              selected != [] ?
                 <>
-                  {details.map((i) => {
+                  {selected.map((i) => {
                     return (
                       <>
-
-                        {sell.payment_provider}
-
-                        {i.payment_provider_name === sell.payment_provider_name && (
-                          <>
-                            <div className="border p-1 pl-3 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full secondary ">
-
-                              <p
-
-                                className="w-full p-1 no-border secondary text-white custom-placeholder"
-
-                              >
-                                {i.account_number}
-                              </p>
-                            </div>
-
-
-                          </>
-                        )}
-
+                        <div className="w-full border white flex justify-between p-3 items-center border-slate-700 rounded-lg">
+                          <div className="flex flex-col g">
+                            <p className="g">
+                              Account name
+                            </p>
+                            <p>{i?.name}</p>
+                          </div>
+                          <div className="flex flex-col g">
+                            <p className="g">
+                              Account Number
+                            </p>
+                            <p>{i?.number}</p>
+                          </div>
+                        </div>
                       </>
                     )
                   })}
                 </>
+                :
+                <p>Pay methods will appear hear</p>
+            }
+            <div className=" secondary small wrap p-2  w-full   flex flex-row gap-6 items-center">
+
+              <div className="flex flex-col w-full gap-1">
+                {details.map((i) => {
+                  return (
+                    <>
+                      {i.payment_provider_name === sell.payment_provider_name && (
+                        <>
+                          <div className="p-1 pl-3 rounded-lg wrap border border-slate-700 flex flex-row items-center justify-between w-full secondary">
+                            <div className="flex flex-col w-full">
+                              <p style={{ fontSize: "14px" }} className="g">
+                                Your Account
+                              </p>
+                              <p className="w-full p-1 no-border secondary text-white custom-placeholder">
+                                {i.account_name}
+                              </p>
+                            </div>
+                            <div className="flex flex-col items-center w-full">
+                              <p style={{ fontSize: "14px" }} className="g">
+                                Account Number
+                              </p>
+                              <p className="p-1 no-border secondary text-white custom-placeholder">
+                                {i.account_number}
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => {
+                                setSeleted((prevSelected) => [
+                                  ...prevSelected,
+                                  {
+                                    name: i.account_name,
+                                    number: i.account_number,
+                                  },
+                                ]);
+                              }}
+                              className="greenbg p-1 rounded-lg text-white"
+                            >
+                              Select
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  );
+                })}
               </div>
+
+
             </div>
+
             <button onClick={handleOpen2} className="greenbg w-48 text-white p-1 rounded-3xl">
               Add payment method
             </button>
           </div>
+
+
           <p className="g">Terms & Auto reply</p>
           <div className="border flex flex-col  border-slate-700 p-4 rounded-lg secondary">
             <p className="g">Terms (Optional)</p>
@@ -1070,7 +1152,13 @@ const Adds = () => {
                 <CircularProgress />
               </div> :
                 <button
-                  onClick={handleOpen3}
+                  onClick={() => {
+                    if (details.length === 0) {
+                      setOpen1(true)
+                    } else {
+                      handleOpen3();
+                    }
+                  }}
                   className={` ${active === "sell" ? "bg-red-700" : "greenbg"}  p-2 w-full rounded-2xl p-1 white`}
                 >
                   Post Ad

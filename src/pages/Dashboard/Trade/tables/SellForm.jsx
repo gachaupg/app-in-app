@@ -227,12 +227,12 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId, verified, setOpen, payme
   }, [show, payments.min_order_amount, receive, payments.max_order_amount]);
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex small wrap items-center justify-center">
       <div
         style={{
           width: "100%",
         }}
-        className="secondary mt-10 flex gap-10 flex-row justify-between secondary border border-slate-700 p-2 rounded-lg"
+        className="secondary mt-10 small wrap flex gap-10 flex-row justify-between secondary border border-slate-700 p-2 rounded-lg"
       >
         <div
 
@@ -352,7 +352,7 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId, verified, setOpen, payme
               <div className="flex flex-row items-center w-full justify-between">
                 <input
                   required
-                  value={show}
+                  value={show!=""?show:""}
                   onChange={handleShowChange}
                   placeholder="220 USDT"
                   type="text"
@@ -388,7 +388,7 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId, verified, setOpen, payme
                 <p>
                   <input
                     required
-                    value={receive}
+                    value={receive!=""?receive:""}
                     onChange={handleReceiveChange}
                     placeholder="220 USDT"
                     type="text"

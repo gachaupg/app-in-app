@@ -179,7 +179,7 @@ const BuyPage = (props) => {
                 const data = await response.json();
 
                 if (response.ok) {
-                    toast.success("Request sent!");
+                    // toast.success("Request sent!");
                     // navigate('/dashboard')
                 } else {
                     if (data.code === "token_not_valid") {
@@ -225,7 +225,13 @@ const BuyPage = (props) => {
 
                 setMatch(res.data);
                 setLoading1(false);
-                console.log('payments', res.data);
+                const res1 = await axios.get(
+                    `${endpoint}/trading_engine/p2porders/${res.data.sell_order}/`,
+                    { headers }
+                );
+                setPayments(res1.data);
+                console.log('Newwwww',res1.data);
+                
                 if (res.data.status === 'completed') {
                     setOpen1(true);
                 }
@@ -257,6 +263,7 @@ const BuyPage = (props) => {
         }
     }, [seconds]);
     const [match, setMatch] = useState([]);
+console.log('gsgdsggdgdggdg',payments);
 
 
     useEffect(() => {
@@ -362,8 +369,8 @@ const BuyPage = (props) => {
                     </Typography>
                     <div className="flex flex-row items-center w-full justify-between gap-10">
                         <button onClick={() => {
-                            navigate('/dashboard')
-                            window.scrollTo(0, 0);
+                           navigate('/dashboard', { state: { data: 'Market' } })
+                           window.scrollTo(0, 0);
 
                         }}
                             className="w-80 small mt-3 p-1 white border border-slate-700 rounded-2xl">
@@ -402,8 +409,8 @@ const BuyPage = (props) => {
                         </Typography>
                         <div>
                             <button onClick={() => {
-                                navigate('/dashboard');
-                                window.scrollTo(0, 0);
+                               navigate('/dashboard', { state: { data: 'Market' } })
+                               window.scrollTo(0, 0);
 
                             }
                             } className="w-full small mt-3 p-1 white border border-slate-700 rounded-2xl">Cancel</button>
@@ -434,7 +441,7 @@ const BuyPage = (props) => {
                             <p className="flex flex-row items-center"> <IoDocumentTextOutline /> Order Number : <span className="green">{'252442'}</span></p>
                         </div>
 
-                        <div className="border border-slate-700 p-2 gap-4 rounded-2xl flex flex-row items-center justify-between">
+                        <div className="border small  w-full wrap border-slate-700 p-2 gap-4 rounded-2xl flex flex-row items-center justify-between">
                             <div className="flex w-full flex-col">
                                 <p className="g text-sm">Fiat USD</p>
                                 <div className="greybg w-full rounded-2xl p-1 flex flex-row items-center justify-between yellowT">
@@ -448,7 +455,7 @@ const BuyPage = (props) => {
                             <div className="flex w-full flex-col">
                                 <p className="g text-sm">Commision</p>
                                 <div className="greybg w-full rounded-2xl p-1 flex flex-row items-center justify-between ">
-                                    <p className="flex items-center" ><DollarSign className="green" />{fromDashboard.commission_rate}%</p>
+                                    <p className="flex items-center" ><DollarSign className="green" />{payments?.commission_rate}%</p>
                                     <p>USD</p>
                                 </div>
                             </div>
@@ -463,9 +470,9 @@ const BuyPage = (props) => {
 
                             </div>
                         </div>
-                        <p style={{
+                        <div style={{
                             fontSize: '12px'
-                        }} className="text-xm mt-2">Confirm that the payment is from Mohamed Ziyad Yousef  (Buyer's name)</p>
+                        }} className="text-xm mt-2">Confirm that the payment is from  {fromDashboard.buyer.split('@')[0]}  (Buyer's name)</div>
 
 
                         <div className="flex flex-col rounded-lg secondary border border-slate-700  p-2 w-full">
@@ -485,12 +492,12 @@ const BuyPage = (props) => {
                                 </div>
                                 <div
                                     style={{ width: "100%" }}
-                                    className="flex small flex-col gap-2 items-center gap-2"
+                                    className="flex small flex-col gap-2 items-center"
                                 >
                                     <div className="w-full flex items-center wrap flex-row ">
                                         <p className="g w-36">Account Name</p>
                                         <p className="border w-full flex items-center w-full greybg border-green-600 rounded-2xl p-1">
-                                            <Dot /> <p> {payments?.account_provider_name}</p>
+                                            <Dot /> <p> {payments?.account_name}</p>
                                         </p>
 
                                     </div>
@@ -499,7 +506,7 @@ const BuyPage = (props) => {
                                         <div className="flex flex-row gap-2 justify-between  w-full">
                                             <p className="border text-green-600 flex items-center w-full greybg border-green-600 rounded-2xl p-1">
                                                 <Dot color="green" />{" "}
-                                                <p>{payments?.account_provider_number}</p>
+                                                <p>{payments?.account_number}</p>
                                             </p>
 
                                         </div>

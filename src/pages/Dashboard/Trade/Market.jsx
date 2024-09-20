@@ -19,49 +19,47 @@ const MarketPage = () => {
   const { user } = useSelector((state) => ({ ...state.auth }));
   const navigate = useNavigate("");
   useEffect(() => {
-    fetchData();
-  }, [user]);
-  async function fetchData() {
-    const token = user.access;
+    const fetchData1 = async () => {
+      const token = user?.access;
+  
+      if (!token) {
+        toast.error("Authentication token is missing. Please log in again.");
+        navigate("/login");
+        setLoading1(false);
+        return;
+      }
+  
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
+  
+      try {
+        const res = await axios.get(
+          `${endpoint}/trading_engine/p2p/all-orders/`,
+          {
+          headers,
+        });
 
-    if (!token) {
-      toast.error("Authentication token is missing. Please log in again.");
-      navigate("/login");
-      setLoading1(false);
-      return;
-    }
-
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+        const sortedData = res.data.sort(
+          (a, b) => new Date(b.created_on) - new Date(a.created_on)
+        );
+        const filteredData = sortedData.filter(order => order.status === "pending");
+        console.log("Filtered pending orders:", filteredData);
+        setPayments(filteredData);
+        setLoading1(false);
+      } catch (error) {
+        console.log(error);
+        setLoading1(false);
+      }
     };
-
-    try {
-      const res = await axios.get(
-        `${endpoint}/trading_engine/p2p/all-orders/`,
-        { headers }
-      );
-      setLoading1(false);
-      setPayments(res.data); // Assuming the response data is what you need to set
-      // console.log("hello", res);
-    } catch (error) {
-      console.log(error);
-      setLoading1(false);
-    }
-  }
-  fetchData();
-
+    fetchData1();
+    const interval = setInterval(fetchData1, 5000);
+    return () => clearInterval(interval);
+  }, [user?.access, navigate]);
   const [kyc, setKyc] = useState([])
 
   console.log('kyc', kyc);
-
-  // useEffect(()=>{
-  // if (kyc.is_verified===true) {
-  //   setLoadingKyc(false)
-  // }else{
-  //   return
-  // }
-  // },[kyc]);
   const style = {
     position: 'absolute',
     top: '50%',
@@ -127,9 +125,6 @@ const MarketPage = () => {
     const interval = setInterval(fetchData, 5000); 
     return () => clearInterval(interval); 
   }, [user?.access, navigate]);
-
-
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -340,12 +335,12 @@ const MarketPage = () => {
       <>
         {show === "Buy" && (
           <>
-            <Buy payments={payments} show={show} isLoading={loading1} verified={kyc.is_verified} setOpen={setOpen} />
+            <Buy setIsloading={setLoading1} payments={payments} show={show} isLoading={loading1} verified={kyc.is_verified} setOpen={setOpen} />
           </>
         )}
         {show === "Sell" && (
           <>
-            <Sell payments={payments} show={show} isLoading={loading1} verified={kyc.is_verified} setOpen={setOpen} />
+            <Sell setIsloading={setLoading1} payments={payments} show={show} isLoading={loading1} verified={kyc.is_verified} setOpen={setOpen} />
           </>
         )}
       </>

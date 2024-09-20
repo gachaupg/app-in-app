@@ -9,10 +9,10 @@ import { DollarSign } from "lucide-react";
 import { IoIosArrowDown } from "react-icons/io";
 import { Link } from "react-router-dom";
 
-const Buy = ({ show ,payments,isLoading,verified,setOpen}) => {
+const Buy = ({ show ,payments,isLoading,verified,setOpen,setIsloading}) => {
   return (
     <>
-      <Table show={show} payments={payments} isLoading={isLoading} verified={verified} setOpen={setOpen}/>
+      <Table setIsLoading={setIsloading} show={show} payments={payments} isLoading={isLoading} verified={verified} setOpen={setOpen}/>
     </>
   );
 };

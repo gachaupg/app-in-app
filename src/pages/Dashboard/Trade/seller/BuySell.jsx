@@ -36,6 +36,7 @@ const BuyPage = (props) => {
     const [open, setOpen] = React.useState(false);
     const location = useLocation()
     const fromDashboard = location.state;
+    const [match, setMatch] = useState([]);
 
     const params = useParams();
     const { id } = params;
@@ -62,48 +63,47 @@ const BuyPage = (props) => {
         auto_reply: payments?.auto_reply || "",
         terms_and_conditions: payments?.terms_and_conditions || "",
     };
-    console.log("hello", show);
+    console.log("hello", match.buy_order);
 
     const [buy, setBuy] = useState(initialState);
 
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const token = user?.access;
+    const fetchData5 = async () => {
+        const token = user?.access;
 
-            if (!token) {
-                toast.error("Authentication token is missing. Please log in again.");
-                navigate("/login");
-                setLoading1(false);
-                return;
-            }
+        if (!token) {
+            toast.error("Authentication token is missing. Please log in again.");
+            navigate("/login");
+            setLoading1(false);
+            return;
+        }
 
-            const headers = {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            };
-
-            try {
-                const res = await axios.get(
-                    `${endpoint}/trading_engine/p2porders/${status.buy_order}/`,
-                    { headers }
-                );
-                setShow(res.data);
-                setLoading1(false);
-                console.log('paymentssasssss', res.data);
-
-            } catch (error) {
-                console.log(error);
-                setLoading1(false);
-            }
+        const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         };
 
-        fetchData(); // Initial fetch
+        try {
+            const res = await axios.get(
+                `${endpoint}/trading_engine/p2porders/${match.buy_order}/`,
+                { headers }
+            );
+            setShow(res.data);
+            setLoading1(false);
+            console.log('paymentssasssss', res.data);
 
-        const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+        } catch (error) {
+            console.log(error);
+            setLoading1(false);
+        }
+    };
 
-        return () => clearInterval(interval); // Clean up interval on unmount
-    }, [user?.access, navigate]);
+    //     fetchData(); // Initial fetch
+
+    //     const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+
+    //     return () => clearInterval(interval); // Clean up interval on unmount
+    // }, [user?.access, navigate]);
 
 
     useEffect(() => {
@@ -155,7 +155,7 @@ const BuyPage = (props) => {
             try {
 
                 const res = await axios.get(
-                    `${endpoint}/trading_engine/p2porders/${id}/`,
+                    `${endpoint}/trading_engine/p2porders/${match.buy_order}/`,
                     { headers }
                 );
                 setPayments(res.data);
@@ -218,7 +218,7 @@ const BuyPage = (props) => {
                 const data = await response.json();
 
                 if (response.ok) {
-                    toast.success("Request sent!");
+                    // toast.success("Request sent!");
                     fetchData3();
                     // if (status.status === 'completed' ) {
                     //     navigate('/dashboard')
@@ -289,7 +289,6 @@ const BuyPage = (props) => {
             setIsDisabled(true); // Disable the button when seconds reach 0
         }
     }, [seconds]);
-    const [match, setMatch] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -315,7 +314,14 @@ const BuyPage = (props) => {
                 setStatus(res.data);
                 setMatch(res.data);
                 setLoading1(false);
-                console.log('paymentsdddd', res.data);
+                fetchData5()
+                const res1 = await axios.get(
+                    `${endpoint}/trading_engine/p2porders/${res.data.buy_order}/`,
+                    { headers }
+                );
+                setShow(res1.data);
+                console.log('ggggggg', res1.data);
+
                 if (res.data.status === 'completed') {
                     setOpen1(true);
                     // navigate('/dashboard')
@@ -399,14 +405,12 @@ const BuyPage = (props) => {
                     </Typography>
                     <div className="flex flex-row items-center w-full justify-between gap-10">
                         <button onClick={() => {
-                            navigate('/dashboard')
+                            navigate('/dashboard', { state: { data: 'Market' } })
                             window.scrollTo(0, 0);
-
                         }}
                             className="w-80 small mt-3 p-1 white border border-slate-700 rounded-2xl">
                             Cancel</button>
                         <button onClick={() => {
-                            // handleOpen2()
                         }}
                             className="w-full small mt-3 p-1 white greenbg rounded-2xl">
                             Submit</button>
@@ -439,7 +443,7 @@ const BuyPage = (props) => {
                             I will receive {fromDashboard.amount} USDT
                         </Typography>
                         <button onClick={() => {
-                            navigate('/dashboard');
+                            navigate('/dashboard', { state: { data: 'Market' } })
                             window.scrollTo(0, 0);
                         }}
                             className="w-full small mt-3 p-1 white border border-slate-700

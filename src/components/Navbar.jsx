@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-
 import {
   AccountCircle,
   Cancel,
@@ -28,7 +27,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import { Wallet } from "lucide-react";
-import { MdKeyboardArrowRight, MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { MdCancel, MdKeyboardArrowRight, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { RxAvatar } from "react-icons/rx";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -59,7 +58,9 @@ const Main = styled("main", {
 const Navbar = () => {
   const [show, setShow] = React.useState(false);
   const [show1, setShow1] = React.useState(false);
+  const [show123, setShow41] = React.useState(false);
   const [tabs, setTabs] = React.useState(false);
+  const [deposit, setDeposit] = React.useState(false);
   const [ProPro, setProPro] = useState(false);
   const { user } = useSelector((state) => ({ ...state.auth }));
   const [showLog, setShowLog] = React.useState(false);
@@ -71,6 +72,9 @@ const Navbar = () => {
   const handleShowSide = () => {
     setSideDash(!showSideDash);
   };
+  const handleShowSideDeposit = () => {
+    setDeposit(!showSideDash);
+  };
   const showTabs = () => {
     setTabs(!tabs);
   };
@@ -78,8 +82,7 @@ const Navbar = () => {
     if (
       (dropdownRef.current && !dropdownRef.current.contains(event.target)) ||
       (profileRef.current && !profileRef.current.contains(event.target)) ||
-      (langRef.current && !langRef.current.contains(event.target)) ||
-      (sideDashRef.current && !sideDashRef.current.contains(event.target))
+      (langRef.current && !langRef.current.contains(event.target))
     ) {
       setSideDash(false);
       setShowLog(false);
@@ -300,8 +303,13 @@ const Navbar = () => {
           <p
             className="cursor-pointer"
             onClick={() => {
-              setShow(false);
-              noUser1();
+
+              console.log('hello');
+
+              navigate('/dashboard', { state: { data: 'Market' } })
+              window.scrollTo(0, 0);
+
+              // noUser1();
             }}
           >
             Market
@@ -334,10 +342,10 @@ const Navbar = () => {
                       {
                         i.id === user?.user?.id && (
                           <>
-                            {i.is_superuser===true ? 
-                            <button className="p-1 h-9 border border-slate-700 w-24 rounded-lg ">Admin</button> : ''
-                            }                  
-                            </>
+                            {i.is_superuser === true ?
+                              <button className="p-1 h-9 border border-slate-700 w-24 rounded-lg ">Admin</button> : ''
+                            }
+                          </>
                         )
                       }
                     </>
@@ -352,11 +360,10 @@ const Navbar = () => {
                 fontSize: "12px",
               }}
               onClick={() => {
-                setShow(false);
-                handleShowSide();
+                handleShowSideDeposit();
 
               }}
-              ref={sideDashRef}
+              // ref={sideDashRef}
               className=" rounded-lg p-1 w-24 h-8 flex flex-row items-center gap-1"
             >
               <img
@@ -391,58 +398,53 @@ const Navbar = () => {
                   <div onClick={HandNew}>
                     <Cancel className="items-left float-left ml-44" />
                   </div>
-                  <Link onClick={() => {
-                    navigate('/account')
+                  <div onClick={() => {
+                    navigate('/dashboard', { state: { data: 'Dashboard', tab: 'Account' } })
                     HandNew();
-
-                  }} className="w-full" to="/account">
+                  }} className="w-full" >
                     <div onClick={() => {
-                      navigate('/account')
                       HandNew();
 
                     }} className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                       <AccountCircle />
                       <button>Profile</button>
                     </div>
-                  </Link>
-                  <Link onClick={() => {
-                    navigate('/account')
+                  </div>
+                  <div onClick={() => {
+                    navigate('/dashboard', { state: { data: 'Dashboard', tab: 'Account' } })
                     HandNew();
 
-                  }} className="w-full" to="/account">
+                  }} className="w-full" >
                     <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                       <Wallet />
                       <button>Wallet</button>
                     </div>
-                  </Link>
-                  <Link onClick={() => {
-                    navigate('/account')
+                  </div>
+                  <div onClick={() => {
+                    navigate('/dashboard', { state: { data: 'Dashboard', tab: 'Account' } })
                     HandNew();
 
-                  }} className="w-full" to="/account">
+                  }} className="w-full" >
                     <div className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg">
                       <Verified />
                       <button>KYC</button>
                     </div>
-                  </Link>
-                  <Link
+                  </div>
+                  <div
                     onClick={() => {
-                      navigate('/account')
+                      navigate('/dashboard', { state: { data: 'Dashboard', tab: 'Account' } })
                       HandNew();
-
                     }}
-                    to='/acount'
-
                     className="flex justify-between w-full p-1 gap-3 border-slate-700  border rounded-lg"
                   >
                     <PrivacyTip />
                     <button>Privacy and Security</button>
-                  </Link>
+                  </div>
                   <div className="w-full">
 
-                    <Link onClick={() => {
-                      navigate('/account')
-                      HandNew();
+                    <div onClick={() => {
+                    navigate('/dashboard', { state: { data: 'Dashboard', tab: 'Account' } })
+                    HandNew();
 
                     }} to="/account"
 
@@ -450,7 +452,7 @@ const Navbar = () => {
                     >
                       <RefreshRounded />
                       <button>Referral</button>
-                    </Link >
+                    </div >
                   </div>
                   <div
                     onClick={() => {
@@ -509,7 +511,7 @@ const Navbar = () => {
           />
           <TiArrowSortedDown color="green" onClick={showLang} />
 
-          {show1 && (
+          {show123 && (
             <div className="lang mt-3 p-2  w-48 right-0  absolute  border border-slate-700 rounded-lg top-8 secondary">
               <p className="flex items-center justify-start gap-2 p-2">
                 <img
@@ -529,10 +531,20 @@ const Navbar = () => {
               </p>
             </div>
           )}
-          {showSideDash && (
+          {deposit && (
             <>
               <div className="sideDash flex cursor-pointer flex-col gap-5 p-3">
-                <Link onClick={handleShowSide} to="/exchange" className="flex  hover cursor-pointer flex-row  items-center  gap-10 w-full">
+                <button onClick={() => {
+                  setDeposit(false)
+                }}><MdCancel className="ml-20 float-left w-full" onClick={() => {
+                  setDeposit(false)
+                }} /></button>
+                <div onClick={() => {
+                  handleShowSideDeposit()
+                  setDeposit(false)
+                  navigate('/dashboard', { state: { data: 'Dashboard', tab: 'Exchange' } })
+                  window.scrollTo(0, 0);
+                }} to="/exchange" className="flex  hover cursor-pointer flex-row  items-center  gap-10 w-full">
                   <img className="h-6" src="https://res.cloudinary.com/pitz/image/upload/v1723104409/uil_exchange_1_tjzevh.png" alt="" />
                   <div className="cursor-pointer">
                     <p className="white cursor-pointer mr-5">Exchange</p>
@@ -544,8 +556,13 @@ const Navbar = () => {
                     </p>
                   </div>
                   <MdKeyboardArrowRight size={30} />
-                </Link>
-                <Link onClick={handleShowSide} to="/dashboard" className="flex hover cursor-pointer flex-row  items-center  gap-10 w-full">
+                </div>
+                <div onClick={() => {
+                  handleShowSideDeposit()
+                  setDeposit(false)
+                  navigate('/dashboard', { state: { data: 'Dashboard', tab: 'P2P Trading' } })
+                  window.scrollTo(0, 0);
+                }} className="flex hover cursor-pointer flex-row  items-center  gap-10 w-full">
                   <img src="https://res.cloudinary.com/pitz/image/upload/v1723104921/users-profiles-left_2_bunnsy.png" alt="" />
                   <div>
                     <p className="white cursor-pointer mr-5">P2P</p>
@@ -557,8 +574,14 @@ const Navbar = () => {
                     </p>
                   </div>
                   <MdKeyboardArrowRight size={30} />
-                </Link>
-                <Link onClick={handleShowSide} to="/dashboard" className="flex hover cursor-pointer flex-row  items-center  gap-10 w-full">
+                </div>
+                <div onClick={() => {
+                  handleShowSideDeposit()
+                  setDeposit(false)
+                  navigate('/dashboard', { state: { data: 'Dashboard', tab: 'Swap Crypto' } })
+
+                  window.scrollTo(0, 0);
+                }} to="/dashboard" className="flex hover cursor-pointer flex-row  items-center  gap-10 w-full">
                   <img src="https://res.cloudinary.com/pitz/image/upload/v1723104988/Group_164002_1_oovexn.png" alt="" />
                   <div>
                     <p className="white cursor-pointer mr-5">Swap</p>
@@ -570,8 +593,13 @@ const Navbar = () => {
                     </p>
                   </div>
                   <MdKeyboardArrowRight size={30} />
-                </Link>
-                <Link onClick={handleShowSide} to="/dashboard" className="flex flex-row hover cursor-pointer items-center  gap-10 w-full">
+                </div>
+                <div onClick={() => {
+                  handleShowSideDeposit()
+                  setDeposit(false)
+                  navigate('/dashboard', { state: { data: 'Dashboard', tab: 'Buy Crypto' } })
+                  window.scrollTo(0, 0);
+                }} to="/dashboard" className="flex flex-row hover cursor-pointer items-center  gap-10 w-full">
                   <img src="https://res.cloudinary.com/pitz/image/upload/v1723105029/Group_164004_1_urbeen.png" alt="" />
                   <div>
                     <p className="white mr-5 cursor-pointer">Buy</p>
@@ -583,7 +611,7 @@ const Navbar = () => {
                     </p>
                   </div>
                   <MdKeyboardArrowRight size={30} />
-                </Link>
+                </div>
               </div>
             </>
           )}
@@ -624,7 +652,8 @@ const Navbar = () => {
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" noWrap component="div">
-                <img
+               <Link to='/'>
+               <img
                   style={{
 
                     width: "5rem",
@@ -634,6 +663,7 @@ const Navbar = () => {
 
                   alt="logo"
                 />
+               </Link>
               </Typography>
             </Toolbar>
           </AppBar>
@@ -673,7 +703,7 @@ const Navbar = () => {
                 style={{ backgroundColor: "" }}
               />
               <List className="sidebar">
-                <div className="flex sidebar ml-10 flex-col justify-center gap-5">
+                <div className="flex sidebar ml-10 flex-col justify-center">
                   <NavLink exact to="/" activeClassName="active">
                     Home
                   </NavLink>
@@ -693,14 +723,16 @@ const Navbar = () => {
                     ""
                   ) : (
                     <>
-                      <NavLink
+                     <div className="w-48">
+                     <NavLink
                         onClick={showTabs}
-                        className="flex items-center cursor-pointer "
+                        className="flex items-center cursor-pointer flex "
                         to="/dashboard"
                         activeClassName="active"
                       >
-                        <p>Dashboard</p> <IoIosArrowDropdownCircle />
+                        <p className="flex items-center justify-center gap-1">Dashboard  <IoIosArrowDropdownCircle /></p>
                       </NavLink>
+                     </div>
                     </>
                   )}
 
@@ -720,7 +752,11 @@ const Navbar = () => {
                                 background:
                                   activeTab === tab.name ? "#303038" : "",
                               }}
-                              onClick={() => setActiveTab(tab.name)}
+                              onClick={() =>{
+                                navigate('/dashboard', { state: { data: 'Dashboard', tab: tab.name } })
+                                window.scrollTo(0, 0);
+                                setActiveTab(tab.name)
+                              }}
                             >
                               <img
                                 className={`${tab.name === "Buy Crypto" ? "h-5" : "h-6"

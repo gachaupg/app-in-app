@@ -38,7 +38,7 @@ const Notifications = () => {
                                                     <RxAvatar size={34} />
                                                     <div>
                                                         {i.order_type === 'sell' ? <p>{truncateBuyer(i.seller)} </p> : <p>{truncateBuyer(i.buyer)} </p>}
-                                                        <p>{formatAmount(i.amount)} USD</p>
+                                                        <p>{formatAmount(i.amount)} USDT</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex flex-col">

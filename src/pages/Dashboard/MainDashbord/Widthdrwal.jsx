@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
+import { FaPaste } from "react-icons/fa";
 import emailjs from "@emailjs/browser";
 import { CircularProgress } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -13,6 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../utils/APIRoutes";
+import { IoCheckmarkCircleSharp } from "react-icons/io5";
+import { ContentPaste } from "@mui/icons-material";
 
 const style = {
   position: "absolute",
@@ -38,7 +41,7 @@ const initialState = {
   receiver_wallet: "",
 };
 
-const DepositForm = ({payments,setShow}) => {
+const WidthForm = ({payments,setShow }) => {
   const [widthdrwal, setWidthdrwal] = useState(initialState);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -54,6 +57,11 @@ console.log(widthdrwal);
   const [codes, setCodes] = useState(Array(6).fill(""));
   const [timeLeft, setTimeLeft] = useState(60);
   const [verify, setVerify] = useState(true);
+
+  const [open2, setOpen2] = useState(false);
+  const handleOpen2 = () => setOpen2(true);
+  const handleClose2 = () => setOpen2(false);
+
   useEffect(() => {
     if (open) {
       setTimeLeft(60); // Reset the timer when the modal opens
@@ -149,8 +157,8 @@ console.log(widthdrwal);
         );
         const data = await response.json();
         if (response.ok) {
-          toast.success("Withdrawal successful!");
-          setShow('P2P');
+          setOpen2(true)
+          
         } else if (data.code === "token_not_valid") {
           toast.error("Your session has expired. Please log in again.");
           navigate("/login"); // Redirect to login page or handle re-authentication
@@ -172,9 +180,48 @@ console.log(widthdrwal);
       setLoading(false); // Ensure loading state is reset in case of invalid code
     }
   };
+  const [pastedText, setPastedText] = useState('');
 
+  const pasteFromClipboard = () => {
+      navigator.clipboard.readText().then((text) => {
+          setPastedText(text);
+      }).catch((err) => {
+          console.error('Failed to read text from clipboard: ', err);
+      });
+  };
+  const handleInputChange1 = (e) => {
+      const value = e.target.value;
+      setPastedText(value);
+      setWidthdrwal({ ...widthdrwal, receiver_wallet: value });
+  };
   return (
     <div className="text-white mt-2">
+   <Modal
+        open={open2}
+        onClose={handleClose2}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box className="flex flex-col primary items-center" sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            <IoCheckmarkCircleSharp className="green" size={40} />
+          </Typography>
+          <Typography className="white">
+            Successfully Submitted
+          </Typography>
+          <p className="g">You will receive</p>
+          <p className="g">{widthdrwal.amount}USDT</p>
+          <button
+            onClick={() => {
+              setShow('P2P')
+              window.scrollTo(0, 0);
+            }}
+            className="w-full mt-3 p-1 white greenbg rounded-2xl"
+          >
+            OK
+          </button>
+        </Box>
+      </Modal>
       <Modal
         open={open}
         onClose={handleClose}
@@ -255,7 +302,7 @@ console.log(widthdrwal);
               >
                 <option value="">
                   <p>
-                    USDT <span className="grey">Tether USDT</span>
+                     <span className="grey">Tether </span>
                   </p>
                 </option>
               </select>
@@ -306,7 +353,7 @@ console.log(widthdrwal);
             style={{
               fontSize: "12px",
             }}
-            className={` small flex flex-row items-center  p-1 ${
+            className={` small flex flex-row  w-40 items-center  p-1 ${
               widthTap === "USDT" && "border-green-600 border mainGrey"
             } rounded-lg`}
           >
@@ -398,10 +445,10 @@ console.log(widthdrwal);
           <div className="small" style={{ width: "50%" }}>
             <div className="flex flex-row mt-2 justify-between">
               <p className="grey"> I want to receive</p>
-              <p className="grey">
+              {/* <p className="grey">
                 {" "}
                 Network fee <span className="text-green-600">$ 3</span>
-              </p>
+              </p> */}
             </div>
             <div className="mainGrey p-1 pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
               <div className="mainGrey flex flex-row gap-1 w-full">
@@ -416,7 +463,7 @@ console.log(widthdrwal);
                     }}
                     className="grey"
                   >
-                    {widthdrwal.amount !== "" ? widthdrwal.amount - 3 : "00.00"}
+                    {widthdrwal.amount !== "" ? widthdrwal.amount  : "00.00"}
                   </span>
                   USDT
                 </p>
@@ -441,17 +488,15 @@ console.log(widthdrwal);
                 type="text"
                 placeholder="Type in your TRC20 wallet address"
                 name=""
+                value={pastedText}
                 id=""
-                onChange={(e) =>
-                  setWidthdrwal({
-                    ...widthdrwal,
-                    receiver_wallet: e.target.value,
-                  })
+                onChange={
+                  handleInputChange1
                 }
               />
             </div>
           </div>
-          <Wallet color="white" />
+          <FaPaste onClick={pasteFromClipboard}  className="cursor-pointer" color="white" />
         </div>
         <p className="grey flex flex-row items-center mt-2 mb-2 gap-1">
           Transfer Details <SlQuestion color="green" />
@@ -483,8 +528,10 @@ console.log(widthdrwal);
           <Link to="/dashboard">
             <button
               onClick={() => {
-                window.location.reload();
-              }}
+                setShow('P2P')
+                window.scrollTo(0, 0);
+            
+            }}
               className="border p-2 w-32 rounded-lg border-slate-700"
             >
               Cancel
@@ -503,4 +550,4 @@ console.log(widthdrwal);
   );
 };
 
-export default DepositForm;
+export default WidthForm;

@@ -13,8 +13,9 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { GoThumbsup } from "react-icons/go";
 import { Clock } from "lucide-react";
+const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-function Table({ show, payments, isLoading, verified }) {
+function Table({ show, payments, isLoading, verified,setIsLoading }) {
   const [buy, setBuy] = useState(false);
   const [showTop, setShowTop] = useState("");
   const [id, setId] = useState("");
@@ -73,7 +74,7 @@ function Table({ show, payments, isLoading, verified }) {
       <div style={{ overflowX: "auto" }}>
         <div className="flex mt-3 wrap mb-2 small flex-row gap-2 w-full justify-between p-1">
           <div style={{ width: "100%" }} className="w-full wrap small flex wrap small gap-12 flex-row p-1">
-            <div className="secondary small w-56 g flex h-9 border border-slate-700 p-2 rounded-lg">
+            <div className="secondary small w-72 g flex h-9 border border-slate-700 p-2 rounded-lg">
               <input
                 className="secondary w-32 g focus"
                 type="text"
@@ -158,10 +159,7 @@ function Table({ show, payments, isLoading, verified }) {
             <button
               className="bg-green-600 rounded-lg text-center h-9 flex items-center justify-center w-32 text-white"
               onClick={() => {
-                setAmount('');
-                setPaymentTypeFilter('');
-                setBankFilter('');
-                setCurrentPage(1); // Reset to the first page after clearing filters
+               setIsLoading(true)
               }}
             >
               <img src="https://res.cloudinary.com/pitz/image/upload/v1721729606/arrow-refresh-01_f760kl.png" alt="Refresh" />

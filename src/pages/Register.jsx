@@ -14,7 +14,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { register } from "../redux/features/authSlice";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
+import { IoCheckmarkCircleSharp } from "react-icons/io5";
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 250,
+  bgcolor: "background.black",
+  border: "1px solid green",
+  borderRadius: 3,
+  boxShadow: 24,
+  p: 4,
+};
 const Register = () => {
   const initialState = {
     first_name: "",
@@ -22,9 +38,9 @@ const Register = () => {
     email: "",
     user_type: "",
     password: "",
-    confirmPassword: "",
+    confirm_password: "",
     phone_number: "",
-    refferal_code: "55555",
+    referral_code: '',
   };
 
   const navigate = useNavigate();
@@ -34,19 +50,16 @@ const Register = () => {
   const dispatch = useDispatch();
   const [user, setUser] = useState(initialState);
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [confirm_password, setShowConfirmPassword] = useState(false);
   const [passerror, setPassError] = useState("");
-  const [type, setType] = useState("Individual");
-
+  const [type, setType] = useState("individual");
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const [formErrors, setFormErrors] = useState({});
-console.log(user);
+  console.log(user);
 
-  useEffect(() => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      refferal_code: "5353535",
-    }));
-  }, []);
+ 
 
   useEffect(() => {
     setUser((prevUser) => ({
@@ -56,7 +69,7 @@ console.log(user);
   }, []);
 
   const handleType = (e) => {
-    const newType = type === "Individual" ? "Institution" : "Individual";
+    const newType = type === "individual" ? "Institution" : "individual";
     setType(newType);
     setUser({ ...user, user_type: newType });
   };
@@ -66,7 +79,7 @@ console.log(user);
   };
 
   const toggleConfirmPasswordVisibility = () => {
-    setShowConfirmPassword(!showConfirmPassword);
+    setShowConfirmPassword(!confirm_password);
   };
 
   const validateForm = () => {
@@ -75,8 +88,8 @@ console.log(user);
     if (!user.last_name) errors.last_name = "Last name is required";
     if (!user.email) errors.email = "Email is required";
     if (!user.password) errors.password = "Password is required";
-    if (user.password !== user.confirmPassword) {
-      errors.confirmPassword = "Passwords do not match";
+    if (user.password !== user.confirm_password) {
+      errors.confirm_password = "Passwords do not match";
     }
     if (!isLengthValid) {
       errors.password = "Password must be at least 8 characters long";
@@ -109,9 +122,12 @@ console.log(user);
 
     try {
       setLoading(true);
-      await dispatch(register({ user, navigate, toast }));
+      console.log('new data reg',user);
+      
+      await dispatch(register({ user, navigate, toast ,handleOpen}));
     } catch (error) {
-      toast.error("Error");
+      console.log(err);
+      
     } finally {
       setLoading(false);
     }
@@ -119,6 +135,31 @@ console.log(user);
 
   return (
     <div className="primary flex p-4 justify-around w-full small wrap">
+      <Modal
+        open={open}
+        // onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box className="flex flex-col primary items-center" sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            <IoCheckmarkCircleSharp className="green" size={40} />
+          </Typography>
+          <Typography className="white">
+            Successfully registered 
+          </Typography>
+          <button
+            onClick={() => {
+              navigate('/login')
+              window.scrollTo(0, 0);
+
+            }}
+            className="w-full mt-3 p-1 white greenbg rounded-2xl"
+          >
+            OK
+          </button>
+        </Box>
+      </Modal>
       <div className="image-none">
         <img
           className="mt-5"
@@ -133,11 +174,11 @@ console.log(user);
         <div className="account-type mb-10">
           <button
             onClick={handleType}
-            style={{ background: type === "Individual" ? "#1D8751" : "#1f1f27" }}
+            style={{ background: type === "individual" ? "#1D8751" : "#1f1f27" }}
             className="type-btn"
           >
             <BsFillPeopleFill color="white" />
-            <span style={{ marginLeft: "3px", color: type === "Individual" ? "white" : "" }}>
+            <span style={{ marginLeft: "3px", color: type === "individual" ? "white" : "" }}>
               Individual
             </span>
           </button>
@@ -152,7 +193,7 @@ console.log(user);
             </span>
           </button>
         </div>
-        {type === "Individual" && (
+        {type === "individual" && (
           <form className="g" onSubmit={handleSubmit}>
             <div className="name-email flex flex-col md:flex-row gap-4">
               <div className="name max-w-screen-md">
@@ -263,16 +304,16 @@ console.log(user);
 
               <div className="name max-w-md">
                 <label htmlFor="">Confirm Password*</label>
-                <div style={{ border: formErrors.confirmPassword ? "1px solid red" : "1px solid rgba(255, 255, 255, 0.5)" }} className="input-group names ">
+                <div style={{ border: formErrors.confirm_password ? "1px solid red" : "1px solid rgba(255, 255, 255, 0.5)" }} className="input-group names ">
                   <FaLock color="green" className="input-icon" />
                   <input
                     className="no-border  h-full bgi "
                     style={{
                       width: '95%'
                     }}
-                    type={showConfirmPassword ? "text" : "password"}
-                    value={user.confirmPassword}
-                    onChange={(e) => setUser({ ...user, confirmPassword: e.target.value })}
+                    type={confirm_password ? "text" : "password"}
+                    value={user.confirm_password}
+                    onChange={(e) => setUser({ ...user, confirm_password: e.target.value })}
                     placeholder="Confirm Password"
                   />
                   <button
@@ -280,10 +321,10 @@ console.log(user);
                     className="password-toggle"
                     onClick={toggleConfirmPasswordVisibility}
                   >
-                    {showConfirmPassword ? <BsEye /> : <FaRegEyeSlash />}
+                    {confirm_password ? <BsEye /> : <FaRegEyeSlash />}
                   </button>
                 </div>
-                {formErrors.confirmPassword && <p className="error-text text-red-600">{formErrors.confirmPassword}</p>}
+                {formErrors.confirm_password && <p className="error-text text-red-600">{formErrors.confirm_password}</p>}
               </div>
             </div>
 
@@ -318,20 +359,15 @@ console.log(user);
                   alt=""
                 />
                 <input
-                  type="text"
+                  type="number"
                   placeholder="Referral code"
                   className="p-1 bg border border-slate-800"
+                  onChange={(e)=>setUser({...user,referral_code:e.target.value})}
                   style={{
                     background: "#18181d",
                     width: "100%",
-                    border: "none", // hide the border initially
-                    outline: "none", // remove the outline on focus
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.border = "none"; // hide the border on focus
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.border = "none"; // ensure border stays hidden on blur
+                    border: "none", 
+                    outline: "none", 
                   }}
                 />
               </div>
@@ -349,7 +385,7 @@ console.log(user);
             <div className="flex flex-col items-center justify-center">
               <p className="mt-5 mb-3 flex text-center">
                 Already have an account?{" "}
-                <Link to="/login" className="text-blue-500">
+                <Link to="/login" className="green">
                   Login here
                 </Link>
               </p>
@@ -393,14 +429,14 @@ console.log(user);
                 <label htmlFor="">Institution Name*</label>
                 {user.name}
                 <div style={{
-                      border: user.name
-                        ? "1px solid rgba(255, 255, 255, 0.5)"
-                        : "1px solid red",
-                    }} className="input-group names">
+                  border: user.name
+                    ? "1px solid rgba(255, 255, 255, 0.5)"
+                    : "1px solid red",
+                }} className="input-group names">
                   <AiOutlineUser color="green" className="input-icon" />
                   <input
-                   className="no-border  h-full bgi "
-                    
+                    className="no-border  h-full bgi "
+
                     type="text"
                     onChange={(e) => setUser({ ...user, first_name: e.target.value })}
                     placeholder="Institution Name"
@@ -410,12 +446,12 @@ console.log(user);
               <div className="name">
                 <label htmlFor="">Established date*</label>
                 <div style={{
-                      border: user.establishedDate
-                        ? "1px solid rgba(255, 255, 255, 0.5)"
-                        : "1px solid red",
-                    }} className="input-group names">
+                  border: user.establishedDate
+                    ? "1px solid rgba(255, 255, 255, 0.5)"
+                    : "1px solid red",
+                }} className="input-group names">
                   <input
-                   
+
                     className="no-border  h-full bgi "
 
                     type="date"
@@ -431,16 +467,16 @@ console.log(user);
               <div className="name max-w-screen-md">
                 <label htmlFor="">Email*</label>
                 <div style={{
-                      border: user.email
-                        ? "1px solid rgba(255, 255, 255, 0.5)"
-                        : "1px solid red",
-                    }} className="input-group names ">
+                  border: user.email
+                    ? "1px solid rgba(255, 255, 255, 0.5)"
+                    : "1px solid red",
+                }} className="input-group names ">
                   <MdOutlineMailOutline color="green" className="input-icon" />
                   <input
-                    
+
                     className="no-border w- h-full bgi "
                     style={{
-                      width:'90%'
+                      width: '90%'
                     }}
                     type="email"
                     onChange={(e) =>
@@ -453,12 +489,12 @@ console.log(user);
               <div className="name">
                 <label htmlFor="">Registration*</label>
                 <div style={{
-                      border: user.registration
-                        ? "1px solid rgba(255, 255, 255, 0.5)"
-                        : "1px solid red",
-                    }}className="input-group names">
+                  border: user.registration
+                    ? "1px solid rgba(255, 255, 255, 0.5)"
+                    : "1px solid red",
+                }} className="input-group names">
                   <input
-                                       className="no-border  h-full bgi "
+                    className="no-border  h-full bgi "
 
                     type="text"
                     onChange={(e) =>
@@ -473,14 +509,14 @@ console.log(user);
               <div className="name-email flex flex-col md:flex-row gap-14">
                 <div className="name max-w-screen-md">
                   <label htmlFor="">Phone number</label>
-                  <div  style={{
-                        border: user.email
-                          ? "1px solid rgba(255, 255, 255, 0.5)"
-                          : "1px solid red",
-                      }}className="input-group names">
+                  <div style={{
+                    border: user.email
+                      ? "1px solid rgba(255, 255, 255, 0.5)"
+                      : "1px solid red",
+                  }} className="input-group names">
                     <Call color="green" className="input-icon text-green-500" />
                     <input
-                                        className="no-border  h-full bgi "
+                      className="no-border  h-full bgi "
 
                       type="tel"
                       onChange={(e) =>
@@ -494,14 +530,14 @@ console.log(user);
               <div className="name  max-w-md">
                 <label htmlFor="">Registration Type*</label>
                 <div style={{
-                      width: "26rem",
-                      border: user.confirmPassword
-                        ? "1px solid rgba(255, 255, 255, 0.5)"
-                        : "1px solid red",
-                    }} className="input-group names">
+                  width: "26rem",
+                  border: user.confirm_password
+                    ? "1px solid rgba(255, 255, 255, 0.5)"
+                    : "1px solid red",
+                }} className="input-group names">
                   <select
-                   
-                   className="no-border  h-full bgi "
+
+                    className="no-border  h-full bgi "
                     name="registration type"
                     value={user.user_type}
                     onChange={(e) =>
@@ -522,14 +558,14 @@ console.log(user);
               <div className="name max-w-md">
                 <label htmlFor="">Password*</label>
                 <div style={{
-                      border: user.password
-                        ? "1px solid rgba(255, 255, 255, 0.5)"
-                        : "1px solid red",
-                    }} className="input-group names">
+                  border: user.password
+                    ? "1px solid rgba(255, 255, 255, 0.5)"
+                    : "1px solid red",
+                }} className="input-group names">
                   <FaLock color="green" className="input-icon" />
                   <input
-                     style={{
-                      width:'90%'
+                    style={{
+                      width: '90%'
                     }}
                     className="no-border w-full  h-full bgi "
 
@@ -557,23 +593,23 @@ console.log(user);
               <div className="name">
                 <label htmlFor="">Confirm Password*</label>
                 <div style={{
-                      border: user.confirmPassword
-                        ? "1px solid rgba(255, 255, 255, 0.5)"
-                        : "1px solid red",
-                    }}className="input-group names">
+                  border: user.confirm_password
+                    ? "1px solid rgba(255, 255, 255, 0.5)"
+                    : "1px solid red",
+                }} className="input-group names">
                   <FaLock color="green" className="input-icon" />
                   <input
-                                       className="no-border  h-full bgi "
+                    className="no-border  h-full bgi "
 
-                    type={showConfirmPassword ? "text" : "password"}
+                    type={confirm_password ? "text" : "password"}
                     onChange={(e) =>
-                      setUser({ ...user, confirmPassword: e.target.value })
+                      setUser({ ...user, confirm_password: e.target.value })
                     }
                     placeholder="Confirm Password"
                   />
-                  {showConfirmPassword ? (
+                  {confirm_password ? (
                     <FaRegEyeSlash
-                    size={30}
+                      size={30}
                       color="green"
                       className="input-icon1 cursor-pointer"
                       onClick={toggleConfirmPasswordVisibility}
@@ -618,21 +654,17 @@ console.log(user);
                   alt=""
                 />
                 <input
+                onChange={()=>setUser({...user,referral_code:e.target.value})}
                   type="text"
                   placeholder="Referral code"
                   className="p-1 bg border border-slate-800"
                   style={{
                     background: "#18181d",
                     width: "100%",
-                    border: "none", // hide the border initially
-                    outline: "none", // remove the outline on focus
+                    border: "none", 
+                    outline: "none", 
                   }}
-                  onFocus={(e) => {
-                    e.target.style.border = "none"; // hide the border on focus
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.border = "none"; // ensure border stays hidden on blur
-                  }}
+                 
                 />
               </div>
               <img
@@ -649,7 +681,7 @@ console.log(user);
             <div className="flex flex-col items-center justify-center">
               <p className="mt-5 mb-3 flex text-center">
                 Already have an account?{" "}
-                <Link to="/login" className="text-blue-500">
+                <Link to="/login" className="green">
                   Login here
                 </Link>
               </p>

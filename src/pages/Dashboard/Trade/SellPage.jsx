@@ -64,7 +64,8 @@ const BuyPage = (props) => {
     auto_reply: payments?.auto_reply || "",
     terms_and_conditions: payments?.terms_and_conditions || "",
   };
-  console.log("hello", id);
+
+
 
   const [buy, setBuy] = useState(initialState);
   console.log("====================================");
@@ -125,7 +126,7 @@ const BuyPage = (props) => {
         );
         setPayments(res.data);
         setLoading1(false);
-        console.log('payments', res.data);
+        console.log('payments ', res.data);
 
       } catch (error) {
         console.log(error);
@@ -184,7 +185,7 @@ const BuyPage = (props) => {
 
         if (response.ok) {
 
-          toast.success("USDT transferred successfully!");
+          // toast.success("USDT transferred successfully!");
           // fetchData3();
           setOpen1(true);
           // navigate('/dashboard')
@@ -237,7 +238,7 @@ const BuyPage = (props) => {
         setStatus(res.data);
         setMatch(res.data);
         setLoading1(false);
-        console.log('payments', res.data);
+        console.log('new data pay', res.data);
         localStorage.setItem('id', JSON.stringify(res.data.id));
 
       } catch (error) {
@@ -276,17 +277,16 @@ const BuyPage = (props) => {
 
         var uid = JSON.parse(localStorage.getItem('id'));
 
-        const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${uid}/confirm/`,
+        const res = await axios.get(`${endpoint}/trading_engine/p2p/trades/${id}/confirm/`,
           { headers }
         );
         setComplete(res.data);
-        console.log('new data ', res.data);
+        console.log('new data staus ', res.data);
 
         setLoading1(false);
         if (res.data.status === 'completed') {
           setOpen1(true);
           navigate('/dashboard')
-
         }
       } catch (error) {
         console.log(error);
@@ -371,8 +371,8 @@ const BuyPage = (props) => {
             </Typography>
             <div className="flex flex-row items-center w-full justify-between gap-10">
               <button onClick={() => {
-                navigate('/dashboard')
-                window.scrollTo(0, 0);
+              navigate('/dashboard', { state: { data: 'Market' } })
+              window.scrollTo(0, 0);
 
               }}
                 className="w-80 small mt-3 p-1 white border border-slate-700 rounded-2xl">
@@ -396,7 +396,7 @@ const BuyPage = (props) => {
               <IoCheckmarkCircleSharp className="green" size={40} />
             </Typography>
             <Typography className="white">
-              Successfully Sold
+              Successfully Transferred the USDT
             </Typography>
             <Typography style={{
               fontSize: '13px'
@@ -404,8 +404,8 @@ const BuyPage = (props) => {
               I will receive {fromDashboard} USD
             </Typography>
             <button onClick={() => {
-              navigate('/dashboard')
-              window.scrollTo(0, 0);
+             navigate('/dashboard', { state: { data: 'Market' } })
+             window.scrollTo(0, 0);
 
             }}
               className="w-full small mt-3 p-1 white greenbg rounded-2xl">

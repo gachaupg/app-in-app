@@ -54,6 +54,7 @@ const Widthform = ({ setShow1 }) => {
     const [verify, setVerify] = useState(true);
     const [loading1, setLoading1] = useState(false);
     const [payments1, setPayments1] = useState([]);
+    const [selected, setSeleted] = useState({});
 
 
     const style = {
@@ -369,7 +370,7 @@ const Widthform = ({ setShow1 }) => {
                         <div className="primary p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
                             <div className="  flex flex-row items-center gap-1 w-full">
                                 <DollarSign color="green" />
-                                <input type="number" onChange={(e) => setWidthdrwal({ ...widthdrwal, amount: e.target.value })} placeholder="100" className="p-1 primary no-border w-full" />
+                                <input value={widthdrwal.amount != '' ? widthdrwal.amount : ""} type="number" onChange={(e) => setWidthdrwal({ ...widthdrwal, amount: e.target.value })} placeholder="100" className="p-1 primary no-border w-full" />
                             </div>
                             <IoMdArrowDropdown color="white" />
                         </div>
@@ -383,7 +384,7 @@ const Widthform = ({ setShow1 }) => {
                                     alt=""
                                 />
                                 <p>
-                                    {widthdrwal.amount != "" ? widthdrwal.amount : '00'} {widthdrwal.currency}
+                                    <input value={widthdrwal.amount != '' ? widthdrwal.amount : ""} type="number" onChange={(e) => setWidthdrwal({ ...widthdrwal, amount: e.target.value })} placeholder="100" className="p-1 mainGrey no-border w-full" />
                                     <span
                                         style={{
                                             fontSize: "12px",
@@ -436,33 +437,8 @@ const Widthform = ({ setShow1 }) => {
                         </span>
                     </p>
                 </button>
-                {/* <div className="flex w-full flex-row gap-10 wrap items-center ">
-                    <div
-                        style={{ width: "100%" }}
-                        className="flex small flex-col p-1 it gap-2 "
-                    >
-                        <div className="mainGrey p-1 pr-2 mt-2 rounded-2xl flex flex-row justify-between w-full items-center">
-                            <input onChange={(e) => setWidthdrwal({ ...widthdrwal, amount: e.target.value })} placeholder="Amount to deposit" className="p-1 mainGrey w-full no-border" type="number" />
-                        </div>
-                    </div>
-
-                </div> */}
                 <p className="w-full flex flex-row items-center mt-3 gap-4"> <LiaExclamationCircleSolid className="yellowT" />
                     Transactions are subject to commission, above is the information on the commission rates</p>
-                {/* <div className="flex flex-row items-center gap-2">
-                    <input
-                        type="checkbox"
-                        className="w-5 h-5 appearance-none rounded-md border-2 border-green-600 bg-white checked:bg-green-600 checked:border-green-600 cursor-pointer relative"
-                        style={{
-                            WebkitAppearance: "none", // Ensures that the custom styles are applied across browsers
-                        }}
-                    />
-                    <label className="text-white">
-                        I confirm that I sent the payment
-                    </label>
-                </div> */}
-
-
             </div>
             <p className="g">2- Your Wallet Address</p>
             <div className="flex flex-col small wrap items-start border secondary  border-slate-700 rounded-2xl p-2">
@@ -543,77 +519,67 @@ const Widthform = ({ setShow1 }) => {
                             </div>
                         </div>
                     </div>
-
                 </div>
-
-                <div className="flex secondary small wrap flex-row justify-between gap-6 w-full items-center">
-                    <div className=" flex flex-col mb-3 w-full">
-                        <p className="grey mb-1"> Account Name</p>
-
-                        {
-                            details.map((i) => {
-                                return (
-                                    <><div className=" p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
-
-                                        {i.payment_provider_name === widthdrwal.payment_provider && (
-                                            <>
-                                                <div className=" border border-green-700 mr-3  p-1 rounded-3xl flex flex-row items-center gap-1 w-full">
-
-                                                    <div className=" p-1 pl-3 rounded-3xl  flex flex-row items-center justify-between  w-full secondary ">
-
-                                                        <p
-
-                                                            className="w-full p-1 no-border secondary text-white custom-placeholder"
-
-                                                        >
-                                                            {i.account_name}
-                                                        </p>
-                                                    </div>
+                {
+                    selected != {} ?
+                        <div className="w-full border white flex justify-between p-3 items-center border-slate-700 rounded-lg">
+                            <div className="flex flex-col g">
+                                <p className="g">
+                                    Account name
+                                </p>
+                                <p>{selected?.name}</p>
+                            </div>
+                            <div className="flex flex-col g">
+                                <p className="g">
+                                    Account Number
+                                </p>
+                                <p>{selected?.number}</p>
+                            </div>
+                        </div> :
+                        <p>Pay methods will appear hear</p>
+                }
+                <div className=" secondary small wrap p-2  rounded lg   w-full   flex flex-row gap-6 items-center">
+                    <div className="flex  flex-col w-full gap-1">
+                        {details.map((i) => {
+                            return (
+                                <>
+                                    {i.payment_provider_name === widthdrwal.payment_provider && (
+                                        <>
+                                            <div className=" p-1 pl-3 rounded-lg wrap border border-slate-700  flex flex-row items-center justify-between  w-full secondary ">
+                                                <div className="flex flex-col w-full">
+                                                    <p style={{ fontSize: "14px" }} className="g">
+                                                        Your Account
+                                                    </p>
+                                                    <p
+                                                        className="w-full p-1 no-border secondary text-white custom-placeholder"
+                                                    >
+                                                        {i.account_name}
+                                                    </p>
                                                 </div>
-                                            </>
-                                        )}
-
-
-                                    </div>
-                                    </>
-                                )
-                            })
-                        }
-
-                    </div>
-                    <div className=" flex flex-col mb-3 w-full">
-                        <p className="grey mb-1"> Account Number</p>
-
-                        {
-                            details.map((i) => {
-                                return (
-                                    <><div className=" p-1 small pr-2 rounded-2xl flex flex-row justify-between w-full items-center">
-
-                                        {i.payment_provider_name === widthdrwal.payment_provider && (
-                                            <>
-                                                <div className=" border border-green-700 mr-3  p-1 rounded-3xl flex flex-row items-center gap-1 w-full">
-
-                                                    <div className=" p-1 pl-3 rounded-3xl  flex flex-row items-center justify-between  w-full secondary ">
-
-                                                        <p
-
-                                                            className="w-full p-1 no-border secondary text-white custom-placeholder"
-
-                                                        >
-                                                            {i.account_number}
-                                                        </p>
-                                                    </div>
+                                                <div className="flex flex-col items-center w-full">
+                                                    <p style={{ fontSize: "14px" }} className="g">
+                                                        Account Number
+                                                    </p>
+                                                    <p
+                                                        className=" p-1 no-border secondary text-white custom-placeholder"
+                                                    >
+                                                        {i.account_number}
+                                                    </p>
                                                 </div>
-                                            </>
-                                        )}
-
-
-                                    </div>
-                                    </>
-                                )
-                            })
-                        }
-
+                                                <button onClick={() => {
+                                                    setSeleted({
+                                                        'name': i.account_name,
+                                                        'number': i.account_number,
+                                                    })
+                                                }} className="greenbg p-1 rounded-lg text-white">
+                                                    Select
+                                                </button>
+                                            </div>
+                                        </>
+                                    )}
+                                </>
+                            )
+                        })}
                     </div>
 
                 </div>
@@ -660,8 +626,7 @@ const Widthform = ({ setShow1 }) => {
                             }
                             }
                         />
-                        <p>{image}</p>
-                        {image && <img src={image} alt="Screenshot" style={{ maxWidth: "200px" }} />}
+                        <p>{widthdrwal.screenshot?.name}</p>
 
                     </div>
                     <p className="g ">

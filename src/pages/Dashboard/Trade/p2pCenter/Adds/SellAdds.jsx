@@ -110,6 +110,7 @@ const Adds = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => ({ ...state.auth }));
   const [payments1, setPayments1] = useState([]);
+  const [test,setTest] = useState('');
 
   useEffect(() => {
     if (payments) {
@@ -668,69 +669,67 @@ const Adds = () => {
               </div>
             </div>
 
-            <div className=" secondary small wrap  w-full  flex flex-row gap-6 items-center">
-              <div className="flex flex-col w-full gap-1">
-                <p style={{ fontSize: "14px" }} className="g">
-                  Your Account
-                </p>
+            {
+              selected != {} ?
+                <div className="w-full border white flex justify-between p-3 items-center border-slate-700 rounded-lg">
+                  <div className="flex flex-col g">
+                    <p className="g">
+                      Account name
+                    </p>
+                    <p>{selected?.name}</p>
+                  </div>
+                  <div className="flex flex-col g">
+                    <p className="g">
+                      Account Number
+                    </p>
+                    <p>{selected?.number}</p>
+                  </div>
+                </div> :
+                <p>Pay methods will appear hear</p>
+            }
+            <div className=" secondary small wrap p-2 border rounded lg border-slate-700  w-full   flex flex-row gap-6 items-center">
+              <div className="flex  flex-col w-full gap-1">
                 {details.map((i) => {
                   return (
                     <>
                       {i.payment_provider_name === sell.payment_provider_name && (
-                        <>      <div className="border p-1 pl-3 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full secondary ">
-
-                          <p
-
-                            className="w-full p-1 no-border secondary text-white custom-placeholder"
-
-                          >
-                            {i.account_name}
-                          </p>
-                        </div> </>
-                      )}
-                    </>
-                  )
-                })}
-
-
-              </div>
-
-              <div className="flex flex-col w-full gap-1">
-                <p style={{ fontSize: "14px" }} className="g">
-                  Account Number
-                </p>
-
-                <>
-                  {details.map((i) => {
-                    return (
-                      <>
-
-                        {sell.payment_provider}
-
-                        {i.payment_provider_name === sell.payment_provider_name && (
-                          <>
-                            <div className="border p-1 pl-3 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full secondary ">
-
+                        <>
+                          <div className=" p-1 pl-3 rounded-lg wrap border border-slate-700  flex flex-row items-center justify-between  w-full secondary ">
+                            <div className="flex flex-col w-full">
+                              <p style={{ fontSize: "14px" }} className="g">
+                                Your Account
+                              </p>
                               <p
-
                                 className="w-full p-1 no-border secondary text-white custom-placeholder"
-
+                              >
+                                {i.account_name}
+                              </p>
+                            </div>
+                            <div className="flex flex-col items-center w-full">
+                              <p style={{ fontSize: "14px" }} className="g">
+                                Account Number
+                              </p>
+                              <p
+                                className=" p-1 no-border secondary text-white custom-placeholder"
                               >
                                 {i.account_number}
                               </p>
                             </div>
-
-
-                          </>
-                        )}
-
-                      </>
-                    )
-                  })}
-                </>
+                            <button onClick={() => {
+                              setSeleted({
+                                'name': i.account_name,
+                                'number': i.account_number,
+                              })
+                            }} className="greenbg p-1 rounded-lg text-white">
+                              Select
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  )
+                })}
               </div>
-
-
             </div>
             <button className="bg-green-600 w-48 text-white p-1 rounded-3xl">
               Add payment method

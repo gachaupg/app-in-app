@@ -329,7 +329,7 @@ cursor: pointer !important;
   /* padding-top: 20rem; */
   top: 0; /* Align to the top edge */
   height: 100vh; /* Full height of the viewport */
-  width: 25%; /* Full width of the viewport */
+  width: 29%; /* Full width of the viewport */
   z-index: 1000; /* Ensure it's on top of other elements */
   background-color: #1E2329; /* Background color (change as needed) */
   overflow-y: auto; /* Enable scrolling if content overflows */

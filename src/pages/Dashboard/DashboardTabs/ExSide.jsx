@@ -101,7 +101,7 @@ const EXDash = ({ activeTab }) => {
 
                 setTotalDeposits(deposits);
                 setTotalWithdrawals(withdrawals);
-                setTotalAmount(deposits - withdrawals);
+                setTotalAmount(deposits + withdrawals);
             } catch (error) {
                 console.log(error);
                 setLoading1(false);
@@ -117,16 +117,17 @@ const EXDash = ({ activeTab }) => {
        
         totalDeposits,
         totalWithdrawals,
+        0,
         totalDeposits+totalWithdrawals
         
       ]; 
-      const labels_d1 = ['Deposits', 'Withdrawals', 'Total'];
+      const labels_d1 = ['Deposits', 'Withdrawals','In Progress', 'Excahange'];
       const chartData = {
         labels: labels_d1,
         datasets: [
           {
             data: data_d1,
-            backgroundColor: ['#FEC228', '#386AB5', '#1D8751', '#E23D3A'], // Yellow, Blue, Green, Red
+            backgroundColor: ['#1D8751','#E23D3A', '#FEC228', '#386AB5', ], // Yellow, Blue, Green, Red
             borderColor: 'transparent',
             borderWidth: 2,
             borderRadius: 20,
@@ -200,6 +201,15 @@ const EXDash = ({ activeTab }) => {
                         <div className="flex flex-row items-center gap-1">
                             <p className="h-3 w-3 rounded-sm bg-yellow-400"></p>
                             <p className="grey">In Progress</p>
+                        </div>
+                        <p className="white">0 USD</p>
+                    </div>
+                </div>
+                <div className="w-full flex flex-col gap-4">
+                    <div className="w-full flex flex-row items-center justify-between p-1">
+                        <div className="flex flex-row items-center gap-1">
+                            <p className="h-3 w-3 rounded-sm bg-blue-400"></p>
+                            <p className="grey">Exchange</p>
                         </div>
                         <p className="white">{totalDeposits+totalWithdrawals} USD</p>
                     </div>

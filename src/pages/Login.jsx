@@ -10,7 +10,23 @@ import { MdOutlineMailOutline } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../redux/features/authSlice";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
+import { IoCheckmarkCircleSharp } from "react-icons/io5";
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 250,
+  bgcolor: "background.black",
+  border: "1px solid green",
+  borderRadius: 3,
+  boxShadow: 24,
+  p: 4,
+};
 const initialState = {
   password: "",
   email: "",
@@ -23,6 +39,9 @@ export default function SignInSide() {
   };
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const [user, setUser] = useState(initialState);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -35,14 +54,14 @@ export default function SignInSide() {
     setErrors(tempErrors);
     return Object.values(tempErrors).every((x) => x === "");
   };
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (validate() && verified) {
       try {
         setLoading(true);
-        await dispatch(login({ user, navigate }));
+        await dispatch(login({ user, navigate ,handleOpen}));
       } catch (error) {
         setErrors({ ...errors, form: "Error logging in invalid credentials" });
       } finally {
@@ -64,6 +83,31 @@ export default function SignInSide() {
 
   return (
     <div className="primary g pt-6 ">
+       <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box className="flex flex-col primary items-center" sx={style}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  <IoCheckmarkCircleSharp className="green" size={40} />
+                </Typography>
+                <Typography className="white">
+                  Successfully logged in
+                </Typography>
+                <button
+                  onClick={() => {
+                    navigate('/dashboard')
+                    window.scrollTo(0, 0);
+
+                  }}
+                  className="w-full mt-3 p-1 white greenbg rounded-2xl"
+                >
+                  OK
+                </button>
+              </Box>
+            </Modal>
       <div className="">
         <div className="flex flex-row jus justify-around ">
           <div className=" image-none">
@@ -136,7 +180,7 @@ export default function SignInSide() {
               {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
               <div className="flex mb-2 items-center justify-between flex-wrap mt-3 gap-10">
                 <label className="flex gap-2 g">
-                  <CheckBox className="green"/>
+                  <CheckBox className="green" />
                   Remember me
                 </label>
 
@@ -179,7 +223,7 @@ export default function SignInSide() {
                 to="/register"
               >
                 <p className="text-center">
-                  Don't have an account? <span className="green cursor-pointer">Sign Up</span> 
+                  Don't have an account? <span className="green cursor-pointer">Sign Up</span>
                 </p>
               </Link>
             </form>

@@ -200,17 +200,22 @@ useEffect(() => {
           onClick={() => handleFilterChange("date", "2024-08-01")}
           className="border w-56 small small-gap border-slate-600 rounded-2xl flex items-center justify-between gap-16 p-1 pl-2 pr-2 secondary h-10 white"
         >
-          <div className="flex g items-center gap-1">
-            <img
+          <div className="flex w-full g items-center gap-1">
+         
+           <select className="secondary h-5 w-full " name="" id="">
+          <option value=""> <img
               className="h-4"
               src="https://res.cloudinary.com/pitz/image/upload/v1721924277/calendar-03_didl6t.png"
               alt=""
             />
-            Date
+            Date</option>
+            <option value="last mont">Toaday</option>
+            <option value="last mont">Last week</option>
+            <option value="last mont">Last Month</option>
+            <option value="last mont">6 Months and above</option>
+           </select>
           </div>
-          <p className="flex flex-row items-center">
-            <IoIosArrowDown />
-          </p>
+          
         </button>
       </div>
       {activeButton==='Completed' && <div className="g text-center">No orders</div>}
@@ -376,8 +381,8 @@ useEffect(() => {
                     {new Date(row.created_on).toLocaleDateString()}
                   </td>
                   <td className="grey">{row.status}</td>
-                  <td className="flex flex-row items-center gap-2">
-                    {row.payment_provider_name}
+                  <td className="">
+                    {row.payment_provider_name} 
                   </td>
                 </tr>
               ))}

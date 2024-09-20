@@ -38,21 +38,21 @@ const initialState = {
   auto_reply: "",
   terms_and_conditions: "",
 };
-
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 250,
+  bgcolor: "background.black",
+  border: "1px solid green",
+  borderRadius: 3,
+  boxShadow: 24,
+  p: 4,
+};
 const Adds = () => {
   const [sell, setSell] = useState(initialState);
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 250,
-    bgcolor: "background.black",
-    border: "1px solid green",
-    borderRadius: 3,
-    boxShadow: 24,
-    p: 4,
-  };
+ 
   const [activeTab, setActiveTab] = useState("P2P Trading");
   const [activeTab1, setActiveTab1] = useState("Dashboard");
   const [show, setShow] = useState("P2P");
@@ -112,6 +112,7 @@ const Adds = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => ({ ...state.auth }));
   const [payments1, setPayments1] = useState([]);
+  const [test,setTest] = useState('');
 
   useEffect(() => {
     if (payments) {
@@ -227,6 +228,7 @@ const Adds = () => {
       setLoading1(false);
     }
   }
+  const [selected, setSeleted] = useState([]);
 
   useEffect(() => {
     fetchData2();
@@ -301,7 +303,7 @@ const Adds = () => {
         const data = await response.json();
 
         if (response.ok) {
-          toast.success("Added successfully!");
+          // toast.success("Added successfully!");
           setOpen(true);
         } else {
           if (data.code === "token_not_valid") {
@@ -399,6 +401,13 @@ const Adds = () => {
       setLoading(false);
     }
   };
+
+  const handleTab=(name)=>{
+    navigate('/dashboard', { state: { data: 'Dashboard', tab: name } })
+  
+   }
+
+
   return (
     <>
       <Modal
@@ -452,11 +461,11 @@ const Adds = () => {
           </div>
           <div className="flex w-full items-center mb-2 mt-3 justify-between">
             <p>Account number:</p>
-            <p>{sell.account_number}</p>
+            <p>{selected.number}</p>
           </div>
           <div className="flex w-full items-center mb-2 mt-3 justify-between">
             <p>Account name:</p>
-            <p>{sell.account_name}</p>
+            <p>{selected.name}</p>
           </div>
           {loading1 ? <div className="flex items-center justify-center">
             <CircularProgress /> </div> :
@@ -514,112 +523,132 @@ const Adds = () => {
           </Modal>
 
           <Modal
-            open={open2}
-            onClose={handleClose2}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box className="primary white" sx={style}>
-              <Typography o id="modal-modal-title" variant="h6" component="h2">
-                Add payment details
-              </Typography>
-              <div
-                className={` small   p-2  rounded-lg flex flex-col justify-between `}
+          open={open2}
+          onClose={handleClose2}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+         >
+          <Box className="primary white" sx={style}>
+            <Typography o id="modal-modal-title" variant="h6" component="h2">
+              Add payment details
+            </Typography>
+            <div
+              className={` small   p-2  rounded-lg flex flex-col justify-between `}
+            >
+              <select
+                onChange={(e) =>
+                  setTest(
+                    e.target.value,
+                  )
+                }
+                className="secondary white p-1  cursor-pointer  w-64   no-border"
+                name=""
+                id=""
               >
-                <p className="white flex flex-row w-64 p-1  rounded-3xl items-center gap-1">
-                  <img
-                    className="rounded-full object-contain"
-                    src="https://res.cloudinary.com/pitz/image/upload/v1721925032/492x0w_1_rw99fe.png"
-                    alt=""
-                  />{" "}
-                  <select
-                    onChange={(e) =>
-                      setForm1({
-                        ...form1,
-                        provider_name: e.target.value,
-                      })
-                    }
-                    className="secondary white p-1  cursor-pointer  w-64   no-border"
-                    name=""
-                    id=""
-                  >
-                    <option value="">Provider</option>
-
-                    {" "}
-                    {/* {provider.map((i) => {
-                  return ( */}
-                    <>
-                      <option value='Salam'>Salam</option>{" "}
-                    </>
-                    {/* );
+                <option value="">Method</option>
+                <>
+                  <option value='Bank'>Bank</option>{" "}
+                  <option value='Mobile'>Mobile</option>
+                </>
+                {/* );
                 })} */}
-                  </select>
-                </p>
-                <div className="w-full small wrap flex flex-col items-center justify-between gap-6">
-                  <div
+              </select>
+              <p className="white flex flex-row w-64 p-2  rounded-3xl items-center gap-1">
+                <img
+                  className="rounded-full object-contain"
+                  src="https://res.cloudinary.com/pitz/image/upload/v1721925032/492x0w_1_rw99fe.png"
+                  alt=""
+                />{" "}
+
+                <select
+                  onChange={(e) =>
+                    setForm1({
+                      ...form1,
+                      provider_name: e.target.value,
+                    })
+                  }
+                  className="secondary white p-1  cursor-pointer  w-full   no-border"
+                  name=""
+                  id=""
+                >
+                  <option value="">Provider</option>
+                  <>
+                  {
+                    test==='Bank' &&(
+                      <option value='Salam'>Salam</option>
+                    )
+                  }
+                   {
+                    test==='Mobile' &&(
+                      <option value='EVC'>EVC</option>
+                    )
+                  }
+                    
+                  </>
+                  {/* );
+                })} */}
+                </select>
+              </p>
+              <div className="w-full small wrap flex flex-col items-center justify-between gap-6">
+                <div
+                  style={{
+                    background: "#35353E                ",
+                  }}
+                  className="secondary mt-2   rounded-3xl w-full p-1"
+                >
+                  <input
+                    onChange={(e) =>
+                      setForm1({ ...form1, account_name: e.target.value })
+                    }
                     style={{
                       background: "#35353E                ",
                     }}
-                    className="secondary mt-2   rounded-3xl w-full p-2"
-                  >
-                    <input
-                      onChange={(e) =>
-                        setForm1({ ...form1, account_name: e.target.value })
-                      }
-                      style={{
-                        background: "#35353E                ",
-                      }}
-                      className="no-border p-1 secondary white w-full"
-                      type="text"
-                      placeholder=" Account Holder"
-                    />
-                    {/* <p className="g">Account Holder</p> */}
-                  </div>
-                  <div
+                    className="no-border p-1 secondary white w-full"
+                    type="text"
+                    placeholder=" Account Holder"
+                  />
+                  {/* <p className="g">Account Holder</p> */}
+                </div>
+                <div
+                  style={{
+                    background: "#35353E                ",
+                  }} className=" mt-2  rounded-3xl w-full p-1">
+                  <input
+                    onChange={(e) =>
+                      setForm1({ ...form1, account_number: e.target.value })
+                    }
                     style={{
                       background: "#35353E                ",
-                    }} className=" mt-2  rounded-3xl w-full p-2">
-                    <input
-                      onChange={(e) =>
-                        setForm1({ ...form1, account_number: e.target.value })
-                      }
-                      style={{
-                        background: "#35353E                ",
-                      }}
-                      className="no-border text-white p-1  w-full"
-                      type="text"
-                      placeholder=" Account Number"
-                    />
-                  </div>
+                    }}
+                    className="no-border text-white p-1  w-full"
+                    type="text"
+                    placeholder=" Account Number"
+                  />
+                </div>
 
-                </div>
-                <div>
-                  {loading === true ? (
-                    <div className="flex items-center justify-center">
-                      <CircularProgress />
-                    </div>
-                  ) : (
-                    <button
-                      onClick={handleSubmit1}
-                      className="p-2 w-full mt-3 mb-2 bg-green-700 rounded-lg text-white"
-                    >
-                      Add
-                    </button>
-                  )}
-                </div>
               </div>
-            </Box>
-          </Modal>
-
-
-
-
+              <div>
+                {loading === true ? (
+                  <div className="flex items-center justify-center">
+                    <CircularProgress />
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleSubmit1}
+                    className="p-2 w-full mt-3 mb-2 bg-green-700 rounded-lg text-white"
+                  >
+                    Add
+                  </button>
+                )}
+              </div>
+            </div>
+          </Box>
+        </Modal>
 
 
           {tabs.map((tab) => (
-            <Link key={tab.name} to={`/${tab.link}`}>
+            <div key={tab.name} onClick={()=>handleTab(tab.name)}>
               <div
-
                 className={`flex w-full flex-row  pl-20 items-center rounded-tr-lg rounded-br-lg gap-4 p-2 `}
                 style={{
                   cursor: "pointer",
@@ -644,7 +673,7 @@ const Adds = () => {
                   )}
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
 
@@ -675,11 +704,11 @@ const Adds = () => {
                   <IoCheckmarkCircleSharp className="green" size={40} />
                 </Typography>
                 <Typography className="white">
-                  Successfully Published
+                Ad Successfully Published
                 </Typography>
                 <button
                   onClick={() => {
-                    navigate('/dashboard', { state: { center: 'Center' } })
+                    navigate('/dashboard', { state: { data: 'Center' } })
                     window.scrollTo(0, 0);
 
                   }}
@@ -950,60 +979,81 @@ const Adds = () => {
                 </div>
               </div>
             </div>
-
-            <div className=" secondary small wrap  w-full  flex flex-row gap-6 items-center">
-              <div className="flex flex-col w-full gap-1">
-                <p style={{ fontSize: "14px" }} className="g">
-                  Your Account
-                </p>
-                {details.map((i) => {
-                  return (
-                    <>
-                      {i.payment_provider_name === sell.payment_provider_name && (
-                        <>      <div className="border p-1 pl-3 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full secondary ">
-
-                          <p
-
-                            className="w-full p-1 no-border secondary text-white custom-placeholder"
-
-                          >
-                            {i.account_name}
-                          </p>
-                        </div> </>
-                      )}
-                    </>
-                  )
-                })}
-
-
-              </div>
-
-              <div className="flex flex-col w-full gap-1">
-                <p style={{ fontSize: "14px" }} className="g">
-                  Account Number
-                </p>
+            {
+              selected != [] ?
                 <>
-                  {details.map((i) => {
+                  {selected.map((i) => {
                     return (
                       <>
-                        {sell.payment_provider}
-                        {i.payment_provider_name === sell.payment_provider_name && (
-                          <>
-                            <div className="border p-1 pl-3 rounded-3xl border-slate-700 flex flex-row items-center justify-between  w-full secondary ">
-                              <p
-                                className="w-full p-1 no-border secondary text-white custom-placeholder">
-                                {i.account_number}
-                              </p>
-                            </div>
-                          </>
-                        )}
+                        <div className="w-full border white flex justify-between p-3 items-center border-slate-700 rounded-lg">
+                          <div className="flex flex-col g">
+                            <p className="g">
+                              Account name
+                            </p>
+                            <p>{i?.name}</p>
+                          </div>
+                          <div className="flex flex-col g">
+                            <p className="g">
+                              Account Number
+                            </p>
+                            <p>{i?.number}</p>
+                          </div>
+                        </div>
                       </>
                     )
                   })}
                 </>
+                :
+                <p>Pay methods will appear hear</p>
+            }
+            <div className=" secondary small wrap p-2   w-full   flex flex-row gap-6 items-center">
+            <div className="flex flex-col w-full gap-1">
+                {details.map((i) => {
+                  return (
+                    <>
+                      {i.payment_provider_name === sell.payment_provider_name && (
+                        <>
+                          <div className="p-1 pl-3 rounded-lg wrap border border-slate-700 flex flex-row items-center justify-between w-full secondary">
+                            <div className="flex flex-col w-full">
+                              <p style={{ fontSize: "14px" }} className="g">
+                                Your Account
+                              </p>
+                              <p className="w-full p-1 no-border secondary text-white custom-placeholder">
+                                {i.account_name}
+                              </p>
+                            </div>
+                            <div className="flex flex-col items-center w-full">
+                              <p style={{ fontSize: "14px" }} className="g">
+                                Account Number
+                              </p>
+                              <p className="p-1 no-border secondary text-white custom-placeholder">
+                                {i.account_number}
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => {
+                                setSeleted((prevSelected) => [
+                                  ...prevSelected,
+                                  {
+                                    name: i.account_name,
+                                    number: i.account_number,
+                                  },
+                                ]);
+                              }}
+                              className="greenbg p-1 rounded-lg text-white"
+                            >
+                              Select
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </>
+                  );
+                })}
               </div>
-            </div>
-            <button onClick={handleSubmit1}
+
+              </div>
+              <button onClick={handleSubmit1}
               className="bg-green-600 w-48 text-white p-1 rounded-3xl">
               Add payment method
             </button>

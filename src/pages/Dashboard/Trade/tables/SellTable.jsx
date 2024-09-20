@@ -15,8 +15,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../../utils/APIRoutes";
 import SellForm from "./SellForm";
+const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-function Table({ show, payments, isLoading, verified, setOpen }) {
+function Table({setIsloading ,show, payments, isLoading, verified, setOpen }) {
   const [buy, setBuy] = useState(false);
   const [showTop, setShowTop] = useState("");
   const [id, setId] = useState("");
@@ -110,9 +111,9 @@ function Table({ show, payments, isLoading, verified, setOpen }) {
       <div style={{ overflowX: "auto" }}>
         <div className="flex mt-3 wrap mb-2 small flex-row gap-2 w-full justify-between p-1">
           <div style={{ width: "100%" }} className="w-full wrap small flex wrap small gap-12 flex-row p-1">
-            <div className="secondary small w-56 flex h-9 border border-slate-700 p-2 rounded-lg">
+            <div className="secondary small w-72 flex h-9 border border-slate-700 p-2 rounded-lg">
               <input
-                className="secondary no-border w-32 gfocus"
+                className="secondary no-border  w-32 g focus"
                 type="text"
                 placeholder="Enter amount"
                 onChange={(e) => setAmount(e.target.value)}
@@ -191,10 +192,7 @@ function Table({ show, payments, isLoading, verified, setOpen }) {
             <button
               className="greenbg rounded-lg text-center h-9 flex items-center justify-center w-32 text-white"
               onClick={() => {
-                setAmount('');
-                setPaymentTypeFilter('');
-                setBankFilter('');
-                setCurrentPage(1); // Reset to the first page after clearing filters
+                setIsloading(true)
               }}
             >
               <img src="https://res.cloudinary.com/pitz/image/upload/v1721729606/arrow-refresh-01_f760kl.png" alt="Refresh" />

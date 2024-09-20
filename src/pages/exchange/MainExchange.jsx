@@ -25,6 +25,10 @@ import Deposit from "./forms/Deposit";
 import ForexWidth from "./forms/ForexWidth";
 import Widthform from "./forms/Width";
 import EXDash from "../Dashboard/DashboardTabs/ExSide";
+import { IoIosArrowDown } from "react-icons/io";
+import DepositGraph from "../Dashboard/DashboardTabs/Charts/exchange/deposit";
+import WidthGraph from "../Dashboard/DashboardTabs/Charts/exchange/widthdrwal";
+import ALLGraph from "../Dashboard/DashboardTabs/Charts/exchange/AllGraphs";
 
 const style = {
   position: 'absolute',
@@ -119,7 +123,6 @@ const MainExchange = () => {
   const handleClose1 = () => setOpen1(false);
   const [kyc, setKyc] = useState([])
 
-  // https://omayaexchangebackend.onrender.com/api/kyc/status/
   useEffect(() => {
     const fetchData = async () => {
       const token = user?.access;
@@ -517,7 +520,7 @@ const MainExchange = () => {
               </div>
             }
             {show === 'depo' &&
-              <div className="flex flex-row items-center gap-5 w-full justify-between">
+              <div className="flex flex-row items-center wrap small gap-5 w-full justify-between">
                 <div>
                   <p className="white">Deposit</p>
                   <div className="flex flex-row border gap-2 rounded-lg border-green-700 w-32 p-1">
@@ -527,7 +530,7 @@ const MainExchange = () => {
                 </div>
                 <div>
                   <p className="white">  Transaction Type</p>
-                  <div className=" w-full p-2 flex flex-row items-center justify-center gap-5 small">
+                  <div className=" w-full p-2 flex flex-row small wrap items-center justify-center gap-5 small">
                     <button onClick={handleVerify} className={`white gap-3 flex items-center justify-center border border-green-700  w-36 ${show === 'Deposit' ? 'greenbg' : ''} p-1 rounded-3xl`}>
                       <MdArrowOutward color="white" />  Deposit
                     </button>
@@ -540,7 +543,7 @@ const MainExchange = () => {
 
             }
             {show === 'Deposit' || show === 'Withdraw' &&
-              <div className="flex flex-row items-center gap-5 w-full justify-between">
+              <div className="flex flex-row small wrap items-center gap-5 w-full justify-between">
                 <div>
                   <p className="white">Deposit</p>
                   <div className="flex flex-row border gap-2 rounded-lg border-green-700 w-32 p-1">
@@ -550,7 +553,7 @@ const MainExchange = () => {
                 </div>
                 <div>
                   <p className="white">  Transaction Type</p>
-                  <div className=" w-full p-2 flex flex-row items-center justify-center gap-5 small">
+                  <div className=" w-full p-2  flex flex-row items-center justify-center gap-5 small">
                     <button onClick={handleVerify} className={`white gap-3 flex items-center justify-center border border-green-700  w-36 ${show === 'Deposit' ? 'greenbg' : ''} p-1 rounded-3xl`}>
                       <MdArrowOutward color="white" />  Deposit
                     </button>
@@ -767,55 +770,53 @@ const MainExchange = () => {
                     <div className="flex flex-row w-full small wrap justify-between">
                       <div className="flex flex-row items-center gap-3 small wrap ">
                         <p className="  white">P2P Overview (USD)</p>
-                        <button onClick={() => setGraph('All')} className={`border  white  border-green-600 ${graph === 'All' && "bg-green-600"} p-1 rounded-2xl w-12`}>
+                        <button onClick={() => setGraph('All')} className={`border  white  border-green-600 ${graph === 'All' && "bg-green-600"}  rounded-2xl w-12`}>
                           All
                         </button>
-                        <button onClick={() => setGraph('sells')} className={`border  white  border-green-600 ${graph === 'sells' && "bg-green-600"} p-1 rounded-2xl `}>
+                        <button onClick={() => setGraph('sells')} className={`border  white  border-green-600 ${graph === 'sells' && "bg-green-600"} w-24 rounded-2xl `}>
                           Deposits
                         </button>
-                        <button onClick={() => setGraph('buys')} className={`border  white  border-green-600 ${graph === 'buys' && "bg-green-600"} p-1 rounded-2xl `}>
+                        <button onClick={() => setGraph('buys')} className={`border  white  border-green-600 ${graph === 'buys' && "bg-green-600"} w-28 rounded-2xl `}>
                           Withdrawals
                         </button>
                       </div>
                       {/* <BasicArea/> */}
 
                       <div>
-                        <img
-                          src="https://res.cloudinary.com/pitz/image/upload/v1721374243/Frame_34636_mplpeh.png"
-                          alt=""
-                        />
+                        <div className="g">
+
+                          <select className="primary no-border h-8 w-16 " name="" id="">
+                            <p className="flex flex-row items-center" value="">
+                              <p className="g cursor-pointer">Month </p>
+                              <p className="cur cursor-pointer"><IoIosArrowDown className="g" /></p>
+                            </p>
+                            <option value="last mont">All</option>
+                            <option value="last mont">Today</option>
+                            <option value="last mont">Last week</option>
+                            <option value="last mont">Last Month</option>
+                            <option value="last mont">6 Months and above</option>
+                          </select>
+                        </div>
                       </div>
                     </div>
                     {graph === 'sells' && (
                       <>
                         <div>
-                          <img
-                            className="mt-2 small wrap "
-                            src="https://res.cloudinary.com/pitz/image/upload/v1721372970/Frame_34605_r1ruic.png"
-                            alt=""
-                          />
+                         <DepositGraph/>
                         </div>
                       </>
                     )}
                     {graph === 'All' && (
                       <>
                         <div>
-                          <img
-                            className="mt-2 small wrap "
-                            src="https://res.cloudinary.com/pitz/image/upload/v1723203872/Frame_34605_3_tcvqya.png"
-                            alt=""
-                          />
+                         <ALLGraph/>
                         </div>
                       </>
                     )}
                     {graph === 'buys' && (
                       <>
                         <div>
-                          <img
-                            className="mt-2 small wrap "
-                            src="https://res.cloudinary.com/pitz/image/upload/v1723203855/Frame_34605_2_y0thdu.png"
-                            alt=""
-                          />
+                          <WidthGraph/>
                         </div>
                       </>
                     )}
@@ -828,7 +829,7 @@ const MainExchange = () => {
                       width: "30%",
                     }}
                   >
-                    <div className="secondary w-full rounded-2xl p-2 flex flex-row items-center justify-center gap-2 h-24 small border border-slate-700">
+                    <div className="secondary small wrap  w-full rounded-2xl p-2 flex flex-row items-center justify-center gap-2 h-24 small border border-slate-700">
                       <button onClick={handleVerify} className="border white flex items-center justify-center w-28 border-green-600 p-1 rounded-3xl">
                         <MdArrowOutward color="green" />  Deposit
                       </button>
@@ -922,7 +923,7 @@ const MainExchange = () => {
                           <div onClick={() => {
                             setNetWork('BTC')
                             setShow('depo')
-                           }} className="border hover1 small size wrap cursor-pointer border-slate-700  w-full p-1 items-center flex flex-row justify-between">
+                          }} className="border hover1 small size wrap cursor-pointer border-slate-700  w-full p-1 items-center flex flex-row justify-between">
                             <div className="flex-1 flex flex-row items-center gap-2">
                               <img className="h-10" src="https://res.cloudinary.com/pitz/image/upload/v1721374473/87496d50-2408-43e1-ad4c-78b47b448a6a.png_aoj8i3.png" alt="USDT TRC20" />
                               <div>
@@ -969,9 +970,9 @@ const MainExchange = () => {
                         </div>
 
                         <div onClick={() => {
-                            setNetWork('FXPRTIMUS')
-                            setShow('depo')
-                          }} className="border hover1 cursor-pointer small size mt-1 wrap border-slate-700 gback w-full p-1 items-center flex flex-row justify-between">
+                          setNetWork('FXPRTIMUS')
+                          setShow('depo')
+                        }} className="border hover1 cursor-pointer small size mt-1 wrap border-slate-700 gback w-full p-1 items-center flex flex-row justify-between">
                           <div className="flex-1 flex flex-row items-center gap-2">
                             <img className="h-10" src="https://res.cloudinary.com/pitz/image/upload/v1724056975/FX_msvvv4.png" alt="USDT TRC20" />
                             <div>
@@ -984,9 +985,9 @@ const MainExchange = () => {
                           </p>
                         </div>
                         <div onClick={() => {
-                            setNetWork('ICM')
-                            setShow('depo')
-                          }} className="border hover1 cursor-pointer small size wrap border-slate-700  w-full p-1 items-center flex flex-row justify-between">
+                          setNetWork('ICM')
+                          setShow('depo')
+                        }} className="border hover1 cursor-pointer small size wrap border-slate-700  w-full p-1 items-center flex flex-row justify-between">
                           <div className="flex-1 flex flex-row items-center gap-2">
                             <img className="h-10" src="https://res.cloudinary.com/pitz/image/upload/v1724056992/ICM_eboxhq.png" alt="USDT TRC20" />
                             <div>

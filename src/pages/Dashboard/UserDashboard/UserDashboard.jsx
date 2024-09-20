@@ -491,7 +491,7 @@ const UserDashboard = () => {
   return (
     <div style={{
       width: '83%'
-    }} className='primary w-full mt-12 ml-20 mr-32'>
+    }} className='primary small wrap margin w-full mt-12 ml-20 mr-32'>
 
       <div>
         <Modal
@@ -600,14 +600,16 @@ const UserDashboard = () => {
       </div>
 
 
-      <div className="secondary border rounded-2xl border-gray-700 w-full p-2 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <div style={{
+        width:'100%'
+      }} className="secondary border  small rounded-2xl border-gray-700 w-full p-2 flex flex-col sm:flex-row justify-between  gap-4">
         {/* User Information Section */}
-        <div className="flex flex-col sm:flex-row gap-6 items-center">
-          <div className="flex flex-row items-center gap-2">
+        <div className="flex flex-col small sm:flex-row gap-6 ">
+          <div className="flex flex-row  gap-2">
             <RxAvatar className="text-slate-500" size={40} />
-            <div>
+            <div className='small'>
               <p className="text-white capitalize text-lg">Hello, {user?.user?.first_name}!</p>
-              <p className="text-sm flex flex-row items-center gap-1">
+              <p className="text-sm flex flex-row  gap-1">
                 {kyc.is_verified ? (
                   <span className="text-green-500">Verified</span>
                 ) : (
@@ -621,13 +623,13 @@ const UserDashboard = () => {
               </p>
             </div>
           </div>
-          <div className="flex flex-col gap-1 text-center sm:text-left">
+          <div className="flex flex-col gap-1  sm:text-left">
             <p className="text-sm text-gray-400">User ID</p>
             <p className="text-white cursor-pointer flex flex-row items-center gap-1">
               {user?.user?.id} <Copy size={16} style={{ color: "#F79330" }} />
             </p>
           </div>
-          <div className="flex flex-col gap-1 text-center sm:text-left">
+          <div className="flex flex-col gap-1  sm:text-left">
             <p className="text-sm text-gray-400">User Type</p>
             <p className="text-white">{user?.user?.user_type}</p>
           </div>

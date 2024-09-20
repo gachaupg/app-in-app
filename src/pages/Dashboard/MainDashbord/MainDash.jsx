@@ -32,6 +32,9 @@ import Widthdrwal from "./Widthdrwal";
 import { IoIosArrowDown } from "react-icons/io";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import Chat from "./Chat";
+import BuyChat from "./buyChaarts";
+import All from "./All";
 
 
 
@@ -77,7 +80,7 @@ const MainDash = () => {
 
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [Verified, setVerified] = useState(false);
-  const [activeTab1, setActiveTab1] = useState("Market");
+  const [activeTab1, setActiveTab1] = useState("Dashboard");
   const [show, setShow] = useState("P2P");
   const tabs = [
     {
@@ -148,14 +151,28 @@ const MainDash = () => {
 
   const location = useLocation()
   const p2pcenter = location.state;
-  console.log('data', p2pcenter);
+  const data2 = location.state;
+  console.log('datasss', data2?.data);
   useEffect(() => {
     if (p2pcenter != null) {
-      setActiveTab1('Center')
+      setActiveTab1(p2pcenter?.data)
+     if (p2pcenter?.tab!=null) {
+      setActiveTab(data2.tab)
+     }else{
+      setActiveTab('P2P Trading')
+     }
     }
   }, [p2pcenter])
 
-  // https://omayaexchangebackend.onrender.com/api/kyc/status/
+  // const tabsloc = location.state;
+  // console.log('datasss', tabsloc?.tab);
+  // useEffect(() => {
+  //   if (p2pcenter != null) {
+  //     setActiveTab(tabsloc?.tab)
+  //   }
+  // }, [tabsloc])
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -230,48 +247,63 @@ const MainDash = () => {
   }, [user?.access, navigate]);
 
 
+  let previousMatchCount = 0; 
 
   useEffect(() => {
     const fetchData1 = async () => {
       const token = user?.access;
-
+  
       if (!token) {
         toast.error("Authentication token is missing. Please log in again.");
         navigate("/login");
         setLoading1(false);
         return;
       }
-
+  
       const headers = {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       };
-
+  
       try {
-        const res = await axios.get(
-          `${endpoint}/trading_engine/trades/matched/`,
-          { headers }
+        const res = await axios.get(`${endpoint}/trading_engine/trades/matched/`, {
+          headers,
+        });
+  
+        console.log("Raw data:", res.data);
+  
+        const sortedData = res.data.sort(
+          (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
         );
-        setMatch(res.data);
+  
+        console.log("Sorted data:", sortedData);
+  
+        // Play sound only if there's an increase in matched trades
+        if (sortedData.length > previousMatchCount) {
+          const audio = new Audio('https://res.cloudinary.com/pitz/video/upload/v1726490784/ringtone-1-46486_yikxhn.mp3');
+          audio.play();
+        }
+  
+        // Update previousMatchCount only after checking
+        previousMatchCount = sortedData.length;
+  
+        setMatch(sortedData);
         setLoading1(false);
-        console.log('payments', res.data);
       } catch (error) {
         console.log(error);
         setLoading1(false);
       }
     };
-
-    fetchData1(); // Initial fetch
-
-    const interval = setInterval(fetchData1, 5000); // Fetch every 5 seconds
-
-    return () => clearInterval(interval); // Clean up interval on unmount
+  
+    fetchData1();
+  
+    const interval = setInterval(fetchData1, 5000);
+  
+    return () => clearInterval(interval);
   }, [user?.access, navigate]);
-
-
-
-
-
+  
+  
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -491,7 +523,7 @@ const MainDash = () => {
 
   return (
     <>
-      <div>
+      <div className="">
         <div>
           <Modal
             className="rounded-lg border-slate-700"
@@ -625,7 +657,7 @@ const MainDash = () => {
                 style={{ width: "83%" }}
                 className="small p-2 pt-10 flex pr-36 pl-24 flex-col gap-4"
               >
- <div className="">
+                <div className="">
                   <Modal
                     className="no-border"
                     open={open}
@@ -635,23 +667,23 @@ const MainDash = () => {
                   >
                     <Box className="primary border no-border mr-20 flex flex-col items-center justify-center g 0" sx={style}>
                       <Typography className='flex flex-row items-center gap-1' id="modal-modal-title" variant="h6" component="h2">
-                       <img src="https://res.cloudinary.com/pitz/image/upload/v1725821568/alert-circle_dzpzh8.png" alt="" /> Verify Account
+                        <img src="https://res.cloudinary.com/pitz/image/upload/v1725821568/alert-circle_dzpzh8.png" alt="" /> Verify Account
                       </Typography>
-                      <p  className="text-xs g">
-                      You need to submit your identity documents in order to perform transaction. KYC is available in the settings section
+                      <p className="text-xs g">
+                        You need to submit your identity documents in order to perform transaction. KYC is available in the settings section
                       </p>
-                     <div className='flex flex-row items-center justify-between  ml-4 mr-4'>
-                          <div style={{
-                            // width:'16rem'
-                          }} className="w-full ">
+                      <div className='flex flex-row items-center justify-between  ml-4 mr-4'>
+                        <div style={{
+                          // width:'16rem'
+                        }} className="w-full ">
                           {loadingKy ? 'Account will be verified soon!, It may take upto 24 hrs' : (
                             <button onClick={handleOpen1} className="flex p-1 text-white items-center justify-center mt-3 w-32 greenbg rounded-lg">
                               Verify Now
                             </button>
                           )}
-                          </div>
-                      <button onClick={() => setOpen(false)} className="flex p-1 w-36 items-center justify-center mt-3  border border-slate-700 rounded-lg">Cancel</button>
-                     </div>
+                        </div>
+                        <button onClick={() => setOpen(false)} className="flex p-1 w-36 items-center justify-center mt-3  border border-slate-700 rounded-lg">Cancel</button>
+                      </div>
                     </Box>
                   </Modal>
                 </div>
@@ -745,7 +777,8 @@ const MainDash = () => {
                       </div>
                       <div className="flex flex-col gap-2">
                         <p style={{ fontSize: "13px" }} className="grey">
-                          Use ID
+                          User ID 
+
                         </p>
                         <p className="white  cursor-pointer flex flex-row items-center gap-1">
                           {user?.user?.id} <Copy onClick={() => copyToClipboard(user?.user?.id)} size={16} style={{ color: "#F79330" }} />
@@ -919,14 +952,20 @@ const MainDash = () => {
                                 </button>
                               </div>
                               <div>
-                                <div
-                                  className="flex flex-row items-center  justify-center gap-1 cursor-pointer"
-                                  onClick={() => setShowCalendar(!showCalendar)}
-                                >
-                                  <p className="g cursor-pointer">Month </p>
-                                  <p className="cur cursor-pointer"><IoIosArrowDown className="g"/></p>
-                                </div>
+                                <div className="g">
 
+                                  <select className="primary h-8 no-border h-5 w-full " name="" id="">
+                                    <p className="flex flex-row items-center" value="">
+                                      <p className="g cursor-pointer">Month </p>
+                                      <p className="cur cursor-pointer"><IoIosArrowDown className="g" /></p>
+                                    </p>
+                                    <option value="last mont">All</option>
+                                    <option value="last mont">Today</option>
+                                    <option value="last mont">Last week</option>
+                                    <option value="last mont">Last Month</option>
+                                    <option value="last mont">6 Months and above</option>
+                                  </select>
+                                </div>
                                 {showCalendar && (
                                   <div className="calendar-container">
                                     <Calendar
@@ -938,36 +977,25 @@ const MainDash = () => {
                                 )}
                               </div>
                             </div>
+                           
                             {graph === 'sells' && (
                               <>
                                 <div>
-                                  <img
-                                    className="mt-2 small wrap "
-                                    src="https://res.cloudinary.com/pitz/image/upload/v1721372970/Frame_34605_r1ruic.png"
-                                    alt=""
-                                  />
+                                   <Chat/>
                                 </div>
                               </>
                             )}
                             {graph === 'All' && (
                               <>
                                 <div>
-                                  <img
-                                    className="mt-2 small wrap "
-                                    src="https://res.cloudinary.com/pitz/image/upload/v1723203872/Frame_34605_3_tcvqya.png"
-                                    alt=""
-                                  />
+                                 <All/>
                                 </div>
                               </>
                             )}
                             {graph === 'buys' && (
                               <>
                                 <div>
-                                  <img
-                                    className="mt-2 small wrap "
-                                    src="https://res.cloudinary.com/pitz/image/upload/v1723203855/Frame_34605_2_y0thdu.png"
-                                    alt=""
-                                  />
+                                 <BuyChat/>
                                 </div>
                               </>
                             )}
@@ -1130,7 +1158,7 @@ const MainDash = () => {
             <BuyCrypto />
           </>
         )}
-         {/* {activeTab === "Dashboard" && (
+        {/* {activeTab === "Dashboard" && (
           <>
             <UserDashboard />
           </>
@@ -1153,9 +1181,9 @@ const MainDash = () => {
         {activeTab === "Dashboard" && (
           <>
             <div style={{
-              width:'80%'
+              width: '100%'
             }} className="w-full">
-            <UserDashboard />
+              <UserDashboard />
             </div>
           </>
         )}
