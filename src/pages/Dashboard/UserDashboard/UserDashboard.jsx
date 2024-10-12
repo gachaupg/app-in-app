@@ -603,7 +603,6 @@ const UserDashboard = () => {
       <div style={{
         width:'100%'
       }} className="secondary border  small rounded-2xl border-gray-700 w-full p-2 flex flex-col sm:flex-row justify-between  gap-4">
-        {/* User Information Section */}
         <div className="flex flex-col small sm:flex-row gap-6 ">
           <div className="flex flex-row  gap-2">
             <RxAvatar className="text-slate-500" size={40} />
@@ -611,7 +610,7 @@ const UserDashboard = () => {
               <p className="text-white capitalize text-lg">Hello, {user?.user?.first_name}!</p>
               <p className="text-sm flex flex-row  gap-1">
                 {kyc.is_verified ? (
-                  <span className="text-green-500">Verified</span>
+                <span className="text-green-500">Verified</span>
                 ) : (
                   <span className="text-red-500">Unverified account</span>
                 )}

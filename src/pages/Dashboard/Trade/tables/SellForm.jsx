@@ -65,8 +65,7 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId, verified, setOpen, payme
     }
   }, [payments, show]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setLoading1(true);
 
     const token = user.access;
@@ -142,9 +141,8 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId, verified, setOpen, payme
     }
   }
 
-  const handleVerify2 = async (e) => {
+  const handleVerify2 = async () => {
     if (verified) {
-      e.preventDefault();
       setLoading1(true);
 
       const token = user.access;

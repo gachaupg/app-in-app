@@ -143,8 +143,7 @@ const BuyPage = (props) => {
     const [open2, setOpen2] = useState(false);
     const handleOpen2 = () => setOpen2(true);
     const handleClose2 = () => setOpen2(false)
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
         setLoading1(true);
         const token = user.access;
         if (!token) {

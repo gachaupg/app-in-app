@@ -18,6 +18,8 @@ import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { endpoint } from "../../../utils/APIRoutes";
+import { FiUpload } from "react-icons/fi";
+import { preview } from "vite";
 
 
 const style = {
@@ -234,8 +236,7 @@ const BuyPage = (props) => {
   }, [user?.access, navigate]);
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setLoading1(true);
     const token = user.access;
     if (!token) {
@@ -302,6 +303,69 @@ const BuyPage = (props) => {
     borderRadius: 3,
     boxShadow: 24,
     p: 4,
+  };
+  const initialState1 = {
+
+    trade_id:id,
+    reason_for_appeal: "",
+    screenshot: "",
+
+  };
+  const [widthdrwal, setWidthdrwal] = useState(initialState1);
+  const [verify, setVerify] = useState(true);
+
+
+  const handleAppeal = async () => {
+    setLoading1(true);
+    const token = user.access;
+    if (!token) {
+      toast.error("Authentication token is missing. Please log in again.");
+      navigate("/login");
+      setLoading(false);
+      return;
+    }
+    if (verify === true) {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+      };
+      const formData = new FormData();
+      formData.append('trade_id', widthdrwal.trade_id);
+      formData.append('reason_for_appeal', widthdrwal.reason_for_appeal);
+
+      if (widthdrwal.screenshot) {
+        formData.append('screenshot', widthdrwal.screenshot);
+      }
+      try {
+        const response = await fetch(
+          `${endpoint}/trading_engine/appeals/create/`,
+          {
+            method: "POST",
+            headers: headers,
+            body: formData,
+          }
+        );
+
+        const data = await response.json();
+        console.log('appeal',data);
+        
+        if (response.ok) {
+          toast('Success')
+        } else if (data.code === "token_not_valid") {
+          toast.error("Your session has expired. Please log in again.");
+          navigate("/login");
+        } else {
+          toast.error(`Deposit failed:${data.error} `);
+        }
+      } catch (error) {
+        toast.error(`Error: ${error.error}`);
+        console.error("Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      toast.error("Invalid code");
+      setLoading(false);
+    }
   };
 
   const copyToClipboard = (text) => {
@@ -666,7 +730,7 @@ const BuyPage = (props) => {
           </div>
           <p className="mt-1">
             I have an issue with{" "}
-            <span onClick={handleOpen} className="span text-red-600">
+            <span onClick={handleOpen} className="span cursor-pointer text-red-600">
               {" "}
               Appeal/Complain
             </span>
@@ -736,9 +800,37 @@ const BuyPage = (props) => {
               <option className="g" value="">
                 Select the reason for appeal
               </option>
+              <option  onChange={(e) => {
+                setWidthdrwal({ ...widthdrwal, reason_for_appeal: e.target.value });
+              }} className="g" value=" usdt not recieved">
+                usdt not received
+              </option>
             </select>
           </div>
-          <p className="mt-2 mb-2">Upload Documents</p>
+          <div className="flex flex-row mt-1 items-center gap-2">
+            <p style={{ fontSize: "14px" }}>Upload Documents</p>
+            <label htmlFor="file-upload" className="cursor-pointer flex  items-center gap-1">
+              <button
+                className="bg-slate-100 p-1 w-12 flex justify-center items-center text-center rounded-lg"
+                onClick={() => {
+                  document.getElementById("file-upload").click();
+                }}
+              >
+                <FiUpload className="text-yellow-700" />
+              </button>
+              <p>{widthdrwal.screenshot?.name}</p>
+            </label>
+            <input
+              id="file-upload"
+              type="file"
+             
+              className="hidden"
+              onChange={(e) => {
+                setWidthdrwal({ ...widthdrwal, screenshot: e.target.files[0] });
+                toast.success('Document picked successfully');
+              }}
+            />
+          </div>
           <p
             style={{
               fontSize: "14px",
@@ -759,12 +851,15 @@ const BuyPage = (props) => {
             >
               Close{" "}
             </Button>
-            <Button
-              className="white txt1 border border-slate"
-              onClick={handleClose}
-            >
-              Submit
-            </Button>
+           {
+            loading1? <CircularProgress/>
+            : <Button
+            className="white txt1 border border-slate"
+            onClick={handleAppeal}
+          >
+            Submit
+          </Button>
+           }
           </div>
         </Box>
       </Modal>
@@ -819,7 +914,7 @@ const BuyPage = (props) => {
         </p>
         {payments?.terms_and_conditions}
       </div>
-    </div>
+    </div >
   );
 };
 

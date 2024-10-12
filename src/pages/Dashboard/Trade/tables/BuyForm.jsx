@@ -142,9 +142,8 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId, verified, setOpen, payme
     }
   }
 
-  const handleVerify2 = async (e) => {
+  const handleVerify2 = async () => {
     if (verified) {
-      e.preventDefault();
       setLoading1(true);
 
       const token = user.access;
@@ -431,7 +430,7 @@ const BuyForm = ({ id, buy, setBuy, handleClose, setId, verified, setOpen, payme
             ) : (
               <button
                 onClick={()=>{
-                  handleVerify2
+                  handleVerify2()
                 }}
                 style={{
                   width: "45%",

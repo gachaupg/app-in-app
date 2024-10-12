@@ -300,8 +300,7 @@ const Adds = () => {
   const [errors1, setErrors1] = useState('');
   console.log('errors', errors1);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     // setLoading1(true);
 
     let validationErrors = {};
@@ -389,8 +388,7 @@ const Adds = () => {
   const handleOpen3 = () => setOpen3(true);
   const handleClose3 = () => setOpen3(false);
   const [err, setErr] = useState('')
-  const handleSubmit1 = async (e) => {
-    e.preventDefault();
+  const handleSubmit1 = async () => {
     setLoading(true);
 
     const token = user.access;

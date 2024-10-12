@@ -262,8 +262,7 @@ const Adds = () => {
 
   console.log(sell);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setLoading1(true);
 
     const token = user.access;
@@ -344,8 +343,7 @@ const Adds = () => {
   const [open3, setOpen3] = useState(false);
   const handleOpen3 = () => setOpen3(true);
   const handleClose3 = () => setOpen3(false);
-  const handleSubmit1 = async (e) => {
-    e.preventDefault();
+  const handleSubmit1 = async () => {
     setLoading(true);
     const token = user.access;
 
